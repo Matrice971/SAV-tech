@@ -1,0 +1,6 @@
+name = "sav-tech-relay"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# Les secrets (WRITE_PASSWORD, GITHUB_TOKEN) ne sont PAS définis ici.
+# Voir README.md de ce dossier : ils se configurent via `wrangler secret put`.
