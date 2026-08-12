@@ -12,6 +12,7 @@
     --color-text-muted: #5f6368;
     --color-border: #e1e3e6;
     --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
     --color-error-bg: #fdecec;
     --color-error-border: #f3b4b4;
     --color-error-text: #8a1f1f;
@@ -52,7 +53,7 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: 1rem;
+    padding: 1.25rem;
     margin-top: 1rem;
   }
 
@@ -78,6 +79,50 @@
     to { transform: rotate(360deg); }
   }
 
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  input[type="password"] {
+    font-size: 1rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    width: 100%;
+  }
+
+  input[type="password"]:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+
+  button {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-primary);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--color-primary-hover);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   .content-label {
     margin: 0 0 0.5rem;
     font-size: 0.8rem;
@@ -88,9 +133,10 @@
 
   .content-value {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     word-break: break-word;
     white-space: pre-wrap;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
 
   .error {
@@ -125,69 +171,165 @@
   </header>
 
   <main>
-    <div id="status" class="status">
+    <div class="card">
+      <form id="password-form">
+        <div>
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" id="submit-btn">Valider</button>
+      </form>
+    </div>
+
+    <div id="status" class="status hidden">
       <span class="spinner"></span>
-      <span>Récupération des données…</span>
+      <span>Vérification…</span>
     </div>
 
     <div id="result" class="card hidden">
-      <p class="content-label">Contenu de test.txt</p>
+      <p class="content-label">Données déchiffrées</p>
       <p id="content-value" class="content-value"></p>
     </div>
 
     <div id="error" class="error hidden">
-      <strong>Impossible de récupérer les données</strong>
+      <strong>Erreur</strong>
       <span id="error-message"></span>
     </div>
   </main>
 
-  <footer>Étape A — lecture brute, sans chiffrement (version de test)</footer>
+  <footer>Étape B — déchiffrement AES-GCM + PBKDF2</footer>
 
   <script>
     const FILE_URL = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients/test.txt";
+    const PBKDF2_ITERATIONS = 100000;
 
+    const formEl = document.getElementById("password-form");
+    const passwordEl = document.getElementById("password");
+    const submitBtnEl = document.getElementById("submit-btn");
     const statusEl = document.getElementById("status");
     const resultEl = document.getElementById("result");
     const contentValueEl = document.getElementById("content-value");
     const errorEl = document.getElementById("error");
     const errorMessageEl = document.getElementById("error-message");
 
-    function showResult(text) {
+    function resetViews() {
+      resultEl.classList.add("hidden");
+      errorEl.classList.add("hidden");
+    }
+
+    function showStatus(message) {
+      statusEl.querySelector("span:last-child").textContent = message;
+      statusEl.classList.remove("hidden");
+    }
+
+    function hideStatus() {
       statusEl.classList.add("hidden");
-      contentValueEl.textContent = text;
+    }
+
+    function showResult(jsonText) {
+      contentValueEl.textContent = jsonText;
       resultEl.classList.remove("hidden");
     }
 
     function showError(message) {
-      statusEl.classList.add("hidden");
       errorMessageEl.textContent = message;
       errorEl.classList.remove("hidden");
     }
 
-    async function loadTestFile() {
-      let response;
-      try {
-        response = await fetch(FILE_URL, { cache: "no-store" });
-      } catch {
-        showError("Connexion impossible. Vérifiez votre accès à internet et réessayez.");
-        return;
+    function base64ToBytes(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
       }
-
-      if (response.status === 404) {
-        showError("Le fichier test.txt est introuvable dans le dépôt.");
-        return;
-      }
-
-      if (!response.ok) {
-        showError(`Le serveur a répondu avec une erreur (code ${response.status}).`);
-        return;
-      }
-
-      const text = await response.text();
-      showResult(text);
+      return bytes;
     }
 
-    loadTestFile();
+    async function deriveKey(password, saltBytes) {
+      const passwordBytes = new TextEncoder().encode(password);
+      const baseKey = await crypto.subtle.importKey(
+        "raw",
+        passwordBytes,
+        { name: "PBKDF2" },
+        false,
+        ["deriveKey"]
+      );
+      return crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: saltBytes,
+          iterations: PBKDF2_ITERATIONS,
+          hash: "SHA-256",
+        },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+      );
+    }
+
+    async function decryptFile(fileContent, password) {
+      const parts = fileContent.trim().split(".");
+      if (parts.length !== 3) {
+        throw new Error("format de fichier invalide");
+      }
+      const [saltB64, ivB64, ciphertextB64] = parts;
+      const salt = base64ToBytes(saltB64);
+      const iv = base64ToBytes(ivB64);
+      const ciphertext = base64ToBytes(ciphertextB64);
+
+      const key = await deriveKey(password, salt);
+      const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
+      return new TextDecoder().decode(decrypted);
+    }
+
+    formEl.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      resetViews();
+      submitBtnEl.disabled = true;
+      showStatus("Récupération du fichier…");
+
+      try {
+        let response;
+        try {
+          response = await fetch(FILE_URL, { cache: "no-store" });
+        } catch {
+          throw { userMessage: "Connexion impossible. Vérifiez votre accès à internet et réessayez." };
+        }
+
+        if (response.status === 404) {
+          throw { userMessage: "Le fichier client est introuvable." };
+        }
+        if (!response.ok) {
+          throw { userMessage: `Le serveur a répondu avec une erreur (code ${response.status}).` };
+        }
+
+        const fileContent = await response.text();
+
+        showStatus("Déchiffrement…");
+        let decryptedText;
+        try {
+          decryptedText = await decryptFile(fileContent, passwordEl.value);
+        } catch {
+          throw { userMessage: "Mot de passe incorrect ou fichier corrompu." };
+        }
+
+        let displayText = decryptedText;
+        try {
+          displayText = JSON.stringify(JSON.parse(decryptedText), null, 2);
+        } catch {
+          // Le contenu déchiffré n'est pas du JSON valide : on l'affiche tel quel.
+        }
+
+        hideStatus();
+        showResult(displayText);
+      } catch (err) {
+        hideStatus();
+        showError(err && err.userMessage ? err.userMessage : "Une erreur inattendue est survenue.");
+      } finally {
+        submitBtnEl.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>

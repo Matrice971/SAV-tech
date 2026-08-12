@@ -1,10 +1,14 @@
-# Chiffrement des fichiers clients — spécification (étape B, pas encore implémentée)
+# Chiffrement des fichiers clients — spécification
 
-Ce document décrit comment le chiffrement des fichiers `.txt` dans
-`data/clients/` fonctionnera une fois implémenté. Il sert de référence
-commune entre l'appli client (JS / Web Crypto API) et le programme de
-gestion (Python), pour garantir que les deux produisent et lisent
-exactement le même format.
+Ce document décrit le chiffrement des fichiers `.txt` dans `data/clients/`.
+Il sert de référence commune entre l'appli client (JS / Web Crypto API) et le
+programme de gestion (Python), pour garantir que les deux produisent et
+lisent exactement le même format.
+
+**Implémenté côté appli client** (`client-app/index.html`) et via le script
+de test `docs/generer_fichier_test.py`. Le programme de gestion Windows
+reproduira la même logique de chiffrement (section 4) dans un prompt
+ultérieur.
 
 **Algorithme retenu** : AES-GCM (chiffrement + authentification intégrée),
 avec dérivation de clé PBKDF2 à partir du mot de passe client.
@@ -46,8 +50,7 @@ simple, séparés par un point (`.`) pour un parsing trivial des deux côtés.
 4. La clé AES est dérivée avec PBKDF2 :
    - Fonction : `crypto.subtle.deriveKey`
    - Hash : SHA-256
-   - Itérations : au moins 100 000 (valeur exacte à figer à l'implémentation,
-     identique côté Python)
+   - Itérations : 100 000 (identique côté Python)
    - Sortie : clé AES-GCM 256 bits
 
 Si le mot de passe est incorrect, la dérivation produira une mauvaise clé et
@@ -96,14 +99,54 @@ exactement le même format :
 
 ---
 
-## 5. Paramètres à figer avant l'implémentation
+## 5. Paramètres figés
 
-Ces valeurs doivent être identiques dans le JS et le Python — à définir une
-fois pour toutes lors de l'implémentation de cette étape :
+Ces valeurs sont identiques dans le JS (`client-app/index.html`) et le
+Python (`docs/generer_fichier_test.py`) — ne pas les modifier d'un côté sans
+les modifier de l'autre, sous peine de casser la compatibilité avec les
+fichiers déjà chiffrés :
 
-- Nombre d'itérations PBKDF2 (proposition : 100 000 minimum)
-- Longueur de clé AES (256 bits)
-- Longueur du salt (16 octets) et de l'IV (12 octets, standard pour GCM)
-- Encodage de séparation des segments (`.` proposé, à confirmer qu'aucun
-  caractère Base64 standard ne peut le produire — c'est le cas, Base64
-  standard n'utilise pas `.`)
+- Itérations PBKDF2 : 100 000
+- Hash PBKDF2 : SHA-256
+- Longueur de clé AES : 256 bits
+- Longueur du salt : 16 octets
+- Longueur de l'IV : 12 octets (standard pour AES-GCM)
+- Séparateur des segments : `.` (absent de l'alphabet Base64 standard, donc
+  sans ambiguïté au parsing)
+
+---
+
+## 6. Comment tester
+
+Étapes pour valider le circuit complet chiffrement → écriture → lecture →
+déchiffrement, de bout en bout :
+
+1. **Générer un fichier chiffré de test** (depuis `docs/`) :
+
+   ```bash
+   pip install cryptography
+   python3 generer_fichier_test.py
+   ```
+
+   Produit `test_chiffre.txt` dans le dossier courant, chiffré avec le mot
+   de passe défini en haut du script (`motdepasse-test` par défaut).
+
+2. **Envoyer ce fichier au relais Cloudflare**, pour qu'il écrase
+   `data/clients/test.txt` avec le contenu chiffré :
+
+   ```bash
+   CONTENT=$(cat test_chiffre.txt)
+   curl -X POST https://sav-tech-relay.matrice971.workers.dev/write \
+     -H "Content-Type: application/json" \
+     -d "{\"password\":\"<mot-de-passe-du-relais>\",\"filename\":\"test.txt\",\"content\":\"$CONTENT\"}"
+   ```
+
+   (`<mot-de-passe-du-relais>` est le `WRITE_PASSWORD` configuré côté
+   Cloudflare — à ne pas confondre avec le mot de passe de chiffrement du
+   client, qui sert à un tout autre usage.)
+
+3. **Tester le déchiffrement dans l'appli client** : ouvrir
+   `client-app/index.html`, saisir le mot de passe utilisé à l'étape 1
+   (`motdepasse-test` par défaut) et cliquer sur "Valider". Le JSON déchiffré
+   doit s'afficher. Un mot de passe incorrect doit afficher le message
+   « Mot de passe incorrect ou fichier corrompu. ».
