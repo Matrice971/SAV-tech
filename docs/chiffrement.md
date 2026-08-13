@@ -7,7 +7,7 @@ lisent exactement le même format.
 
 **Implémenté côté appli client** (`client-app/index.html`) et via le script
 de test `docs/generer_fichier_test.py`. Le programme de gestion Windows
-reproduira la même logique de chiffrement (section 4) dans un prompt
+reproduira la même logique de chiffrement (section 5) dans un prompt
 ultérieur.
 
 **Algorithme retenu** : AES-GCM (chiffrement + authentification intégrée),
@@ -15,7 +15,49 @@ avec dérivation de clé PBKDF2 à partir du mot de passe client.
 
 ---
 
-## 1. Format du fichier chiffré
+## 1. Structure des données (JSON avant chiffrement)
+
+C'est ce JSON qui est chiffré pour produire le fichier `.txt` (section 2).
+
+```json
+{
+  "contact": "Nom du contact/responsable de centre (identifiant fiable du regroupement client)",
+  "appareils": [
+    {
+      "type": "Banc de frein",
+      "num_serie": "BF-2024-0088",
+      "centre_origine": "Centre Nord",
+      "adresse": "12 rue Example, 97100 Basse-Terre",
+      "etat": 2,
+      "date_prise_charge": "2026-07-20",
+      "lieu_prise_charge": "atelier",
+      "piece_en_commande": true,
+      "materiel_prete_num_serie": "PRET-0012",
+      "commentaire_technicien": "Diagnostic en cours, pièce commandée",
+      "date_remise_service": null
+    }
+  ]
+}
+```
+
+**Pas de champ `photos`** : les photos restent exclusivement des données
+locales, gérées côté technicien/gestion (stockage local, IndexedDB pour le
+mode hors-ligne terrain). Elles ne sont **jamais** incluses dans le JSON
+chiffré envoyé vers GitHub, pour deux raisons : taille de fichier (le dépôt
+et le relais ne sont pas dimensionnés pour des binaires images) et
+confidentialité (le dépôt est public — voir section 2 du résumé du projet).
+
+**Règle d'affichage des appareils** (à documenter ici, pas encore implémentée
+dans l'appli — l'étape actuelle affiche le JSON brut sans filtre) : un
+appareil n'apparaît dans la liste que si `date_remise_service` est `null`,
+ou si elle date de moins de 90 jours. Au-delà de 90 jours après
+`date_remise_service`, l'appareil doit être filtré et ne plus apparaître.
+Ce filtre sera implémenté côté appli client dans un prompt ultérieur, en
+même temps que la vraie interface de liste.
+
+---
+
+## 2. Format du fichier chiffré
 
 Le fichier `.txt` stocké dans `data/clients/` contient une seule chaîne,
 structurée ainsi :
@@ -30,8 +72,8 @@ structurée ainsi :
 - **iv** (vecteur d'initialisation) : 12 octets aléatoires, requis par
   AES-GCM. Généré à chaque écriture/chiffrement (jamais réutilisé avec la
   même clé).
-- **ciphertext** : le JSON de données (voir structure dans le résumé du
-  projet, section 6) chiffré en AES-GCM. Le tag d'authentification GCM est
+- **ciphertext** : le JSON de données (voir structure en section 1) chiffré
+  en AES-GCM. Le tag d'authentification GCM est
   inclus automatiquement à la fin du ciphertext par la Web Crypto API et par
   `cryptography`/`pycryptodome` côté Python — pas de champ séparé à gérer.
 
@@ -40,7 +82,7 @@ simple, séparés par un point (`.`) pour un parsing trivial des deux côtés.
 
 ---
 
-## 2. Saisie et dérivation du mot de passe (côté client HTML)
+## 3. Saisie et dérivation du mot de passe (côté client HTML)
 
 1. L'utilisateur saisit son mot de passe dans un champ `<input type="password">`.
 2. Le mot de passe n'est **jamais envoyé** où que ce soit — tout le
@@ -54,22 +96,24 @@ simple, séparés par un point (`.`) pour un parsing trivial des deux côtés.
    - Sortie : clé AES-GCM 256 bits
 
 Si le mot de passe est incorrect, la dérivation produira une mauvaise clé et
-l'étape de déchiffrement (section 3) échouera avec une erreur
+l'étape de déchiffrement (section 4) échouera avec une erreur
 d'authentification GCM — c'est ce qui sert de vérification du mot de passe,
 sans jamais avoir à le stocker ni le comparer explicitement.
 
 ---
 
-## 3. Déchiffrement (Web Crypto API, navigateur)
+## 4. Déchiffrement (Web Crypto API, navigateur)
 
 1. Télécharger le fichier `.txt` via `fetch()` (comme pour `test.txt`
    aujourd'hui, mais avec un nom de fichier par client).
 2. Découper la chaîne sur les `.` → `salt`, `iv`, `ciphertext`.
 3. Décoder chaque partie de Base64 vers `Uint8Array`.
-4. Dériver la clé (section 2) à partir du mot de passe saisi + salt.
+4. Dériver la clé (section 3) à partir du mot de passe saisi + salt.
 5. Appeler `crypto.subtle.decrypt({ name: "AES-GCM", iv }, clé, ciphertext)`.
-6. En cas de succès : parser le résultat comme JSON (structure des
-   appareils, voir résumé projet section 6) et afficher la liste.
+6. En cas de succès : parser le résultat comme JSON (structure en section 1).
+   **Étape actuelle** : affichage du JSON brut formaté, sans liste ni filtre.
+   La vraie interface de liste et le filtre des 90 jours (section 1) seront
+   implémentés dans un prompt ultérieur.
 7. En cas d'échec (exception levée par `decrypt`) : afficher un message
    « mot de passe incorrect », sans autre détail (ne pas distinguer
    « fichier corrompu » de « mauvais mot de passe » pour ne pas donner
@@ -77,7 +121,7 @@ sans jamais avoir à le stocker ni le comparer explicitement.
 
 ---
 
-## 4. Chiffrement côté Python (programme de gestion)
+## 5. Chiffrement côté Python (programme de gestion)
 
 Pour que les fichiers produits par le programme de gestion soient lisibles
 par l'appli client (et vice versa), le code Python doit reproduire
@@ -99,7 +143,7 @@ exactement le même format :
 
 ---
 
-## 5. Paramètres figés
+## 6. Paramètres figés
 
 Ces valeurs sont identiques dans le JS (`client-app/index.html`) et le
 Python (`docs/generer_fichier_test.py`) — ne pas les modifier d'un côté sans
@@ -116,7 +160,7 @@ fichiers déjà chiffrés :
 
 ---
 
-## 6. Comment tester
+## 7. Comment tester
 
 Étapes pour valider le circuit complet chiffrement → écriture → lecture →
 déchiffrement, de bout en bout :

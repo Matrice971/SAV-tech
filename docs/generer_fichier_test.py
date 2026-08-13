@@ -27,21 +27,35 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 PASSWORD = "motdepasse-test"
 
 TEST_DATA = {
-    "compte_client": "12345",
+    "contact": "Jean Dupont",
     "appareils": [
         {
             "type": "Banc de frein",
             "num_serie": "BF-2024-0088",
-            "centre": "Centre Contrôle Nord",
+            "centre_origine": "Centre Nord",
+            "adresse": "12 rue Example, 97100 Basse-Terre",
             "etat": 2,
-            "date_etat": "2026-07-25",
+            "date_prise_charge": "2026-07-20",
+            "lieu_prise_charge": "atelier",
+            "piece_en_commande": True,
+            "materiel_prete_num_serie": "PRET-0012",
+            "commentaire_technicien": "Diagnostic en cours, pièce commandée",
+            "date_remise_service": None,
         },
         {
             "type": "Opacimètre",
             "num_serie": "OP-2023-0142",
-            "centre": "Centre Contrôle Nord",
-            "etat": 1,
-            "date_etat": "2026-08-01",
+            "centre_origine": "Centre Sud",
+            "adresse": "5 avenue Example, 97110 Pointe-à-Pitre",
+            "etat": 4,
+            "date_prise_charge": "2026-06-15",
+            "lieu_prise_charge": "site",
+            "piece_en_commande": False,
+            "materiel_prete_num_serie": None,
+            "commentaire_technicien": "Réparé et testé, remis en service",
+            # Moins de 90 jours avant la date du script (2026-08-12) :
+            # doit rester visible une fois le filtre implémenté.
+            "date_remise_service": "2026-07-25",
         },
     ],
 }
@@ -49,7 +63,7 @@ TEST_DATA = {
 OUTPUT_FILE = "test_chiffre.txt"
 
 # --- Paramètres cryptographiques (doivent rester identiques à ceux du JS,
-#     voir docs/chiffrement.md section 5) ---
+#     voir docs/chiffrement.md section 6) ---
 
 SALT_LENGTH = 16
 IV_LENGTH = 12
