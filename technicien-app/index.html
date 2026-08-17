@@ -1,12 +1,453 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAV-tech — Appli technicien</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAV-tech — Appli technicien</title>
+<style>
+  :root {
+    --color-bg: #f5f6f8;
+    --color-surface: #ffffff;
+    --color-text: #1c1e21;
+    --color-text-muted: #5f6368;
+    --color-border: #e1e3e6;
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-error-bg: #fdecec;
+    --color-error-border: #f3b4b4;
+    --color-error-text: #8a1f1f;
+    --radius: 10px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  header {
+    padding: 1.25rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .card h2 {
+    margin: 0 0 1rem;
+    font-size: 1.05rem;
+  }
+
+  form,
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  select {
+    font-size: 1rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    width: 100%;
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  select:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+
+  select:disabled {
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+  }
+
+  button {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-primary);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--color-primary-hover);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .button-secondary {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+    font-weight: 600;
+  }
+
+  .button-secondary:hover {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+  }
+
+  .button-small {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .top-bar-label {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  .top-bar-label strong {
+    color: var(--color-text);
+  }
+
+  .list-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  .content-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .content-value {
+    margin: 0;
+    font-size: 0.95rem;
+    word-break: break-word;
+  }
+
+  .error {
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error-text);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .error strong {
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .screen-title {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1.15rem;
+  }
+
+  .back-link {
+    margin-top: 1rem;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    padding: 1.5rem 1rem;
+  }
+</style>
 </head>
 <body>
-  <h1>Appli technicien terrain — SAV-tech</h1>
-  <p>Placeholder. Déclaration de prise en charge et suivi initial (à venir).</p>
+  <header>
+    <h1>SAV-tech — Appli technicien terrain</h1>
+  </header>
+
+  <main>
+    <div id="screen-technicien">
+      <div class="card">
+        <h2>Quel technicien effectue cette intervention ?</h2>
+        <div class="field-group">
+          <div>
+            <label for="technicien-select">Technicien</label>
+            <select id="technicien-select">
+              <option value="">— Choisir —</option>
+            </select>
+          </div>
+          <button type="button" id="technicien-continue-btn" disabled>Continuer</button>
+        </div>
+      </div>
+
+      <div id="load-error" class="error hidden">
+        <strong>Erreur</strong>
+        <span id="load-error-message"></span>
+      </div>
+    </div>
+
+    <div id="screen-selection" class="hidden">
+      <div class="top-bar">
+        <span class="top-bar-label">Technicien : <strong id="top-bar-technicien"></strong></span>
+        <button type="button" id="change-tech-btn" class="button-secondary button-small">Changer de technicien</button>
+      </div>
+
+      <div class="list-actions">
+        <button type="button" id="historique-btn" class="button-secondary button-small">Voir toutes les interventions</button>
+      </div>
+
+      <div class="card">
+        <div class="field-group">
+          <div>
+            <label for="centre-select">Client (centre de contrôle)</label>
+            <select id="centre-select">
+              <option value="">— Choisir un client —</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="equipement-select">Matériel</label>
+            <select id="equipement-select" disabled>
+              <option value="">— Choisir d'abord un client —</option>
+            </select>
+          </div>
+
+          <button type="button" id="valider-btn" disabled>Valider la sélection</button>
+        </div>
+      </div>
+
+      <div id="summary-card" class="card hidden">
+        <p class="content-label">Résumé</p>
+        <p id="summary-text" class="content-value"></p>
+      </div>
+    </div>
+
+    <div id="screen-historique" class="hidden">
+      <button type="button" id="historique-back-btn" class="button-secondary back-link">← Retour</button>
+      <div class="card">
+        <h2 class="screen-title">Historique des interventions</h2>
+        <p>Historique à venir</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>Étape 5a — structure de base (technicien + sélecteurs)</footer>
+
+  <script>
+    // Étape 5a : source de données locale de test (export réel TECHNIZEN).
+    // Sera remplacée par le stockage local / la synchro relais dans un
+    // prompt ultérieur.
+    const DATA_URL = "data-test/export_technizen.json";
+
+    const screenTechnicienEl = document.getElementById("screen-technicien");
+    const screenSelectionEl = document.getElementById("screen-selection");
+    const screenHistoriqueEl = document.getElementById("screen-historique");
+
+    const technicienSelectEl = document.getElementById("technicien-select");
+    const technicienContinueBtnEl = document.getElementById("technicien-continue-btn");
+    const loadErrorEl = document.getElementById("load-error");
+    const loadErrorMessageEl = document.getElementById("load-error-message");
+
+    const topBarTechnicienEl = document.getElementById("top-bar-technicien");
+    const changeTechBtnEl = document.getElementById("change-tech-btn");
+    const historiqueBtnEl = document.getElementById("historique-btn");
+    const historiqueBackBtnEl = document.getElementById("historique-back-btn");
+
+    const centreSelectEl = document.getElementById("centre-select");
+    const equipementSelectEl = document.getElementById("equipement-select");
+    const validerBtnEl = document.getElementById("valider-btn");
+    const summaryCardEl = document.getElementById("summary-card");
+    const summaryTextEl = document.getElementById("summary-text");
+
+    let centres = [];
+    let techniciensList = [];
+    let selectedTechnicien = null;
+    let selectedCentre = null;
+
+    function showScreen(screen) {
+      screenTechnicienEl.classList.toggle("hidden", screen !== "technicien");
+      screenSelectionEl.classList.toggle("hidden", screen !== "selection");
+      screenHistoriqueEl.classList.toggle("hidden", screen !== "historique");
+    }
+
+    function showLoadError(message) {
+      loadErrorMessageEl.textContent = message;
+      loadErrorEl.classList.remove("hidden");
+      technicienSelectEl.disabled = true;
+    }
+
+    async function loadData() {
+      let response;
+      try {
+        response = await fetch(DATA_URL, { cache: "no-store" });
+      } catch {
+        throw new Error(
+          "Impossible de charger les données de test. Si vous ouvrez ce fichier " +
+          "directement (file://), lancez plutôt un petit serveur local " +
+          "(ex. python3 -m http.server) depuis technicien-app/."
+        );
+      }
+      if (!response.ok) {
+        throw new Error(`Le fichier de données a répondu avec une erreur (code ${response.status}).`);
+      }
+      return response.json();
+    }
+
+    function populateTechnicienSelect() {
+      techniciensList.forEach((technicien) => {
+        const option = document.createElement("option");
+        option.value = technicien.id;
+        option.textContent = technicien.nom;
+        technicienSelectEl.appendChild(option);
+      });
+    }
+
+    function populateCentreSelect() {
+      centres.forEach((centre) => {
+        const option = document.createElement("option");
+        option.value = String(centre.id);
+        option.textContent = `${centre.nom} — ${centre.contact}`;
+        centreSelectEl.appendChild(option);
+      });
+    }
+
+    function resetCentreAndEquipementSelects() {
+      centreSelectEl.value = "";
+      equipementSelectEl.innerHTML = '<option value="">— Choisir d\'abord un client —</option>';
+      equipementSelectEl.disabled = true;
+      validerBtnEl.disabled = true;
+      selectedCentre = null;
+      summaryCardEl.classList.add("hidden");
+    }
+
+    technicienSelectEl.addEventListener("change", () => {
+      technicienContinueBtnEl.disabled = !technicienSelectEl.value;
+    });
+
+    technicienContinueBtnEl.addEventListener("click", () => {
+      selectedTechnicien = techniciensList.find((t) => t.id === technicienSelectEl.value);
+      if (!selectedTechnicien) {
+        return;
+      }
+      topBarTechnicienEl.textContent = selectedTechnicien.nom;
+      showScreen("selection");
+    });
+
+    changeTechBtnEl.addEventListener("click", () => {
+      selectedTechnicien = null;
+      technicienSelectEl.value = "";
+      technicienContinueBtnEl.disabled = true;
+      resetCentreAndEquipementSelects();
+      showScreen("technicien");
+    });
+
+    centreSelectEl.addEventListener("change", () => {
+      const centreId = centreSelectEl.value;
+      summaryCardEl.classList.add("hidden");
+
+      if (!centreId) {
+        selectedCentre = null;
+        equipementSelectEl.innerHTML = '<option value="">— Choisir d\'abord un client —</option>';
+        equipementSelectEl.disabled = true;
+        validerBtnEl.disabled = true;
+        return;
+      }
+
+      selectedCentre = centres.find((c) => String(c.id) === centreId);
+      equipementSelectEl.innerHTML = '<option value="">— Choisir un matériel —</option>';
+      (selectedCentre.equipements || []).forEach((equipement, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        const detail = equipement.modele ? `${equipement.type} ${equipement.modele}` : equipement.type;
+        option.textContent = `${detail} — n° ${equipement.serie}`;
+        equipementSelectEl.appendChild(option);
+      });
+      equipementSelectEl.disabled = false;
+      validerBtnEl.disabled = true;
+    });
+
+    equipementSelectEl.addEventListener("change", () => {
+      validerBtnEl.disabled = !equipementSelectEl.value;
+      summaryCardEl.classList.add("hidden");
+    });
+
+    validerBtnEl.addEventListener("click", () => {
+      if (!selectedTechnicien || !selectedCentre || !equipementSelectEl.value) {
+        return;
+      }
+      const equipement = selectedCentre.equipements[Number(equipementSelectEl.value)];
+      summaryTextEl.textContent =
+        `Technicien : ${selectedTechnicien.nom} — ` +
+        `Client : ${selectedCentre.nom} — ` +
+        `Matériel : ${equipement.type} ${equipement.serie}`;
+      summaryCardEl.classList.remove("hidden");
+    });
+
+    historiqueBtnEl.addEventListener("click", () => {
+      showScreen("historique");
+    });
+
+    historiqueBackBtnEl.addEventListener("click", () => {
+      showScreen("selection");
+    });
+
+    (async function init() {
+      try {
+        const data = await loadData();
+        techniciensList = Object.entries(data.config?.techniciens || {})
+          .map(([id, t]) => ({ id, nom: t.nom }))
+          .sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+        centres = data.actifs || [];
+        populateTechnicienSelect();
+        populateCentreSelect();
+      } catch (err) {
+        showLoadError(err.message || "Une erreur inattendue est survenue au chargement des données.");
+      }
+    })();
+  </script>
 </body>
 </html>

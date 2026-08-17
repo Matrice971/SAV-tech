@@ -1,2 +1,6 @@
 .wrangler/
 node_modules/
+
+# Export réel TECHNIZEN (données clients réelles) : référence locale de
+# test uniquement, ne doit jamais être poussé sur GitHub.
+technicien-app/data-test/
