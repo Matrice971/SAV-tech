@@ -74,7 +74,8 @@
     color: var(--color-text-muted);
   }
 
-  select {
+  select,
+  input[type="text"] {
     font-size: 1rem;
     padding: 0.65rem 0.75rem;
     border: 1px solid var(--color-border);
@@ -84,7 +85,8 @@
     color: var(--color-text);
   }
 
-  select:focus {
+  select:focus,
+  input[type="text"]:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
   }
@@ -243,6 +245,11 @@
       <div class="card">
         <div class="field-group">
           <div>
+            <label for="centre-search">Rechercher un client</label>
+            <input type="text" id="centre-search" placeholder="Nom du centre ou commune…" autocomplete="off">
+          </div>
+
+          <div>
             <label for="centre-select">Client (centre de contrôle)</label>
             <select id="centre-select">
               <option value="">— Choisir un client —</option>
@@ -297,6 +304,7 @@
     const historiqueBtnEl = document.getElementById("historique-btn");
     const historiqueBackBtnEl = document.getElementById("historique-back-btn");
 
+    const centreSearchEl = document.getElementById("centre-search");
     const centreSelectEl = document.getElementById("centre-select");
     const equipementSelectEl = document.getElementById("equipement-select");
     const validerBtnEl = document.getElementById("valider-btn");
@@ -346,8 +354,33 @@
       });
     }
 
-    function populateCentreSelect() {
-      centres.forEach((centre) => {
+    function normalizeText(value) {
+      return (value || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .toLowerCase();
+    }
+
+    function renderCentreOptions(list) {
+      centreSelectEl.innerHTML = "";
+
+      if (list.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "— Aucun résultat —";
+        centreSelectEl.appendChild(option);
+        centreSelectEl.disabled = true;
+        return;
+      }
+
+      centreSelectEl.disabled = false;
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "— Choisir un client —";
+      centreSelectEl.appendChild(placeholder);
+
+      list.forEach((centre) => {
         const option = document.createElement("option");
         option.value = String(centre.id);
         option.textContent = `${centre.nom} — ${centre.contact}`;
@@ -355,13 +388,28 @@
       });
     }
 
-    function resetCentreAndEquipementSelects() {
-      centreSelectEl.value = "";
+    function filterCentres() {
+      const query = normalizeText(centreSearchEl.value.trim());
+      if (!query) {
+        return centres;
+      }
+      return centres.filter(
+        (centre) => normalizeText(centre.nom).includes(query) || normalizeText(centre.ville).includes(query)
+      );
+    }
+
+    function resetDownstreamAfterCentreChange() {
+      selectedCentre = null;
       equipementSelectEl.innerHTML = '<option value="">— Choisir d\'abord un client —</option>';
       equipementSelectEl.disabled = true;
       validerBtnEl.disabled = true;
-      selectedCentre = null;
       summaryCardEl.classList.add("hidden");
+    }
+
+    function resetCentreAndEquipementSelects() {
+      centreSearchEl.value = "";
+      renderCentreOptions(centres);
+      resetDownstreamAfterCentreChange();
     }
 
     technicienSelectEl.addEventListener("change", () => {
@@ -385,15 +433,17 @@
       showScreen("technicien");
     });
 
+    centreSearchEl.addEventListener("input", () => {
+      renderCentreOptions(filterCentres());
+      resetDownstreamAfterCentreChange();
+    });
+
     centreSelectEl.addEventListener("change", () => {
       const centreId = centreSelectEl.value;
       summaryCardEl.classList.add("hidden");
 
       if (!centreId) {
-        selectedCentre = null;
-        equipementSelectEl.innerHTML = '<option value="">— Choisir d\'abord un client —</option>';
-        equipementSelectEl.disabled = true;
-        validerBtnEl.disabled = true;
+        resetDownstreamAfterCentreChange();
         return;
       }
 
@@ -443,7 +493,7 @@
           .sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
         centres = data.actifs || [];
         populateTechnicienSelect();
-        populateCentreSelect();
+        renderCentreOptions(centres);
       } catch (err) {
         showLoadError(err.message || "Une erreur inattendue est survenue au chargement des données.");
       }
