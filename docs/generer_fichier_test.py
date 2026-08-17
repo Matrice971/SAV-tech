@@ -53,9 +53,52 @@ TEST_DATA = {
             "piece_en_commande": False,
             "materiel_prete_num_serie": None,
             "commentaire_technicien": "Réparé et testé, remis en service",
-            # Moins de 90 jours avant la date du script (2026-08-12) :
-            # doit rester visible une fois le filtre implémenté.
+            # Moins de 90 jours avant la date du script : doit rester visible
+            # dans la liste (teste le cas limite "récemment remis en service").
             "date_remise_service": "2026-07-25",
+        },
+        {
+            "type": "Analyseur de gaz",
+            "num_serie": "AG-2025-0031",
+            "centre_origine": "Centre Nord",
+            "adresse": "12 rue Example, 97100 Basse-Terre",
+            "etat": 1,
+            "date_prise_charge": "2026-08-10",
+            "lieu_prise_charge": "site",
+            "piece_en_commande": False,
+            "materiel_prete_num_serie": None,
+            "commentaire_technicien": "",
+            # Teste le cas sans commentaire, sans pièce en commande, sans
+            # prêt, et l'état 1 (prise en charge) avec lieu "site".
+            "date_remise_service": None,
+        },
+        {
+            "type": "Banc de frein",
+            "num_serie": "BF-2023-0021",
+            "centre_origine": "Centre Est",
+            "adresse": "8 chemin Example, 97139 Les Abymes",
+            "etat": 3,
+            "date_prise_charge": "2026-08-01",
+            "lieu_prise_charge": "atelier",
+            "piece_en_commande": False,
+            "materiel_prete_num_serie": "PRET-0031",
+            "commentaire_technicien": "Remontage en cours après remplacement du capteur",
+            "date_remise_service": None,
+        },
+        {
+            "type": "Opacimètre",
+            "num_serie": "OP-2022-0099",
+            "centre_origine": "Centre Sud",
+            "adresse": "5 avenue Example, 97110 Pointe-à-Pitre",
+            "etat": 4,
+            "date_prise_charge": "2026-01-10",
+            "lieu_prise_charge": "atelier",
+            "piece_en_commande": False,
+            "materiel_prete_num_serie": None,
+            "commentaire_technicien": "Réparé et testé, remis en service",
+            # Plus de 90 jours avant la date du script : doit être filtré et
+            # absent de la liste (teste le filtre des 90 jours).
+            "date_remise_service": "2026-03-01",
         },
     ],
 }

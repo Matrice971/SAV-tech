@@ -47,13 +47,12 @@ chiffré envoyé vers GitHub, pour deux raisons : taille de fichier (le dépôt
 et le relais ne sont pas dimensionnés pour des binaires images) et
 confidentialité (le dépôt est public — voir section 2 du résumé du projet).
 
-**Règle d'affichage des appareils** (à documenter ici, pas encore implémentée
-dans l'appli — l'étape actuelle affiche le JSON brut sans filtre) : un
-appareil n'apparaît dans la liste que si `date_remise_service` est `null`,
-ou si elle date de moins de 90 jours. Au-delà de 90 jours après
-`date_remise_service`, l'appareil doit être filtré et ne plus apparaître.
-Ce filtre sera implémenté côté appli client dans un prompt ultérieur, en
-même temps que la vraie interface de liste.
+**Règle d'affichage des appareils** (implémentée côté appli client, voir
+section 4) : un appareil n'apparaît dans la liste que si
+`date_remise_service` est `null`, ou si elle date de moins de 90 jours.
+Au-delà de 90 jours après `date_remise_service`, l'appareil est filtré et
+n'apparaît plus dans la liste (mais reste bien présent dans le fichier
+chiffré — c'est un filtre d'affichage, pas de suppression de données).
 
 ---
 
@@ -110,10 +109,12 @@ sans jamais avoir à le stocker ni le comparer explicitement.
 3. Décoder chaque partie de Base64 vers `Uint8Array`.
 4. Dériver la clé (section 3) à partir du mot de passe saisi + salt.
 5. Appeler `crypto.subtle.decrypt({ name: "AES-GCM", iv }, clé, ciphertext)`.
-6. En cas de succès : parser le résultat comme JSON (structure en section 1).
-   **Étape actuelle** : affichage du JSON brut formaté, sans liste ni filtre.
-   La vraie interface de liste et le filtre des 90 jours (section 1) seront
-   implémentés dans un prompt ultérieur.
+6. En cas de succès : parser le résultat comme JSON (structure en section 1),
+   appliquer le filtre des 90 jours (section 1), puis afficher l'écran liste
+   (un appareil par ligne, cliquable) et l'écran détail (statut, dates,
+   commentaire technicien, etc. en texte clair, format de date français).
+   Navigation entre les deux écrans gérée en JavaScript, sans rechargement
+   de page.
 7. En cas d'échec (exception levée par `decrypt`) : afficher un message
    « mot de passe incorrect », sans autre détail (ne pas distinguer
    « fichier corrompu » de « mauvais mot de passe » pour ne pas donner

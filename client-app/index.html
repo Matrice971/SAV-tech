@@ -123,20 +123,16 @@
     cursor: not-allowed;
   }
 
-  .content-label {
-    margin: 0 0 0.5rem;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-text-muted);
+  .button-secondary {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+    font-weight: 600;
   }
 
-  .content-value {
-    margin: 0;
-    font-size: 0.9rem;
-    word-break: break-word;
-    white-space: pre-wrap;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  .button-secondary:hover {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
   }
 
   .error {
@@ -157,6 +153,83 @@
     display: none;
   }
 
+  .screen-title {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1.15rem;
+  }
+
+  .device-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .device-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 0.75rem;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+
+  .device-item:hover,
+  .device-item:focus {
+    border-color: var(--color-primary);
+    outline: none;
+  }
+
+  .device-item-title {
+    font-weight: 600;
+  }
+
+  .device-item-center {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .empty-message {
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .detail-label {
+    margin: 0.9rem 0 0.15rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .detail-label:first-child {
+    margin-top: 0;
+  }
+
+  .detail-value {
+    margin: 0;
+    font-size: 0.95rem;
+    word-break: break-word;
+  }
+
+  .detail-note {
+    margin: 0.9rem 0 0;
+    padding: 0.6rem 0.75rem;
+    background: var(--color-bg);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+  }
+
+  .back-link {
+    margin-top: 1rem;
+  }
+
   footer {
     text-align: center;
     color: var(--color-text-muted);
@@ -171,50 +244,87 @@
   </header>
 
   <main>
-    <div class="card">
-      <form id="password-form">
-        <div>
-          <label for="password">Mot de passe</label>
-          <input type="password" id="password" name="password" autocomplete="current-password" required>
-        </div>
-        <button type="submit" id="submit-btn">Valider</button>
-      </form>
+    <div id="screen-password">
+      <div class="card">
+        <form id="password-form">
+          <div>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+          </div>
+          <button type="submit" id="submit-btn">Valider</button>
+        </form>
+      </div>
+
+      <div id="status" class="status hidden">
+        <span class="spinner"></span>
+        <span>Vérification…</span>
+      </div>
+
+      <div id="error" class="error hidden">
+        <strong>Erreur</strong>
+        <span id="error-message"></span>
+      </div>
     </div>
 
-    <div id="status" class="status hidden">
-      <span class="spinner"></span>
-      <span>Vérification…</span>
+    <div id="screen-list" class="hidden">
+      <h2 id="list-title" class="screen-title"></h2>
+      <ul id="device-list" class="device-list"></ul>
+      <p id="empty-message" class="empty-message hidden">Aucun matériel actuellement en réparation.</p>
     </div>
 
-    <div id="result" class="card hidden">
-      <p class="content-label">Données déchiffrées</p>
-      <p id="content-value" class="content-value"></p>
-    </div>
-
-    <div id="error" class="error hidden">
-      <strong>Erreur</strong>
-      <span id="error-message"></span>
+    <div id="screen-detail" class="hidden">
+      <button type="button" id="back-btn" class="button-secondary back-link">← Retour à la liste</button>
+      <div class="card">
+        <h2 id="detail-title" class="screen-title"></h2>
+        <div id="detail-body"></div>
+      </div>
     </div>
   </main>
 
-  <footer>Étape B — déchiffrement AES-GCM + PBKDF2</footer>
+  <footer>Étape C — liste et détail des appareils</footer>
 
   <script>
     const FILE_URL = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients/test.txt";
     const PBKDF2_ITERATIONS = 100000;
+    const REMISE_SERVICE_VISIBILITY_DAYS = 90;
+
+    const ETAT_LABELS = {
+      1: "Prise en charge",
+      2: "En attente de pièce",
+      3: "Réparation en cours",
+      4: "Matériel livré et testé",
+    };
+
+    const LIEU_LABELS = {
+      atelier: "Atelier",
+      site: "Site",
+    };
+
+    const screenPasswordEl = document.getElementById("screen-password");
+    const screenListEl = document.getElementById("screen-list");
+    const screenDetailEl = document.getElementById("screen-detail");
 
     const formEl = document.getElementById("password-form");
     const passwordEl = document.getElementById("password");
     const submitBtnEl = document.getElementById("submit-btn");
     const statusEl = document.getElementById("status");
-    const resultEl = document.getElementById("result");
-    const contentValueEl = document.getElementById("content-value");
     const errorEl = document.getElementById("error");
     const errorMessageEl = document.getElementById("error-message");
 
-    function resetViews() {
-      resultEl.classList.add("hidden");
-      errorEl.classList.add("hidden");
+    const listTitleEl = document.getElementById("list-title");
+    const deviceListEl = document.getElementById("device-list");
+    const emptyMessageEl = document.getElementById("empty-message");
+
+    const detailTitleEl = document.getElementById("detail-title");
+    const detailBodyEl = document.getElementById("detail-body");
+    const backBtnEl = document.getElementById("back-btn");
+
+    let visibleAppareils = [];
+
+    function showScreen(screen) {
+      screenPasswordEl.classList.toggle("hidden", screen !== "password");
+      screenListEl.classList.toggle("hidden", screen !== "list");
+      screenDetailEl.classList.toggle("hidden", screen !== "detail");
     }
 
     function showStatus(message) {
@@ -226,14 +336,13 @@
       statusEl.classList.add("hidden");
     }
 
-    function showResult(jsonText) {
-      contentValueEl.textContent = jsonText;
-      resultEl.classList.remove("hidden");
+    function showError(message) {
+      errorEl.classList.remove("hidden");
+      errorMessageEl.textContent = message;
     }
 
-    function showError(message) {
-      errorMessageEl.textContent = message;
-      errorEl.classList.remove("hidden");
+    function hideError() {
+      errorEl.classList.add("hidden");
     }
 
     function base64ToBytes(base64) {
@@ -283,9 +392,121 @@
       return new TextDecoder().decode(decrypted);
     }
 
+    // Parse une date "AAAA-MM-JJ" en objet Date local (évite le décalage de
+    // fuseau horaire qu'introduirait new Date("AAAA-MM-JJ"), interprété en UTC).
+    function parseIsoDate(isoDate) {
+      const [year, month, day] = isoDate.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function formatDateFr(isoDate) {
+      return new Intl.DateTimeFormat("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(parseIsoDate(isoDate));
+    }
+
+    function daysSince(isoDate) {
+      const today = new Date();
+      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const target = parseIsoDate(isoDate);
+      const msPerDay = 24 * 60 * 60 * 1000;
+      return Math.round((todayMidnight - target) / msPerDay);
+    }
+
+    function isAppareilVisible(appareil) {
+      if (!appareil.date_remise_service) {
+        return true;
+      }
+      return daysSince(appareil.date_remise_service) < REMISE_SERVICE_VISIBILITY_DAYS;
+    }
+
+    function escapeHtml(value) {
+      const div = document.createElement("div");
+      div.textContent = value == null ? "" : String(value);
+      return div.innerHTML;
+    }
+
+    function renderList(data) {
+      listTitleEl.textContent = `Bonjour ${data.contact}`;
+      visibleAppareils = (data.appareils || []).filter(isAppareilVisible);
+
+      deviceListEl.innerHTML = "";
+      const isEmpty = visibleAppareils.length === 0;
+      emptyMessageEl.classList.toggle("hidden", !isEmpty);
+      deviceListEl.classList.toggle("hidden", isEmpty);
+
+      visibleAppareils.forEach((appareil, index) => {
+        const li = document.createElement("li");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "device-item";
+        button.innerHTML = `
+          <div class="device-item-title">${escapeHtml(appareil.type)} — ${escapeHtml(appareil.num_serie)}</div>
+          <div class="device-item-center">${escapeHtml(appareil.centre_origine)}</div>
+        `;
+        button.addEventListener("click", () => {
+          renderDetail(appareil);
+          showScreen("detail");
+        });
+        li.appendChild(button);
+        deviceListEl.appendChild(li);
+      });
+    }
+
+    function renderDetail(appareil) {
+      detailTitleEl.textContent = `${appareil.type} — ${appareil.num_serie}`;
+
+      const etatLabel = ETAT_LABELS[appareil.etat] || "Statut inconnu";
+      const lieuLabel = LIEU_LABELS[appareil.lieu_prise_charge] || appareil.lieu_prise_charge;
+
+      let html = `
+        <p class="detail-label">Centre d'origine</p>
+        <p class="detail-value">${escapeHtml(appareil.centre_origine)}</p>
+
+        <p class="detail-label">Adresse</p>
+        <p class="detail-value">${escapeHtml(appareil.adresse)}</p>
+
+        <p class="detail-label">Statut actuel</p>
+        <p class="detail-value">${escapeHtml(etatLabel)}</p>
+
+        <p class="detail-label">Prise en charge</p>
+        <p class="detail-value">${escapeHtml(formatDateFr(appareil.date_prise_charge))} — ${escapeHtml(lieuLabel)}</p>
+      `;
+
+      if (appareil.piece_en_commande) {
+        html += `<p class="detail-note">Pièce en commande</p>`;
+      }
+
+      if (appareil.materiel_prete_num_serie) {
+        html += `<p class="detail-note">Matériel de prêt : ${escapeHtml(appareil.materiel_prete_num_serie)}</p>`;
+      }
+
+      if (appareil.commentaire_technicien) {
+        html += `
+          <p class="detail-label">Commentaire technicien</p>
+          <p class="detail-value">${escapeHtml(appareil.commentaire_technicien)}</p>
+        `;
+      }
+
+      if (appareil.date_remise_service) {
+        html += `
+          <p class="detail-label">Remise en service</p>
+          <p class="detail-value">Remis en service le ${escapeHtml(formatDateFr(appareil.date_remise_service))}</p>
+        `;
+      }
+
+      detailBodyEl.innerHTML = html;
+    }
+
+    backBtnEl.addEventListener("click", () => {
+      showScreen("list");
+    });
+
     formEl.addEventListener("submit", async (event) => {
       event.preventDefault();
-      resetViews();
+      hideError();
       submitBtnEl.disabled = true;
       showStatus("Récupération du fichier…");
 
@@ -314,15 +535,16 @@
           throw { userMessage: "Mot de passe incorrect ou fichier corrompu." };
         }
 
-        let displayText = decryptedText;
+        let data;
         try {
-          displayText = JSON.stringify(JSON.parse(decryptedText), null, 2);
+          data = JSON.parse(decryptedText);
         } catch {
-          // Le contenu déchiffré n'est pas du JSON valide : on l'affiche tel quel.
+          throw { userMessage: "Les données déchiffrées sont invalides." };
         }
 
         hideStatus();
-        showResult(displayText);
+        renderList(data);
+        showScreen("list");
       } catch (err) {
         hideStatus();
         showError(err && err.userMessage ? err.userMessage : "Une erreur inattendue est survenue.");
