@@ -75,7 +75,8 @@
   }
 
   select,
-  input[type="text"] {
+  input[type="text"],
+  textarea {
     font-size: 1rem;
     padding: 0.65rem 0.75rem;
     border: 1px solid var(--color-border);
@@ -83,10 +84,17 @@
     width: 100%;
     background: var(--color-surface);
     color: var(--color-text);
+    font-family: inherit;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 4.5rem;
   }
 
   select:focus,
-  input[type="text"]:focus {
+  input[type="text"]:focus,
+  textarea:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
   }
@@ -94,6 +102,141 @@
   select:disabled {
     background: var(--color-bg);
     color: var(--color-text-muted);
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .radio-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.65rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+
+  .radio-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .radio-option.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .photo-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .photo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 84px;
+  }
+
+  .photo-thumb {
+    position: relative;
+    width: 84px;
+    height: 84px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+
+  .photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    line-height: 1;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .photo-caption {
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .recap-row {
+    margin: 0 0 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .recap-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .history-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .history-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .history-item:first-child {
+    margin-top: 0;
+  }
+
+  .history-item-date {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .history-item-title {
+    font-weight: 600;
+    margin-top: 0.15rem;
+  }
+
+  .history-item-sub {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.15rem;
+  }
+
+  .empty-message {
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 2rem 1rem;
   }
 
   button {
@@ -277,10 +420,76 @@
           <button type="button" id="valider-btn" disabled>Valider la sélection</button>
         </div>
       </div>
+    </div>
 
-      <div id="summary-card" class="card hidden">
-        <p class="content-label">Résumé</p>
-        <p id="summary-text" class="content-value"></p>
+    <div id="screen-form" class="hidden">
+      <button type="button" id="form-back-btn" class="button-secondary back-link">← Retour à la sélection</button>
+
+      <div class="card">
+        <p class="content-label">Intervention</p>
+        <p class="recap-row"><strong>Technicien :</strong> <span id="recap-technicien"></span></p>
+        <p class="recap-row"><strong>Client :</strong> <span id="recap-centre"></span></p>
+        <p class="recap-row"><strong>Matériel :</strong> <span id="recap-materiel"></span></p>
+      </div>
+
+      <div id="form-error" class="error hidden">
+        <strong>Erreur</strong>
+        <span id="form-error-message"></span>
+      </div>
+
+      <div class="card">
+        <form id="prise-en-charge-form">
+          <div>
+            <label>Lieu de prise en charge</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="lieu" value="site" required>
+                Sur site
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="lieu" value="atelier" required>
+                Atelier
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label for="description-panne">Description de la panne</label>
+            <textarea id="description-panne" required></textarea>
+          </div>
+
+          <div>
+            <label for="pieces-montees">Pièces déjà montées</label>
+            <textarea id="pieces-montees"></textarea>
+          </div>
+
+          <div>
+            <label for="pieces-a-prevoir">Pièces à prévoir</label>
+            <textarea id="pieces-a-prevoir"></textarea>
+          </div>
+
+          <div>
+            <label>Photos</label>
+            <div>
+              <button type="button" id="add-photo-btn" class="button-secondary">Ajouter une photo</button>
+              <input type="file" id="photo-input" accept="image/*" capture="environment" multiple class="hidden">
+            </div>
+            <div id="photo-list" class="photo-list"></div>
+          </div>
+
+          <button type="submit" id="save-intervention-btn">Enregistrer la prise en charge</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="screen-confirmation" class="hidden">
+      <div class="card">
+        <h2 class="screen-title">Prise en charge enregistrée</h2>
+        <p>L'intervention a bien été enregistrée sur cet appareil.</p>
+        <div class="field-group">
+          <button type="button" id="confirmation-new-btn">Nouvelle intervention</button>
+          <button type="button" id="confirmation-historique-btn" class="button-secondary">Voir l'historique</button>
+        </div>
       </div>
     </div>
 
@@ -288,14 +497,15 @@
       <button type="button" id="historique-back-btn" class="button-secondary back-link">← Retour</button>
       <div class="card">
         <h2 class="screen-title">Historique des interventions</h2>
-        <p>Historique à venir</p>
+        <ul id="history-list" class="history-list"></ul>
+        <p id="history-empty" class="empty-message hidden">Aucune intervention enregistrée pour le moment.</p>
       </div>
     </div>
 
     <input type="file" id="import-file-input" accept=".json" class="hidden">
   </main>
 
-  <footer>Étape 5a — structure de base (technicien + sélecteurs, import manuel de la base)</footer>
+  <footer>Étape 5b — formulaire de prise en charge + enregistrement local</footer>
 
   <script>
     // La base TECHNIZEN est importée manuellement par le technicien (fichier
@@ -306,6 +516,8 @@
     const screenImportEl = document.getElementById("screen-import");
     const screenTechnicienEl = document.getElementById("screen-technicien");
     const screenSelectionEl = document.getElementById("screen-selection");
+    const screenFormEl = document.getElementById("screen-form");
+    const screenConfirmationEl = document.getElementById("screen-confirmation");
     const screenHistoriqueEl = document.getElementById("screen-historique");
 
     const importBtnEl = document.getElementById("import-btn");
@@ -326,19 +538,69 @@
     const centreSelectEl = document.getElementById("centre-select");
     const equipementSelectEl = document.getElementById("equipement-select");
     const validerBtnEl = document.getElementById("valider-btn");
-    const summaryCardEl = document.getElementById("summary-card");
-    const summaryTextEl = document.getElementById("summary-text");
+
+    const formBackBtnEl = document.getElementById("form-back-btn");
+    const recapTechnicienEl = document.getElementById("recap-technicien");
+    const recapCentreEl = document.getElementById("recap-centre");
+    const recapMaterielEl = document.getElementById("recap-materiel");
+    const formErrorEl = document.getElementById("form-error");
+    const formErrorMessageEl = document.getElementById("form-error-message");
+    const priseEnChargeFormEl = document.getElementById("prise-en-charge-form");
+    const descriptionPanneEl = document.getElementById("description-panne");
+    const piecesMonteesEl = document.getElementById("pieces-montees");
+    const piecesAPrevoirEl = document.getElementById("pieces-a-prevoir");
+    const addPhotoBtnEl = document.getElementById("add-photo-btn");
+    const photoInputEl = document.getElementById("photo-input");
+    const photoListEl = document.getElementById("photo-list");
+
+    const confirmationNewBtnEl = document.getElementById("confirmation-new-btn");
+    const confirmationHistoriqueBtnEl = document.getElementById("confirmation-historique-btn");
+
+    const historyListEl = document.getElementById("history-list");
+    const historyEmptyEl = document.getElementById("history-empty");
+
+    const INTERVENTIONS_STORAGE_KEY = "interventions_locales";
+    const PHOTO_MAX_WIDTH = 1280;
+    const PHOTO_JPEG_QUALITY = 0.7;
 
     let centres = [];
     let techniciensList = [];
     let selectedTechnicien = null;
     let selectedCentre = null;
+    let selectedEquipement = null;
+    let currentPhotos = [];
+    let photoIdCounter = 0;
 
     function showScreen(screen) {
       screenImportEl.classList.toggle("hidden", screen !== "import");
       screenTechnicienEl.classList.toggle("hidden", screen !== "technicien");
       screenSelectionEl.classList.toggle("hidden", screen !== "selection");
+      screenFormEl.classList.toggle("hidden", screen !== "form");
+      screenConfirmationEl.classList.toggle("hidden", screen !== "confirmation");
       screenHistoriqueEl.classList.toggle("hidden", screen !== "historique");
+    }
+
+    function escapeHtml(value) {
+      const div = document.createElement("div");
+      div.textContent = value == null ? "" : String(value);
+      return div.innerHTML;
+    }
+
+    function formatDateFr(isoDate) {
+      const [year, month, day] = isoDate.split("-").map(Number);
+      return new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(
+        new Date(year, month - 1, day)
+      );
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) {
+        return "0 Ko";
+      }
+      if (bytes < 1024 * 1024) {
+        return `${Math.round(bytes / 1024)} Ko`;
+      }
+      return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
     }
 
     function showImportError(message) {
@@ -446,10 +708,10 @@
 
     function resetDownstreamAfterCentreChange() {
       selectedCentre = null;
+      selectedEquipement = null;
       equipementSelectEl.innerHTML = '<option value="">— Choisir d\'abord un client —</option>';
       equipementSelectEl.disabled = true;
       validerBtnEl.disabled = true;
-      summaryCardEl.classList.add("hidden");
     }
 
     function resetCentreAndEquipementSelects() {
@@ -486,7 +748,6 @@
 
     centreSelectEl.addEventListener("change", () => {
       const centreId = centreSelectEl.value;
-      summaryCardEl.classList.add("hidden");
 
       if (!centreId) {
         resetDownstreamAfterCentreChange();
@@ -494,6 +755,7 @@
       }
 
       selectedCentre = centres.find((c) => String(c.id) === centreId);
+      selectedEquipement = null;
       equipementSelectEl.innerHTML = '<option value="">— Choisir un matériel —</option>';
       (selectedCentre.equipements || []).forEach((equipement, index) => {
         const option = document.createElement("option");
@@ -508,22 +770,243 @@
 
     equipementSelectEl.addEventListener("change", () => {
       validerBtnEl.disabled = !equipementSelectEl.value;
-      summaryCardEl.classList.add("hidden");
     });
 
     validerBtnEl.addEventListener("click", () => {
       if (!selectedTechnicien || !selectedCentre || !equipementSelectEl.value) {
         return;
       }
-      const equipement = selectedCentre.equipements[Number(equipementSelectEl.value)];
-      summaryTextEl.textContent =
-        `Technicien : ${selectedTechnicien.nom} — ` +
-        `Client : ${selectedCentre.nom} — ` +
-        `Matériel : ${equipement.type} ${equipement.serie}`;
-      summaryCardEl.classList.remove("hidden");
+      selectedEquipement = selectedCentre.equipements[Number(equipementSelectEl.value)];
+      openForm();
+    });
+
+    function openForm() {
+      recapTechnicienEl.textContent = selectedTechnicien.nom;
+      recapCentreEl.textContent = `${selectedCentre.nom} (${selectedCentre.contact})`;
+      recapMaterielEl.textContent = selectedEquipement.modele
+        ? `${selectedEquipement.type} ${selectedEquipement.modele} — n° ${selectedEquipement.serie}`
+        : `${selectedEquipement.type} — n° ${selectedEquipement.serie}`;
+
+      priseEnChargeFormEl.reset();
+      priseEnChargeFormEl.querySelectorAll(".radio-option").forEach((label) => label.classList.remove("selected"));
+      currentPhotos = [];
+      renderPhotoList();
+      hideFormError();
+      showScreen("form");
+    }
+
+    formBackBtnEl.addEventListener("click", () => {
+      showScreen("selection");
+    });
+
+    priseEnChargeFormEl.addEventListener("change", (event) => {
+      if (event.target.name !== "lieu") {
+        return;
+      }
+      priseEnChargeFormEl.querySelectorAll(".radio-option").forEach((label) => {
+        label.classList.toggle("selected", label.querySelector("input").checked);
+      });
+    });
+
+    function showFormError(message) {
+      formErrorMessageEl.textContent = message;
+      formErrorEl.classList.remove("hidden");
+    }
+
+    function hideFormError() {
+      formErrorEl.classList.add("hidden");
+    }
+
+    function compressImage(file, maxWidth, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error("lecture du fichier impossible"));
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = () => reject(new Error("image illisible"));
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > maxWidth) {
+              height = Math.round(height * (maxWidth / width));
+              width = maxWidth;
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            const base64Length = dataUrl.length - dataUrl.indexOf(",") - 1;
+            const compressedSize = Math.round((base64Length * 3) / 4);
+            resolve({ dataUrl, compressedSize });
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderPhotoList() {
+      photoListEl.innerHTML = "";
+      currentPhotos.forEach((photo) => {
+        const item = document.createElement("div");
+        item.className = "photo-item";
+
+        const thumb = document.createElement("div");
+        thumb.className = "photo-thumb";
+
+        const img = document.createElement("img");
+        img.src = photo.dataUrl;
+        img.alt = "Photo de l'intervention";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "photo-remove";
+        removeBtn.textContent = "×";
+        removeBtn.setAttribute("aria-label", "Supprimer la photo");
+        removeBtn.addEventListener("click", () => {
+          currentPhotos = currentPhotos.filter((p) => p.id !== photo.id);
+          renderPhotoList();
+        });
+
+        const caption = document.createElement("span");
+        caption.className = "photo-caption";
+        caption.textContent = `${formatBytes(photo.originalSize)} → ${formatBytes(photo.compressedSize)}`;
+
+        thumb.appendChild(img);
+        thumb.appendChild(removeBtn);
+        item.appendChild(thumb);
+        item.appendChild(caption);
+        photoListEl.appendChild(item);
+      });
+    }
+
+    addPhotoBtnEl.addEventListener("click", () => {
+      photoInputEl.click();
+    });
+
+    photoInputEl.addEventListener("change", async (event) => {
+      const files = Array.from(event.target.files || []);
+      event.target.value = "";
+      hideFormError();
+
+      for (const file of files) {
+        try {
+          const { dataUrl, compressedSize } = await compressImage(file, PHOTO_MAX_WIDTH, PHOTO_JPEG_QUALITY);
+          currentPhotos.push({
+            id: `photo-${Date.now()}-${photoIdCounter++}`,
+            dataUrl,
+            originalSize: file.size,
+            compressedSize,
+          });
+        } catch {
+          showFormError(`Impossible de traiter la photo "${file.name}".`);
+        }
+      }
+      renderPhotoList();
+    });
+
+    function loadInterventions() {
+      try {
+        return JSON.parse(localStorage.getItem(INTERVENTIONS_STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveInterventions(list) {
+      try {
+        localStorage.setItem(INTERVENTIONS_STORAGE_KEY, JSON.stringify(list));
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    priseEnChargeFormEl.addEventListener("submit", (event) => {
+      event.preventDefault();
+      hideFormError();
+
+      const lieu = priseEnChargeFormEl.querySelector('input[name="lieu"]:checked')?.value;
+      if (!lieu || !descriptionPanneEl.value.trim()) {
+        return;
+      }
+      if (!selectedTechnicien || !selectedCentre || !selectedEquipement) {
+        showFormError("Sélection incomplète : revenez en arrière et recommencez.");
+        return;
+      }
+
+      const now = new Date();
+      const intervention = {
+        technicien: { id: selectedTechnicien.id, nom: selectedTechnicien.nom },
+        centre: { id: selectedCentre.id, nom: selectedCentre.nom, contact: selectedCentre.contact },
+        materiel: {
+          type: selectedEquipement.type,
+          modele: selectedEquipement.modele || null,
+          serie: selectedEquipement.serie,
+        },
+        lieu_prise_charge: lieu,
+        description_panne: descriptionPanneEl.value.trim(),
+        pieces_montees: piecesMonteesEl.value.trim(),
+        pieces_a_prevoir: piecesAPrevoirEl.value.trim(),
+        photos: currentPhotos.map((p) => p.dataUrl),
+        date_prise_charge: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
+        etat: 1,
+        enregistre_le: now.toISOString(),
+      };
+
+      const interventions = loadInterventions();
+      interventions.push(intervention);
+      const ok = saveInterventions(interventions);
+
+      if (!ok) {
+        showFormError(
+          "Impossible d'enregistrer : le stockage local est plein ou indisponible. " +
+          "Essayez de supprimer une photo (les photos occupent le plus de place) puis réessayez."
+        );
+        return;
+      }
+
+      showScreen("confirmation");
+    });
+
+    function renderHistorique() {
+      const interventions = loadInterventions()
+        .slice()
+        .sort((a, b) => (b.enregistre_le || "").localeCompare(a.enregistre_le || ""));
+
+      historyListEl.innerHTML = "";
+      const isEmpty = interventions.length === 0;
+      historyEmptyEl.classList.toggle("hidden", !isEmpty);
+      historyListEl.classList.toggle("hidden", isEmpty);
+
+      interventions.forEach((intervention) => {
+        const li = document.createElement("li");
+        li.className = "history-item";
+        const materielLabel = [intervention.materiel?.type, intervention.materiel?.serie]
+          .filter(Boolean)
+          .join(" — ");
+        li.innerHTML = `
+          <div class="history-item-date">${escapeHtml(formatDateFr(intervention.date_prise_charge))}</div>
+          <div class="history-item-title">${escapeHtml(intervention.centre?.nom || "")} — ${escapeHtml(materielLabel)}</div>
+          <div class="history-item-sub">Technicien : ${escapeHtml(intervention.technicien?.nom || "")}</div>
+        `;
+        historyListEl.appendChild(li);
+      });
+    }
+
+    confirmationNewBtnEl.addEventListener("click", () => {
+      resetCentreAndEquipementSelects();
+      showScreen("selection");
+    });
+
+    confirmationHistoriqueBtnEl.addEventListener("click", () => {
+      renderHistorique();
+      showScreen("historique");
     });
 
     historiqueBtnEl.addEventListener("click", () => {
+      renderHistorique();
       showScreen("historique");
     });
 
