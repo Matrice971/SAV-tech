@@ -230,6 +230,26 @@
     margin-top: 1rem;
   }
 
+  .list-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .button-small {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .close-message {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
   footer {
     text-align: center;
     color: var(--color-text-muted);
@@ -267,6 +287,11 @@
     </div>
 
     <div id="screen-list" class="hidden">
+      <div class="list-actions">
+        <button type="button" id="logout-btn" class="button-secondary button-small">Déconnexion</button>
+        <button type="button" id="close-btn" class="button-secondary button-small">Fermer</button>
+        <p id="close-message" class="close-message hidden">Vous pouvez fermer cet onglet ou cette fenêtre manuellement.</p>
+      </div>
       <h2 id="list-title" class="screen-title"></h2>
       <ul id="device-list" class="device-list"></ul>
       <p id="empty-message" class="empty-message hidden">Aucun matériel actuellement en réparation.</p>
@@ -314,6 +339,9 @@
     const listTitleEl = document.getElementById("list-title");
     const deviceListEl = document.getElementById("device-list");
     const emptyMessageEl = document.getElementById("empty-message");
+    const logoutBtnEl = document.getElementById("logout-btn");
+    const closeBtnEl = document.getElementById("close-btn");
+    const closeMessageEl = document.getElementById("close-message");
 
     const detailTitleEl = document.getElementById("detail-title");
     const detailBodyEl = document.getElementById("detail-body");
@@ -502,6 +530,29 @@
 
     backBtnEl.addEventListener("click", () => {
       showScreen("list");
+    });
+
+    function resetToPasswordScreen() {
+      visibleAppareils = [];
+      listTitleEl.textContent = "";
+      deviceListEl.innerHTML = "";
+      detailBodyEl.innerHTML = "";
+      passwordEl.value = "";
+      hideError();
+      hideStatus();
+      closeBtnEl.classList.remove("hidden");
+      closeMessageEl.classList.add("hidden");
+      showScreen("password");
+    }
+
+    logoutBtnEl.addEventListener("click", resetToPasswordScreen);
+
+    closeBtnEl.addEventListener("click", () => {
+      window.close();
+      setTimeout(() => {
+        closeBtnEl.classList.add("hidden");
+        closeMessageEl.classList.remove("hidden");
+      }, 300);
     });
 
     formEl.addEventListener("submit", async (event) => {
