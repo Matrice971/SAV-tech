@@ -250,6 +250,39 @@
     color: var(--color-text-muted);
   }
 
+  .drive-header {
+    margin-top: 0.75rem;
+  }
+
+  .link-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .link-button:hover {
+    border-color: var(--color-primary);
+    background: var(--color-bg);
+  }
+
+  .detail-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
   footer {
     text-align: center;
     color: var(--color-text-muted);
@@ -291,6 +324,9 @@
         <button type="button" id="logout-btn" class="button-secondary button-small">Déconnexion</button>
         <button type="button" id="close-btn" class="button-secondary button-small">Fermer</button>
         <p id="close-message" class="close-message hidden">Vous pouvez fermer cet onglet ou cette fenêtre manuellement.</p>
+      </div>
+      <div id="drive-header" class="drive-header hidden">
+        <a id="drive-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button">Accéder à mon Drive</a>
       </div>
       <h2 id="list-title" class="screen-title"></h2>
       <ul id="device-list" class="device-list"></ul>
@@ -342,12 +378,15 @@
     const logoutBtnEl = document.getElementById("logout-btn");
     const closeBtnEl = document.getElementById("close-btn");
     const closeMessageEl = document.getElementById("close-message");
+    const driveHeaderEl = document.getElementById("drive-header");
+    const driveLinkEl = document.getElementById("drive-link");
 
     const detailTitleEl = document.getElementById("detail-title");
     const detailBodyEl = document.getElementById("detail-body");
     const backBtnEl = document.getElementById("back-btn");
 
     let visibleAppareils = [];
+    let emailContact = null;
 
     function showScreen(screen) {
       screenPasswordEl.classList.toggle("hidden", screen !== "password");
@@ -457,6 +496,16 @@
     }
 
     function renderList(data) {
+      emailContact = data.email_contact || null;
+
+      const driveLink = (data.appareils || []).find((a) => a.lien_drive)?.lien_drive;
+      if (driveLink) {
+        driveLinkEl.href = driveLink;
+        driveHeaderEl.classList.remove("hidden");
+      } else {
+        driveHeaderEl.classList.add("hidden");
+      }
+
       listTitleEl.textContent = `Bonjour ${data.contact}`;
       visibleAppareils = (data.appareils || []).filter(isAppareilVisible);
 
@@ -525,6 +574,27 @@
         `;
       }
 
+      const links = [];
+
+      if (appareil.lien_drive) {
+        links.push(
+          `<a href="${escapeHtml(appareil.lien_drive)}" target="_blank" rel="noopener noreferrer" class="link-button">Accéder à mon Drive</a>`
+        );
+      }
+
+      if (emailContact) {
+        const subject = `Question - ${appareil.centre_origine} - ${appareil.type} - ${appareil.num_serie}`;
+        const body =
+          `Bonjour, j'ai une question concernant la réparation de mon matériel ${appareil.type} ` +
+          `(n° série ${appareil.num_serie}) situé à ${appareil.centre_origine} :`;
+        const mailtoUrl = `mailto:${emailContact}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        links.push(`<a href="${escapeHtml(mailtoUrl)}" class="link-button">Un commentaire ou une question sur cette réparation ?</a>`);
+      }
+
+      if (links.length > 0) {
+        html += `<div class="detail-links">${links.join("")}</div>`;
+      }
+
       detailBodyEl.innerHTML = html;
     }
 
@@ -534,9 +604,11 @@
 
     function resetToPasswordScreen() {
       visibleAppareils = [];
+      emailContact = null;
       listTitleEl.textContent = "";
       deviceListEl.innerHTML = "";
       detailBodyEl.innerHTML = "";
+      driveHeaderEl.classList.add("hidden");
       passwordEl.value = "";
       hideError();
       hideStatus();

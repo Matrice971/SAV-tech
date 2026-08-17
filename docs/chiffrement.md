@@ -22,6 +22,7 @@ C'est ce JSON qui est chiffré pour produire le fichier `.txt` (section 2).
 ```json
 {
   "contact": "Nom du contact/responsable de centre (identifiant fiable du regroupement client)",
+  "email_contact": "Adresse email de destination pour les demandes clients (mailto), définie par le programme de gestion",
   "appareils": [
     {
       "type": "Banc de frein",
@@ -34,11 +35,24 @@ C'est ce JSON qui est chiffré pour produire le fichier `.txt` (section 2).
       "piece_en_commande": true,
       "materiel_prete_num_serie": "PRET-0012",
       "commentaire_technicien": "Diagnostic en cours, pièce commandée",
-      "date_remise_service": null
+      "date_remise_service": null,
+      "lien_drive": "URL du dossier Drive racine du centre (optionnel, repris tel quel depuis TECHNIZEN)"
     }
   ]
 }
 ```
+
+**Champ `email_contact`** (racine, optionnel) : adresse email utilisée par
+l'appli client pour construire le lien `mailto:` de l'écran de détail (voir
+section 4). Si absent, l'appli client n'affiche simplement pas ce lien —
+elle ne code jamais d'adresse en dur.
+
+**Champ `lien_drive`** (par appareil, optionnel) : URL du dossier Drive du
+centre d'origine de l'appareil. Pour un même contact réparti sur plusieurs
+centres, chaque centre a en théorie son propre lien, mais tous pointent vers
+la même arborescence Drive racine côté client — l'appli client se contente
+donc, sur l'écran liste, d'afficher le premier `lien_drive` non vide trouvé
+parmi les appareils du contact (voir section 4).
 
 **Pas de champ `photos`** : les photos restent exclusivement des données
 locales, gérées côté technicien/gestion (stockage local, IndexedDB pour le
@@ -115,6 +129,13 @@ sans jamais avoir à le stocker ni le comparer explicitement.
    commentaire technicien, etc. en texte clair, format de date français).
    Navigation entre les deux écrans gérée en JavaScript, sans rechargement
    de page.
+   - Écran liste : en-tête avec un lien « Accéder à mon Drive » vers le
+     premier `lien_drive` non vide trouvé parmi `appareils` (absent si
+     aucun appareil n'en a un).
+   - Écran détail : lien Drive de l'appareil affiché (son propre
+     `lien_drive`, absent si non défini) et lien `mailto:` vers
+     `email_contact` avec objet et corps pré-remplis (absent si
+     `email_contact` n'est pas défini dans le JSON).
 7. En cas d'échec (exception levée par `decrypt`) : afficher un message
    « mot de passe incorrect », sans autre détail (ne pas distinguer
    « fichier corrompu » de « mauvais mot de passe » pour ne pas donner

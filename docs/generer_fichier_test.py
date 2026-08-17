@@ -26,8 +26,11 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 PASSWORD = "motdepasse-test"
 
+DRIVE_LINK = "https://drive.google.com/drive/folders/1AbCDefGhiJKLmnOPQRstuVWXyz0000"
+
 TEST_DATA = {
     "contact": "Jean Dupont",
+    "email_contact": "sav@centre-controle-exemple.fr",
     "appareils": [
         {
             "type": "Banc de frein",
@@ -41,6 +44,10 @@ TEST_DATA = {
             "materiel_prete_num_serie": "PRET-0012",
             "commentaire_technicien": "Diagnostic en cours, pièce commandée",
             "date_remise_service": None,
+            # Volontairement sans lien_drive : teste l'écran détail sans le
+            # lien Drive (il ne doit pas afficher un lien pour cet appareil,
+            # même si d'autres appareils du même contact en ont un).
+            "lien_drive": None,
         },
         {
             "type": "Opacimètre",
@@ -56,6 +63,9 @@ TEST_DATA = {
             # Moins de 90 jours avant la date du script : doit rester visible
             # dans la liste (teste le cas limite "récemment remis en service").
             "date_remise_service": "2026-07-25",
+            # 1er appareil de la liste à avoir un lien_drive : c'est celui-ci
+            # qui doit apparaître dans l'en-tête de l'écran liste.
+            "lien_drive": DRIVE_LINK,
         },
         {
             "type": "Analyseur de gaz",
@@ -71,6 +81,7 @@ TEST_DATA = {
             # Teste le cas sans commentaire, sans pièce en commande, sans
             # prêt, et l'état 1 (prise en charge) avec lieu "site".
             "date_remise_service": None,
+            "lien_drive": DRIVE_LINK,
         },
         {
             "type": "Banc de frein",
@@ -84,6 +95,7 @@ TEST_DATA = {
             "materiel_prete_num_serie": "PRET-0031",
             "commentaire_technicien": "Remontage en cours après remplacement du capteur",
             "date_remise_service": None,
+            "lien_drive": DRIVE_LINK,
         },
         {
             "type": "Opacimètre",
@@ -99,6 +111,7 @@ TEST_DATA = {
             # Plus de 90 jours avant la date du script : doit être filtré et
             # absent de la liste (teste le filtre des 90 jours).
             "date_remise_service": "2026-03-01",
+            "lien_drive": DRIVE_LINK,
         },
     ],
 }
