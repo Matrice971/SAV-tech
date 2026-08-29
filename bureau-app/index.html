@@ -226,6 +226,26 @@
     margin-bottom: 0;
   }
 
+  .intervention-save-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .intervention-save-status {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .intervention-save-status.intervention-save-success {
+    color: var(--color-success);
+  }
+
+  .intervention-save-status.intervention-save-error {
+    color: var(--color-error-text);
+  }
+
   .button-small {
     padding: 0.4rem 0.75rem;
     font-size: 0.85rem;
@@ -313,15 +333,24 @@
     color: var(--color-text-muted);
   }
 
-  .form-field input[type="text"] {
+  .form-field input[type="text"],
+  .form-field select,
+  .form-field textarea {
     font-size: 1rem;
+    font-family: inherit;
     padding: 0.6rem 0.75rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     width: 100%;
   }
 
-  .form-field input[type="text"]:focus {
+  .form-field textarea {
+    resize: vertical;
+  }
+
+  .form-field input[type="text"]:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
   }
@@ -637,7 +666,72 @@
       interventionsStatusEl.textContent = "";
     }
 
-    function buildInterventionRow(item) {
+    function textFieldValue(value) {
+      if (Array.isArray(value)) {
+        return value.map((item) => (item == null ? "" : String(item))).join("\n");
+      }
+      return value == null ? "" : String(value);
+    }
+
+    async function saveInterventionChanges(entry, refs) {
+      const updatedData = {
+        ...entry.data,
+        lieu_prise_charge: refs.lieuSelect.value,
+        pieces_complementaires: refs.piecesInput.value,
+        commentaire_bureau: refs.bureauInput.value,
+      };
+
+      refs.saveBtn.disabled = true;
+      refs.saveBtn.textContent = "Enregistrement...";
+      refs.statusEl.textContent = "";
+      refs.statusEl.className = "intervention-save-status";
+
+      try {
+        const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
+        let res;
+        try {
+          res = await fetch(`${relaisUrl}/write`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              password: configState.relais.writePassword,
+              filename: entry.filename,
+              content: JSON.stringify(updatedData),
+              dossier: "interventions",
+            }),
+          });
+        } catch {
+          refs.statusEl.textContent = "Erreur réseau, les modifications n'ont pas été envoyées. Vérifiez votre connexion et réessayez.";
+          refs.statusEl.classList.add("intervention-save-error");
+          return;
+        }
+
+        let result = null;
+        try {
+          result = await res.json();
+        } catch {
+          // corps de réponse non JSON, traité comme un échec ci-dessous
+        }
+
+        if (!res.ok || !result || result.success !== true) {
+          const errorMessage = result && typeof result.error === "string" ? result.error : `Erreur HTTP ${res.status}`;
+          refs.statusEl.textContent = `Échec de l'enregistrement : ${errorMessage}`;
+          refs.statusEl.classList.add("intervention-save-error");
+          return;
+        }
+
+        entry.data = updatedData;
+        refs.lieuSummaryEl.textContent = updatedData.lieu_prise_charge;
+        refs.statusEl.textContent = "Modifications enregistrées";
+        refs.statusEl.classList.add("intervention-save-success");
+      } finally {
+        refs.saveBtn.disabled = false;
+        refs.saveBtn.textContent = "💾 Enregistrer les modifications";
+      }
+    }
+
+    function buildInterventionRow(entry) {
+      const item = entry.data;
       const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
       const row = document.createElement("div");
       row.className = "intervention-row";
@@ -646,15 +740,36 @@
           <div class="intervention-contact">${escapeHtml(item.contact)} — ${escapeHtml(item.centre)}</div>
           <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
           <div class="intervention-details">État : ${etatLabel(item.etat)}${item.piece_en_commande ? " · Pièce en commande" : ""}</div>
-          <div class="intervention-details">${escapeHtml(item.date)} · ${escapeHtml(item.technicien)} · ${escapeHtml(item.lieu_prise_charge)}</div>
+          <div class="intervention-details">${escapeHtml(item.date)} · ${escapeHtml(item.technicien)} · <span class="intervention-lieu-summary"></span></div>
         </div>
         <div class="intervention-row-actions">
           <button type="button" class="button-secondary button-small" data-action="toggle-detail">Voir détail</button>
         </div>
         <div class="intervention-detail hidden">
           <p><strong>Commentaire technicien</strong><br>${hasContent(item.commentaire_technicien) ? formatListOrText(item.commentaire_technicien) : "(aucun)"}</p>
-          ${hasContent(item.pieces_complementaires) ? `<p><strong>Pièces complémentaires</strong><br>${formatListOrText(item.pieces_complementaires)}</p>` : ""}
-          ${hasContent(item.commentaire_bureau) ? `<p><strong>Commentaire bureau</strong><br>${formatListOrText(item.commentaire_bureau)}</p>` : ""}
+
+          <div class="form-field">
+            <label>Lieu de prise en charge</label>
+            <select class="intervention-lieu-select">
+              <option value="Site">Site</option>
+              <option value="Atelier">Atelier</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label>Pièces complémentaires</label>
+            <textarea class="intervention-pieces-input" rows="2"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label>Commentaire bureau</label>
+            <textarea class="intervention-bureau-input" rows="2"></textarea>
+          </div>
+
+          <div class="intervention-save-row">
+            <button type="button" class="button-save button-small intervention-save-btn">💾 Enregistrer les modifications</button>
+            <span class="intervention-save-status"></span>
+          </div>
         </div>
       `;
       const toggleBtn = row.querySelector('[data-action="toggle-detail"]');
@@ -663,6 +778,22 @@
         const isHidden = detailEl.classList.toggle("hidden");
         toggleBtn.textContent = isHidden ? "Voir détail" : "Masquer détail";
       });
+
+      const lieuSummaryEl = row.querySelector(".intervention-lieu-summary");
+      const lieuSelect = row.querySelector(".intervention-lieu-select");
+      const piecesInput = row.querySelector(".intervention-pieces-input");
+      const bureauInput = row.querySelector(".intervention-bureau-input");
+      const saveBtn = row.querySelector(".intervention-save-btn");
+      const statusEl = row.querySelector(".intervention-save-status");
+
+      lieuSummaryEl.textContent = item.lieu_prise_charge == null ? "" : String(item.lieu_prise_charge);
+      lieuSelect.value = item.lieu_prise_charge || "";
+      piecesInput.value = textFieldValue(item.pieces_complementaires);
+      bureauInput.value = textFieldValue(item.commentaire_bureau);
+
+      const refs = { lieuSummaryEl, lieuSelect, piecesInput, bureauInput, saveBtn, statusEl };
+      saveBtn.addEventListener("click", () => saveInterventionChanges(entry, refs));
+
       return row;
     }
 
@@ -673,8 +804,8 @@
       }
       hideInterventionsStatus();
       interventionsListEl.innerHTML = "";
-      interventions.forEach((item) => {
-        interventionsListEl.appendChild(buildInterventionRow(item));
+      interventions.forEach((entry) => {
+        interventionsListEl.appendChild(buildInterventionRow(entry));
       });
     }
 
@@ -746,13 +877,13 @@
             if (data && data.traitee === true) {
               continue;
             }
-            interventions.push(data);
+            interventions.push({ filename: file.name, data });
           } catch (err) {
             console.warn(`Intervention ignorée (erreur réseau) : ${file.name}`, err);
           }
         }
 
-        interventions.sort((a, b) => String((b && b.date) || "").localeCompare(String((a && a.date) || "")));
+        interventions.sort((a, b) => String((b.data && b.data.date) || "").localeCompare(String((a.data && a.data.date) || "")));
 
         renderInterventions(interventions);
       } finally {
@@ -879,12 +1010,19 @@
           return;
         }
         if (!contactsMap.has(contact)) {
-          contactsMap.set(contact, "");
+          contactsMap.set(contact, { lienDrive: "", email: "" });
         }
-        if (!contactsMap.get(contact)) {
+        const infos = contactsMap.get(contact);
+        if (!infos.lienDrive) {
           const drive = centre && typeof centre.lienDrive === "string" ? centre.lienDrive.trim() : "";
           if (drive) {
-            contactsMap.set(contact, drive);
+            infos.lienDrive = drive;
+          }
+        }
+        if (!infos.email) {
+          const email = centre && typeof centre.email === "string" ? centre.email.trim() : "";
+          if (email) {
+            infos.email = email;
           }
         }
       });
@@ -893,7 +1031,7 @@
       const unchanged = [];
       const importedSlugs = new Set();
 
-      contactsMap.forEach((lienDrive, contact) => {
+      contactsMap.forEach(({ lienDrive, email }, contact) => {
         const slug = slugify(contact);
         if (!slug) {
           return;
@@ -905,7 +1043,7 @@
           configState.clients[slug] = {
             contact,
             password: "",
-            emailContact: "",
+            emailContact: email,
             lienDrive,
           };
           added.push(contact);
