@@ -151,6 +151,134 @@
     padding: 2rem 1rem;
   }
 
+  .clients-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+  }
+
+  .button-small {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .button-danger {
+    color: var(--color-error-text);
+    border-color: var(--color-error-border);
+  }
+
+  .button-danger:hover {
+    background: var(--color-error-bg);
+    border-color: var(--color-error-text);
+  }
+
+  .client-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .client-row:last-child {
+    border-bottom: none;
+  }
+
+  .client-contact {
+    font-weight: 600;
+  }
+
+  .client-details {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.15rem;
+    word-break: break-word;
+  }
+
+  .client-row-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+  }
+
+  .modal-card {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-card h3 {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.85rem;
+  }
+
+  .form-field:first-child {
+    margin-top: 0;
+  }
+
+  .form-field label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .form-field input[type="text"] {
+    font-size: 1rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    width: 100%;
+  }
+
+  .form-field input[type="text"]:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+
+  .form-field input[readonly] {
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+  }
+
+  .field-note {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  #client-form-error {
+    margin-top: 0.85rem;
+  }
+
   footer {
     text-align: center;
     color: var(--color-text-muted);
@@ -200,11 +328,51 @@
 
       <h2 class="screen-title">Gestion des clients</h2>
       <div class="card">
-        <p class="placeholder">À venir</p>
+        <div class="clients-header">
+          <button type="button" id="add-client-btn">+ Ajouter un client</button>
+        </div>
+        <div id="clients-list"></div>
+        <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
       </div>
     </main>
 
     <footer>SAV-tech — Appli bureau — configuration chargée en mémoire</footer>
+  </div>
+
+  <div id="client-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3 id="client-modal-title">Ajouter un client</h3>
+      <form id="client-form">
+        <div class="form-field">
+          <label for="client-contact">Contact</label>
+          <input type="text" id="client-contact" required>
+          <p id="client-contact-note" class="field-note hidden">Le contact ne peut pas être changé après création, car il détermine le nom du fichier client sur GitHub — supprimez et recréez le client si besoin.</p>
+        </div>
+        <div class="form-field">
+          <label for="client-password">Mot de passe</label>
+          <input type="text" id="client-password" required>
+          <p class="field-note">Minimum 8 caractères, avec au moins 1 majuscule, 1 minuscule et 1 chiffre.</p>
+        </div>
+        <div class="form-field">
+          <label for="client-email">Email de contact (optionnel)</label>
+          <input type="text" id="client-email">
+        </div>
+        <div class="form-field">
+          <label for="client-drive">Lien Drive (optionnel)</label>
+          <input type="text" id="client-drive">
+        </div>
+
+        <div id="client-form-error" class="error hidden">
+          <strong>Erreur</strong>
+          <span id="client-form-error-message"></span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="client-cancel-btn" class="button-secondary">Annuler</button>
+          <button type="submit" id="client-save-btn">Enregistrer</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
@@ -224,6 +392,25 @@
 
     const saveCloseBtnEl = document.getElementById("save-close-btn");
     const saveMessageEl = document.getElementById("save-message");
+
+    const addClientBtnEl = document.getElementById("add-client-btn");
+    const clientsListEl = document.getElementById("clients-list");
+    const clientsEmptyEl = document.getElementById("clients-empty");
+
+    const clientModalOverlayEl = document.getElementById("client-modal-overlay");
+    const clientModalTitleEl = document.getElementById("client-modal-title");
+    const clientFormEl = document.getElementById("client-form");
+    const clientContactEl = document.getElementById("client-contact");
+    const clientContactNoteEl = document.getElementById("client-contact-note");
+    const clientPasswordEl = document.getElementById("client-password");
+    const clientEmailEl = document.getElementById("client-email");
+    const clientDriveEl = document.getElementById("client-drive");
+    const clientFormErrorEl = document.getElementById("client-form-error");
+    const clientFormErrorMessageEl = document.getElementById("client-form-error-message");
+    const clientCancelBtnEl = document.getElementById("client-cancel-btn");
+    const clientSaveBtnEl = document.getElementById("client-save-btn");
+
+    let editingSlug = null;
 
     function showError(message) {
       errorMessageEl.textContent = message;
@@ -255,7 +442,174 @@
       saveMessageEl.classList.add("hidden");
       screenAccueilEl.classList.add("hidden");
       screenPrincipalEl.classList.remove("hidden");
+      renderClients();
     }
+
+    function escapeHtml(value) {
+      const div = document.createElement("div");
+      div.textContent = value == null ? "" : String(value);
+      return div.innerHTML;
+    }
+
+    function slugify(text) {
+      return text
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function isValidPassword(password) {
+      return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function showClientFormError(message) {
+      clientFormErrorMessageEl.textContent = message;
+      clientFormErrorEl.classList.remove("hidden");
+    }
+
+    function hideClientFormError() {
+      clientFormErrorEl.classList.add("hidden");
+    }
+
+    function renderClients() {
+      const slugs = Object.keys(configState.clients);
+      clientsListEl.innerHTML = "";
+      clientsEmptyEl.classList.toggle("hidden", slugs.length > 0);
+
+      slugs.forEach((slug) => {
+        const client = configState.clients[slug];
+        const row = document.createElement("div");
+        row.className = "client-row";
+        row.innerHTML = `
+          <div>
+            <div class="client-contact">${escapeHtml(client.contact)}</div>
+            <div class="client-details">••••••••  ·  ${escapeHtml(client.emailContact || "(pas d'email)")}  ·  ${escapeHtml(client.lienDrive || "(pas de lien Drive)")}</div>
+          </div>
+          <div class="client-row-actions">
+            <button type="button" class="button-secondary button-small" data-action="edit">Modifier</button>
+            <button type="button" class="button-secondary button-small button-danger" data-action="delete">Supprimer</button>
+          </div>
+        `;
+        row.querySelector('[data-action="edit"]').addEventListener("click", () => openEditClientForm(slug));
+        row.querySelector('[data-action="delete"]').addEventListener("click", () => deleteClient(slug));
+        clientsListEl.appendChild(row);
+      });
+    }
+
+    function openAddClientForm() {
+      editingSlug = null;
+      clientModalTitleEl.textContent = "Ajouter un client";
+      clientSaveBtnEl.textContent = "Enregistrer";
+      clientFormEl.reset();
+      clientContactEl.readOnly = false;
+      clientContactNoteEl.classList.add("hidden");
+      hideClientFormError();
+      clientModalOverlayEl.classList.remove("hidden");
+      clientContactEl.focus();
+    }
+
+    function openEditClientForm(slug) {
+      const client = configState.clients[slug];
+      editingSlug = slug;
+      clientModalTitleEl.textContent = "Modifier le client";
+      clientSaveBtnEl.textContent = "Enregistrer les modifications";
+      clientContactEl.value = client.contact;
+      clientPasswordEl.value = client.password;
+      clientEmailEl.value = client.emailContact || "";
+      clientDriveEl.value = client.lienDrive || "";
+      clientContactEl.readOnly = true;
+      clientContactNoteEl.classList.remove("hidden");
+      hideClientFormError();
+      clientModalOverlayEl.classList.remove("hidden");
+      clientPasswordEl.focus();
+    }
+
+    function closeClientForm() {
+      clientModalOverlayEl.classList.add("hidden");
+      clientFormEl.reset();
+      editingSlug = null;
+    }
+
+    function deleteClient(slug) {
+      const client = configState.clients[slug];
+      const confirmed = window.confirm(
+        `Supprimer ${client.contact} de la configuration ? Le fichier existant sur GitHub ne sera pas supprimé, seule la gestion locale de ce client sera retirée.`
+      );
+      if (!confirmed) {
+        return;
+      }
+      delete configState.clients[slug];
+      renderClients();
+    }
+
+    addClientBtnEl.addEventListener("click", openAddClientForm);
+    clientCancelBtnEl.addEventListener("click", closeClientForm);
+
+    clientModalOverlayEl.addEventListener("click", (event) => {
+      if (event.target === clientModalOverlayEl) {
+        closeClientForm();
+      }
+    });
+
+    clientFormEl.addEventListener("submit", (event) => {
+      event.preventDefault();
+      hideClientFormError();
+
+      const contact = clientContactEl.value.trim();
+      const password = clientPasswordEl.value;
+      const email = clientEmailEl.value.trim();
+      const drive = clientDriveEl.value.trim();
+
+      if (!contact) {
+        showClientFormError("Le contact est obligatoire.");
+        return;
+      }
+
+      if (!isValidPassword(password)) {
+        showClientFormError("Le mot de passe doit contenir au moins 8 caractères, avec au moins 1 majuscule, 1 minuscule et 1 chiffre.");
+        return;
+      }
+
+      if (email && !isValidEmail(email)) {
+        showClientFormError("L'adresse email n'est pas valide.");
+        return;
+      }
+
+      if (editingSlug === null) {
+        const slug = slugify(contact);
+        if (!slug) {
+          showClientFormError("Le contact doit contenir au moins une lettre ou un chiffre.");
+          return;
+        }
+        if (configState.clients[slug]) {
+          showClientFormError("Un client avec ce contact existe déjà.");
+          return;
+        }
+        configState.clients[slug] = {
+          contact,
+          password,
+          emailContact: email,
+          lienDrive: drive,
+        };
+      } else {
+        configState.clients[editingSlug] = {
+          contact: configState.clients[editingSlug].contact,
+          password,
+          emailContact: email,
+          lienDrive: drive,
+        };
+      }
+
+      closeClientForm();
+      renderClients();
+    });
 
     loadConfigBtnEl.addEventListener("click", () => {
       configFileInputEl.click();
