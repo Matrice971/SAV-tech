@@ -177,6 +177,55 @@
     margin-bottom: 0.75rem;
   }
 
+  .interventions-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .intervention-row {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .intervention-row:last-child {
+    border-bottom: none;
+  }
+
+  .intervention-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .intervention-contact {
+    font-weight: 600;
+  }
+
+  .intervention-details {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .intervention-row-actions {
+    margin-top: 0.5rem;
+  }
+
+  .intervention-detail {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .intervention-detail p {
+    margin: 0 0 0.5rem;
+  }
+
+  .intervention-detail p:last-child {
+    margin-bottom: 0;
+  }
+
   .button-small {
     padding: 0.4rem 0.75rem;
     font-size: 0.85rem;
@@ -343,7 +392,11 @@
 
       <h2 class="screen-title">Interventions à traiter</h2>
       <div class="card">
-        <p class="placeholder">À venir</p>
+        <div class="interventions-header">
+          <button type="button" id="refresh-interventions-btn" class="button-secondary button-small">🔄 Rafraîchir</button>
+        </div>
+        <p id="interventions-status" class="placeholder hidden"></p>
+        <div id="interventions-list"></div>
       </div>
 
       <h2 class="screen-title">Gestion des clients</h2>
@@ -410,6 +463,14 @@
   <script>
     const REQUIRED_KEYS_RELAIS = ["url", "writePassword"];
 
+    const GITHUB_API_CONTENTS = "https://api.github.com/repos/Matrice971/SAV-tech/contents/data/interventions";
+    const ETAT_LABELS = {
+      1: "Prise en charge",
+      2: "En attente de pièce",
+      3: "Réparation en cours",
+      4: "Livré et testé",
+    };
+
     let configState = null;
     let configFileName = "config-bureau.json";
 
@@ -424,6 +485,10 @@
 
     const saveCloseBtnEl = document.getElementById("save-close-btn");
     const saveMessageEl = document.getElementById("save-message");
+
+    const refreshInterventionsBtnEl = document.getElementById("refresh-interventions-btn");
+    const interventionsStatusEl = document.getElementById("interventions-status");
+    const interventionsListEl = document.getElementById("interventions-list");
 
     const addClientBtnEl = document.getElementById("add-client-btn");
     const clientsListEl = document.getElementById("clients-list");
@@ -481,6 +546,7 @@
       screenAccueilEl.classList.add("hidden");
       screenPrincipalEl.classList.remove("hidden");
       renderClients();
+      fetchInterventions();
     }
 
     function escapeHtml(value) {
@@ -541,6 +607,160 @@
         clientsListEl.appendChild(row);
       });
     }
+
+    function hasContent(value) {
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return typeof value === "string" && value.trim() !== "";
+    }
+
+    function formatListOrText(value) {
+      if (Array.isArray(value)) {
+        return value.map((item) => escapeHtml(item)).join(", ");
+      }
+      return escapeHtml(value);
+    }
+
+    function etatLabel(etat) {
+      return ETAT_LABELS[etat] || `État inconnu (${escapeHtml(etat)})`;
+    }
+
+    function showInterventionsStatus(message) {
+      interventionsListEl.innerHTML = "";
+      interventionsStatusEl.textContent = message;
+      interventionsStatusEl.classList.remove("hidden");
+    }
+
+    function hideInterventionsStatus() {
+      interventionsStatusEl.classList.add("hidden");
+      interventionsStatusEl.textContent = "";
+    }
+
+    function buildInterventionRow(item) {
+      const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+      const row = document.createElement("div");
+      row.className = "intervention-row";
+      row.innerHTML = `
+        <div class="intervention-summary">
+          <div class="intervention-contact">${escapeHtml(item.contact)} — ${escapeHtml(item.centre)}</div>
+          <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
+          <div class="intervention-details">État : ${etatLabel(item.etat)}${item.piece_en_commande ? " · Pièce en commande" : ""}</div>
+          <div class="intervention-details">${escapeHtml(item.date)} · ${escapeHtml(item.technicien)} · ${escapeHtml(item.lieu_prise_charge)}</div>
+        </div>
+        <div class="intervention-row-actions">
+          <button type="button" class="button-secondary button-small" data-action="toggle-detail">Voir détail</button>
+        </div>
+        <div class="intervention-detail hidden">
+          <p><strong>Commentaire technicien</strong><br>${hasContent(item.commentaire_technicien) ? formatListOrText(item.commentaire_technicien) : "(aucun)"}</p>
+          ${hasContent(item.pieces_complementaires) ? `<p><strong>Pièces complémentaires</strong><br>${formatListOrText(item.pieces_complementaires)}</p>` : ""}
+          ${hasContent(item.commentaire_bureau) ? `<p><strong>Commentaire bureau</strong><br>${formatListOrText(item.commentaire_bureau)}</p>` : ""}
+        </div>
+      `;
+      const toggleBtn = row.querySelector('[data-action="toggle-detail"]');
+      const detailEl = row.querySelector(".intervention-detail");
+      toggleBtn.addEventListener("click", () => {
+        const isHidden = detailEl.classList.toggle("hidden");
+        toggleBtn.textContent = isHidden ? "Voir détail" : "Masquer détail";
+      });
+      return row;
+    }
+
+    function renderInterventions(interventions) {
+      if (interventions.length === 0) {
+        showInterventionsStatus("Aucune intervention à traiter pour le moment");
+        return;
+      }
+      hideInterventionsStatus();
+      interventionsListEl.innerHTML = "";
+      interventions.forEach((item) => {
+        interventionsListEl.appendChild(buildInterventionRow(item));
+      });
+    }
+
+    async function fetchInterventions() {
+      refreshInterventionsBtnEl.disabled = true;
+      showInterventionsStatus("Chargement des interventions…");
+
+      try {
+        let listRes;
+        try {
+          listRes = await fetch(GITHUB_API_CONTENTS);
+        } catch {
+          showInterventionsStatus("Erreur réseau lors du chargement des interventions.");
+          return;
+        }
+
+        if (listRes.status === 404) {
+          showInterventionsStatus("Aucune intervention à traiter pour le moment");
+          return;
+        }
+
+        if (listRes.status === 403) {
+          let message = "";
+          try {
+            const errBody = await listRes.json();
+            message = errBody && typeof errBody.message === "string" ? errBody.message : "";
+          } catch {
+            // corps d'erreur non JSON, on garde le message générique ci-dessous
+          }
+          if (message.toLowerCase().includes("rate limit")) {
+            showInterventionsStatus("Limite de requêtes GitHub atteinte, réessayez dans quelques minutes.");
+          } else {
+            showInterventionsStatus("Erreur lors du chargement des interventions.");
+          }
+          return;
+        }
+
+        if (!listRes.ok) {
+          showInterventionsStatus("Erreur lors du chargement des interventions.");
+          return;
+        }
+
+        const entries = await listRes.json();
+        if (!Array.isArray(entries)) {
+          showInterventionsStatus("Erreur lors du chargement des interventions.");
+          return;
+        }
+
+        const files = entries.filter(
+          (entry) => entry && entry.type === "file" && typeof entry.name === "string" && entry.name.endsWith(".txt") && entry.download_url
+        );
+
+        const interventions = [];
+        for (const file of files) {
+          try {
+            const fileRes = await fetch(file.download_url);
+            if (!fileRes.ok) {
+              console.warn(`Intervention ignorée (HTTP ${fileRes.status}) : ${file.name}`);
+              continue;
+            }
+            const text = await fileRes.text();
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch (err) {
+              console.warn(`Intervention ignorée (JSON invalide) : ${file.name}`, err);
+              continue;
+            }
+            if (data && data.traitee === true) {
+              continue;
+            }
+            interventions.push(data);
+          } catch (err) {
+            console.warn(`Intervention ignorée (erreur réseau) : ${file.name}`, err);
+          }
+        }
+
+        interventions.sort((a, b) => String((b && b.date) || "").localeCompare(String((a && a.date) || "")));
+
+        renderInterventions(interventions);
+      } finally {
+        refreshInterventionsBtnEl.disabled = false;
+      }
+    }
+
+    refreshInterventionsBtnEl.addEventListener("click", fetchInterventions);
 
     function openAddClientForm() {
       editingSlug = null;
