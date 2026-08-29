@@ -157,7 +157,7 @@ export default {
     const url = new URL(request.url);
 
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
     if (url.pathname === "/write" && request.method === "POST") {
