@@ -14,7 +14,17 @@
 const GITHUB_OWNER = "Matrice971";
 const GITHUB_REPO = "SAV-tech";
 const GITHUB_BRANCH = "main";
-const DATA_DIR = "data/clients";
+
+// Sous-dossiers autorisés pour l'écriture via /write, choisis par le champ
+// "dossier" du corps de la requête. Liste blanche stricte : la valeur reçue
+// n'est jamais interpolée directement dans un chemin de fichier (elle sert
+// uniquement de clé vers ce dictionnaire), pour empêcher tout path traversal
+// via ce champ contrôlé par l'appelant.
+const DOSSIERS_AUTORISES = {
+  clients: "data/clients",
+  interventions: "data/interventions",
+};
+const DOSSIER_PAR_DEFAUT = "clients";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -76,7 +86,7 @@ async function handleWrite(request, env) {
     return jsonResponse({ success: false, error: "Corps JSON invalide." }, 400);
   }
 
-  const { password, filename, content } = body;
+  const { password, filename, content, dossier } = body;
 
   if (!env.WRITE_PASSWORD || !env.GITHUB_TOKEN) {
     return jsonResponse(
@@ -100,7 +110,12 @@ async function handleWrite(request, env) {
     return jsonResponse({ success: false, error: "Contenu manquant ou invalide." }, 400);
   }
 
-  const path = `${DATA_DIR}/${filename}`;
+  const cleDossier = (typeof dossier === "string" && Object.prototype.hasOwnProperty.call(DOSSIERS_AUTORISES, dossier))
+    ? dossier
+    : DOSSIER_PAR_DEFAUT;
+  const dataDir = DOSSIERS_AUTORISES[cleDossier];
+
+  const path = `${dataDir}/${filename}`;
 
   // Récupère le sha du fichier existant (nécessaire pour une mise à jour, absent pour une création).
   let sha;
