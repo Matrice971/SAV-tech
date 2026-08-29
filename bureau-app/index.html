@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAV-tech — Appli bureau</title>
+<style>
+  :root {
+    --color-bg: #f5f6f8;
+    --color-surface: #ffffff;
+    --color-text: #1c1e21;
+    --color-text-muted: #5f6368;
+    --color-border: #e1e3e6;
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-success: #1a7f37;
+    --color-success-hover: #146c2e;
+    --color-error-bg: #fdecec;
+    --color-error-border: #f3b4b4;
+    --color-error-text: #8a1f1f;
+    --radius: 10px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  button {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-primary);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--color-primary-hover);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .button-secondary {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
+    font-weight: 600;
+  }
+
+  .button-secondary:hover {
+    background: var(--color-bg);
+    border-color: var(--color-primary);
+  }
+
+  .button-save {
+    background: var(--color-success);
+    white-space: nowrap;
+  }
+
+  .button-save:hover {
+    background: var(--color-success-hover);
+  }
+
+  .error {
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error-text);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .error strong {
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .info-message {
+    background: #eaf3ff;
+    border: 1px solid #bcd6f7;
+    color: #17457a;
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .screen-title {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1.15rem;
+  }
+
+  .placeholder {
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    padding: 1.5rem 1rem;
+  }
+</style>
+</head>
+<body>
+  <div id="screen-accueil">
+    <header>
+      <h1>SAV-tech — Appli bureau</h1>
+    </header>
+
+    <main>
+      <div class="card">
+        <p>Chargez le fichier de configuration pour accéder à l'application.</p>
+        <div class="actions">
+          <button type="button" id="load-config-btn">📂 Charger le fichier de configuration</button>
+          <button type="button" id="new-config-btn" class="button-secondary">Créer une configuration vide</button>
+        </div>
+        <input type="file" id="config-file-input" accept=".json" class="hidden">
+      </div>
+
+      <div id="error" class="error hidden">
+        <strong>Erreur</strong>
+        <span id="error-message"></span>
+      </div>
+    </main>
+  </div>
+
+  <div id="screen-principal" class="hidden">
+    <header>
+      <h1>SAV-tech — Appli bureau</h1>
+      <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer et fermer</button>
+    </header>
+
+    <main>
+      <div id="save-message" class="info-message hidden">
+        Configuration enregistrée. Vous pouvez fermer cet onglet.
+      </div>
+
+      <h2 class="screen-title">Interventions à traiter</h2>
+      <div class="card">
+        <p class="placeholder">À venir</p>
+      </div>
+
+      <h2 class="screen-title">Gestion des clients</h2>
+      <div class="card">
+        <p class="placeholder">À venir</p>
+      </div>
+    </main>
+
+    <footer>SAV-tech — Appli bureau — configuration chargée en mémoire</footer>
+  </div>
+
+  <script>
+    const REQUIRED_KEYS_RELAIS = ["url", "writePassword"];
+
+    let configState = null;
+    let configFileName = "config-bureau.json";
+
+    const screenAccueilEl = document.getElementById("screen-accueil");
+    const screenPrincipalEl = document.getElementById("screen-principal");
+
+    const loadConfigBtnEl = document.getElementById("load-config-btn");
+    const newConfigBtnEl = document.getElementById("new-config-btn");
+    const configFileInputEl = document.getElementById("config-file-input");
+    const errorEl = document.getElementById("error");
+    const errorMessageEl = document.getElementById("error-message");
+
+    const saveCloseBtnEl = document.getElementById("save-close-btn");
+    const saveMessageEl = document.getElementById("save-message");
+
+    function showError(message) {
+      errorMessageEl.textContent = message;
+      errorEl.classList.remove("hidden");
+    }
+
+    function hideError() {
+      errorEl.classList.add("hidden");
+    }
+
+    function isValidConfig(data) {
+      if (!data || typeof data !== "object") {
+        return false;
+      }
+      if (!data.relais || typeof data.relais !== "object") {
+        return false;
+      }
+      if (!REQUIRED_KEYS_RELAIS.every((key) => typeof data.relais[key] === "string")) {
+        return false;
+      }
+      if (!data.clients || typeof data.clients !== "object" || Array.isArray(data.clients)) {
+        return false;
+      }
+      return true;
+    }
+
+    function enterMainScreen() {
+      hideError();
+      saveMessageEl.classList.add("hidden");
+      screenAccueilEl.classList.add("hidden");
+      screenPrincipalEl.classList.remove("hidden");
+    }
+
+    loadConfigBtnEl.addEventListener("click", () => {
+      configFileInputEl.click();
+    });
+
+    configFileInputEl.addEventListener("change", async () => {
+      const file = configFileInputEl.files[0];
+      configFileInputEl.value = "";
+      if (!file) {
+        return;
+      }
+
+      hideError();
+
+      let text;
+      try {
+        text = await file.text();
+      } catch {
+        showError("Impossible de lire le fichier sélectionné.");
+        return;
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        showError("Le fichier n'est pas un JSON valide.");
+        return;
+      }
+
+      if (!isValidConfig(data)) {
+        showError("Structure de configuration invalide (clés attendues : relais.url, relais.writePassword, clients).");
+        return;
+      }
+
+      configState = data;
+      configFileName = file.name || configFileName;
+      enterMainScreen();
+    });
+
+    newConfigBtnEl.addEventListener("click", () => {
+      hideError();
+      configState = {
+        relais: { url: "", writePassword: "" },
+        clients: {},
+      };
+      configFileName = "config-bureau.json";
+      enterMainScreen();
+    });
+
+    saveCloseBtnEl.addEventListener("click", () => {
+      const json = JSON.stringify(configState, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = configFileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      saveMessageEl.classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
