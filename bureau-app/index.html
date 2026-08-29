@@ -312,6 +312,52 @@
     overflow-y: auto;
   }
 
+  .modal-card-wide {
+    max-width: 760px;
+  }
+
+  .conflicts-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .conflicts-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .conflicts-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .conflicts-table th,
+  .conflicts-table td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+  }
+
+  .conflicts-table th {
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .conflict-choice {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .conflict-choice + .conflict-choice {
+    margin-top: 0.35rem;
+  }
+
   .modal-card h3 {
     margin: 0 0 1rem;
     font-size: 1.1rem;
@@ -443,6 +489,34 @@
     <footer>SAV-tech — Appli bureau — configuration chargée en mémoire</footer>
   </div>
 
+  <div id="import-conflicts-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card modal-card-wide">
+      <h3>Différences détectées avec l'import TECHNIZEN</h3>
+      <p class="field-note">Ces clients existent déjà avec des valeurs différentes dans l'export. Choisissez la valeur à conserver pour chaque ligne.</p>
+      <div class="conflicts-actions">
+        <button type="button" id="conflicts-keep-all-btn" class="button-secondary button-small">Tout garder en local</button>
+        <button type="button" id="conflicts-use-all-btn" class="button-secondary button-small">Tout utiliser depuis l'import</button>
+      </div>
+      <div class="conflicts-table-wrapper">
+        <table class="conflicts-table">
+          <thead>
+            <tr>
+              <th>Contact</th>
+              <th>Champ</th>
+              <th>Valeur locale</th>
+              <th>Valeur importée</th>
+              <th>Choix</th>
+            </tr>
+          </thead>
+          <tbody id="conflicts-table-body"></tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="conflicts-confirm-btn">Confirmer et importer</button>
+      </div>
+    </div>
+  </div>
+
   <div id="import-summary-modal-overlay" class="modal-overlay hidden">
     <div class="modal-card">
       <h3>Résumé de l'import TECHNIZEN</h3>
@@ -525,9 +599,17 @@
 
     const importTechnizenBtnEl = document.getElementById("import-technizen-btn");
     const technizenFileInputEl = document.getElementById("technizen-file-input");
+    const importConflictsModalOverlayEl = document.getElementById("import-conflicts-modal-overlay");
+    const conflictsTableBodyEl = document.getElementById("conflicts-table-body");
+    const conflictsKeepAllBtnEl = document.getElementById("conflicts-keep-all-btn");
+    const conflictsUseAllBtnEl = document.getElementById("conflicts-use-all-btn");
+    const conflictsConfirmBtnEl = document.getElementById("conflicts-confirm-btn");
+
     const importSummaryModalOverlayEl = document.getElementById("import-summary-modal-overlay");
     const importSummaryContentEl = document.getElementById("import-summary-content");
     const importSummaryCloseBtnEl = document.getElementById("import-summary-close-btn");
+
+    let pendingImport = null;
 
     const clientModalOverlayEl = document.getElementById("client-modal-overlay");
     const clientModalTitleEl = document.getElementById("client-modal-title");
@@ -1001,7 +1083,12 @@
       renderClients();
     });
 
-    function importFromTechnizen(actifs) {
+    const IMPORT_CONFLICT_FIELDS = [
+      { key: "email", clientField: "emailContact", label: "Email" },
+      { key: "lienDrive", clientField: "lienDrive", label: "Lien Drive" },
+    ];
+
+    function buildTechnizenContactsMap(actifs) {
       const contactsMap = new Map();
 
       actifs.forEach((centre) => {
@@ -1027,9 +1114,46 @@
         }
       });
 
+      return contactsMap;
+    }
+
+    function detectImportConflicts(contactsMap) {
+      const conflicts = [];
+
+      contactsMap.forEach((infos, contact) => {
+        const slug = slugify(contact);
+        if (!slug) {
+          return;
+        }
+        const existing = configState.clients[slug];
+        if (!existing) {
+          return;
+        }
+        IMPORT_CONFLICT_FIELDS.forEach(({ key, clientField, label }) => {
+          const importedValue = infos[key];
+          const localValue = existing[clientField] || "";
+          if (importedValue && importedValue !== localValue) {
+            conflicts.push({ slug, contact, clientField, label, localValue, importedValue, choice: "local" });
+          }
+        });
+      });
+
+      return conflicts;
+    }
+
+    function applyImport(contactsMap, conflicts) {
+      const conflictsBySlug = new Map();
+      conflicts.forEach((conflict) => {
+        if (!conflictsBySlug.has(conflict.slug)) {
+          conflictsBySlug.set(conflict.slug, []);
+        }
+        conflictsBySlug.get(conflict.slug).push(conflict);
+      });
+
       const added = [];
       const unchanged = [];
       const importedSlugs = new Set();
+      let updatedFieldsCount = 0;
 
       contactsMap.forEach(({ lienDrive, email }, contact) => {
         const slug = slugify(contact);
@@ -1038,6 +1162,12 @@
         }
         importedSlugs.add(slug);
         if (configState.clients[slug]) {
+          (conflictsBySlug.get(slug) || []).forEach((conflict) => {
+            if (conflict.choice === "imported") {
+              configState.clients[slug][conflict.clientField] = conflict.importedValue;
+              updatedFieldsCount++;
+            }
+          });
           unchanged.push(configState.clients[slug].contact);
         } else {
           configState.clients[slug] = {
@@ -1054,15 +1184,85 @@
         .filter((slug) => !importedSlugs.has(slug))
         .map((slug) => configState.clients[slug].contact);
 
-      showImportSummary({ added, unchanged, toReview });
+      showImportSummary({ added, unchanged, toReview, updatedFieldsCount });
     }
 
-    function showImportSummary({ added, unchanged, toReview }) {
+    function importFromTechnizen(actifs) {
+      const contactsMap = buildTechnizenContactsMap(actifs);
+      const conflicts = detectImportConflicts(contactsMap);
+
+      if (conflicts.length === 0) {
+        applyImport(contactsMap, []);
+        return;
+      }
+
+      pendingImport = { contactsMap, conflicts };
+      renderImportConflicts();
+      importConflictsModalOverlayEl.classList.remove("hidden");
+    }
+
+    function renderImportConflicts() {
+      conflictsTableBodyEl.innerHTML = pendingImport.conflicts.map((conflict, index) => `
+        <tr data-index="${index}">
+          <td>${escapeHtml(conflict.contact)}</td>
+          <td>${escapeHtml(conflict.label)}</td>
+          <td>${escapeHtml(conflict.localValue) || "(vide)"}</td>
+          <td>${escapeHtml(conflict.importedValue)}</td>
+          <td>
+            <label class="conflict-choice"><input type="radio" name="conflict-choice-${index}" value="local" ${conflict.choice === "local" ? "checked" : ""}> Garder la valeur locale</label>
+            <label class="conflict-choice"><input type="radio" name="conflict-choice-${index}" value="imported" ${conflict.choice === "imported" ? "checked" : ""}> Utiliser la valeur importée</label>
+          </td>
+        </tr>
+      `).join("");
+
+      conflictsTableBodyEl.querySelectorAll('input[type="radio"]').forEach((radio) => {
+        radio.addEventListener("change", (event) => {
+          const index = Number(event.target.closest("tr").dataset.index);
+          pendingImport.conflicts[index].choice = event.target.value;
+        });
+      });
+    }
+
+    function setAllImportConflictsChoice(choice) {
+      if (!pendingImport) {
+        return;
+      }
+      pendingImport.conflicts.forEach((conflict) => {
+        conflict.choice = choice;
+      });
+      renderImportConflicts();
+    }
+
+    conflictsKeepAllBtnEl.addEventListener("click", () => setAllImportConflictsChoice("local"));
+    conflictsUseAllBtnEl.addEventListener("click", () => setAllImportConflictsChoice("imported"));
+
+    conflictsConfirmBtnEl.addEventListener("click", () => {
+      if (!pendingImport) {
+        return;
+      }
+      const { contactsMap, conflicts } = pendingImport;
+      importConflictsModalOverlayEl.classList.add("hidden");
+      pendingImport = null;
+      applyImport(contactsMap, conflicts);
+    });
+
+    importConflictsModalOverlayEl.addEventListener("click", (event) => {
+      if (event.target === importConflictsModalOverlayEl) {
+        importConflictsModalOverlayEl.classList.add("hidden");
+        pendingImport = null;
+      }
+    });
+
+    function showImportSummary({ added, unchanged, toReview, updatedFieldsCount = 0 }) {
       const sections = [];
 
       sections.push(`<p><strong>${added.length}</strong> nouveau client${added.length > 1 ? "s" : ""} ajouté${added.length > 1 ? "s" : ""}${added.length ? " : " + added.map(escapeHtml).join(", ") : ""}.</p>`);
 
       sections.push(`<p><strong>${unchanged.length}</strong> client${unchanged.length > 1 ? "s" : ""} déjà existant${unchanged.length > 1 ? "s" : ""}, inchangé${unchanged.length > 1 ? "s" : ""}.</p>`);
+
+      if (updatedFieldsCount > 0) {
+        sections.push(`<p><strong>${updatedFieldsCount}</strong> champ${updatedFieldsCount > 1 ? "s" : ""} mis à jour suite à un choix.</p>`);
+      }
 
       if (toReview.length > 0) {
         sections.push(`
