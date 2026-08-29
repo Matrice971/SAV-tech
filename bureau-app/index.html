@@ -136,6 +136,25 @@
     margin-top: 1rem;
   }
 
+  .warning {
+    background: #fff8e6;
+    border: 1px solid #f5dfa0;
+    color: #7a5b17;
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .warning strong {
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .warning ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.2rem;
+  }
+
   .hidden {
     display: none !important;
   }
@@ -154,6 +173,7 @@
   .clients-header {
     display: flex;
     justify-content: flex-end;
+    gap: 0.5rem;
     margin-bottom: 0.75rem;
   }
 
@@ -329,14 +349,26 @@
       <h2 class="screen-title">Gestion des clients</h2>
       <div class="card">
         <div class="clients-header">
+          <button type="button" id="import-technizen-btn" class="button-secondary">Importer depuis TECHNIZEN</button>
           <button type="button" id="add-client-btn">+ Ajouter un client</button>
         </div>
+        <input type="file" id="technizen-file-input" accept=".json" class="hidden">
         <div id="clients-list"></div>
         <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
       </div>
     </main>
 
     <footer>SAV-tech — Appli bureau — configuration chargée en mémoire</footer>
+  </div>
+
+  <div id="import-summary-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>Résumé de l'import TECHNIZEN</h3>
+      <div id="import-summary-content"></div>
+      <div class="modal-actions">
+        <button type="button" id="import-summary-close-btn">Fermer</button>
+      </div>
+    </div>
   </div>
 
   <div id="client-modal-overlay" class="modal-overlay hidden">
@@ -396,6 +428,12 @@
     const addClientBtnEl = document.getElementById("add-client-btn");
     const clientsListEl = document.getElementById("clients-list");
     const clientsEmptyEl = document.getElementById("clients-empty");
+
+    const importTechnizenBtnEl = document.getElementById("import-technizen-btn");
+    const technizenFileInputEl = document.getElementById("technizen-file-input");
+    const importSummaryModalOverlayEl = document.getElementById("import-summary-modal-overlay");
+    const importSummaryContentEl = document.getElementById("import-summary-content");
+    const importSummaryCloseBtnEl = document.getElementById("import-summary-close-btn");
 
     const clientModalOverlayEl = document.getElementById("client-modal-overlay");
     const clientModalTitleEl = document.getElementById("client-modal-title");
@@ -485,12 +523,13 @@
 
       slugs.forEach((slug) => {
         const client = configState.clients[slug];
+        const passwordDisplay = client.password ? "••••••••" : "⚠️ Mot de passe à définir";
         const row = document.createElement("div");
         row.className = "client-row";
         row.innerHTML = `
           <div>
             <div class="client-contact">${escapeHtml(client.contact)}</div>
-            <div class="client-details">••••••••  ·  ${escapeHtml(client.emailContact || "(pas d'email)")}  ·  ${escapeHtml(client.lienDrive || "(pas de lien Drive)")}</div>
+            <div class="client-details">${passwordDisplay}  ·  ${escapeHtml(client.emailContact || "(pas d'email)")}  ·  ${escapeHtml(client.lienDrive || "(pas de lien Drive)")}</div>
           </div>
           <div class="client-row-actions">
             <button type="button" class="button-secondary button-small" data-action="edit">Modifier</button>
@@ -609,6 +648,124 @@
 
       closeClientForm();
       renderClients();
+    });
+
+    function importFromTechnizen(actifs) {
+      const contactsMap = new Map();
+
+      actifs.forEach((centre) => {
+        const contact = centre && typeof centre.contact === "string" ? centre.contact.trim() : "";
+        if (!contact) {
+          return;
+        }
+        if (!contactsMap.has(contact)) {
+          contactsMap.set(contact, "");
+        }
+        if (!contactsMap.get(contact)) {
+          const drive = centre && typeof centre.lienDrive === "string" ? centre.lienDrive.trim() : "";
+          if (drive) {
+            contactsMap.set(contact, drive);
+          }
+        }
+      });
+
+      const added = [];
+      const unchanged = [];
+      const importedSlugs = new Set();
+
+      contactsMap.forEach((lienDrive, contact) => {
+        const slug = slugify(contact);
+        if (!slug) {
+          return;
+        }
+        importedSlugs.add(slug);
+        if (configState.clients[slug]) {
+          unchanged.push(configState.clients[slug].contact);
+        } else {
+          configState.clients[slug] = {
+            contact,
+            password: "",
+            emailContact: "",
+            lienDrive,
+          };
+          added.push(contact);
+        }
+      });
+
+      const toReview = Object.keys(configState.clients)
+        .filter((slug) => !importedSlugs.has(slug))
+        .map((slug) => configState.clients[slug].contact);
+
+      showImportSummary({ added, unchanged, toReview });
+    }
+
+    function showImportSummary({ added, unchanged, toReview }) {
+      const sections = [];
+
+      sections.push(`<p><strong>${added.length}</strong> nouveau client${added.length > 1 ? "s" : ""} ajouté${added.length > 1 ? "s" : ""}${added.length ? " : " + added.map(escapeHtml).join(", ") : ""}.</p>`);
+
+      sections.push(`<p><strong>${unchanged.length}</strong> client${unchanged.length > 1 ? "s" : ""} déjà existant${unchanged.length > 1 ? "s" : ""}, inchangé${unchanged.length > 1 ? "s" : ""}.</p>`);
+
+      if (toReview.length > 0) {
+        sections.push(`
+          <div class="warning">
+            <strong>${toReview.length} client${toReview.length > 1 ? "s" : ""} à vérifier</strong>
+            <p class="field-note">Ces clients n'apparaissent plus dans cet export TECHNIZEN — un changement de propriétaire de centre est peut-être survenu. Ils n'ont pas été supprimés ; vérifiez-les manuellement si besoin.</p>
+            <ul>${toReview.map((contact) => `<li>${escapeHtml(contact)}</li>`).join("")}</ul>
+          </div>
+        `);
+      }
+
+      importSummaryContentEl.innerHTML = sections.join("");
+      importSummaryModalOverlayEl.classList.remove("hidden");
+    }
+
+    function closeImportSummary() {
+      importSummaryModalOverlayEl.classList.add("hidden");
+      renderClients();
+    }
+
+    importTechnizenBtnEl.addEventListener("click", () => {
+      technizenFileInputEl.click();
+    });
+
+    technizenFileInputEl.addEventListener("change", async () => {
+      const file = technizenFileInputEl.files[0];
+      technizenFileInputEl.value = "";
+      if (!file) {
+        return;
+      }
+
+      let text;
+      try {
+        text = await file.text();
+      } catch {
+        window.alert("Impossible de lire le fichier sélectionné.");
+        return;
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        window.alert("Le fichier n'est pas un JSON valide.");
+        return;
+      }
+
+      if (!data || !Array.isArray(data.actifs)) {
+        window.alert("Structure d'export TECHNIZEN invalide (tableau \"actifs\" attendu).");
+        return;
+      }
+
+      importFromTechnizen(data.actifs);
+    });
+
+    importSummaryCloseBtnEl.addEventListener("click", closeImportSummary);
+
+    importSummaryModalOverlayEl.addEventListener("click", (event) => {
+      if (event.target === importSummaryModalOverlayEl) {
+        closeImportSummary();
+      }
     });
 
     loadConfigBtnEl.addEventListener("click", () => {
