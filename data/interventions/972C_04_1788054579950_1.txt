@@ -1,0 +1,21 @@
+{
+  "centre": "3C Auto Controle",
+  "centre_numero": "972C.04",
+  "client_adresse": "Ancienne Route de SCHOELCHER, 97233 SCHOELCHER",
+  "contact": "COUPIN Carl",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "29008"
+  },
+  "etat": 1,
+  "date": "2026-08-30",
+  "piece_en_commande": false,
+  "commentaire_technicien": "big up",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-3CAutoControle-300826.pdf",
+  "pieces_montees": [],
+  "materiel_recupere_num_serie": "654321"
+}
