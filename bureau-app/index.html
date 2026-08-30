@@ -18,6 +18,12 @@
     --color-error-bg: #fdecec;
     --color-error-border: #f3b4b4;
     --color-error-text: #8a1f1f;
+    --color-pending-bg: #fff8e6;
+    --color-pending-border: #f5dfa0;
+    --color-pending-text: #7a5b17;
+    --color-neutral-bg: #eaf3ff;
+    --color-neutral-border: #bcd6f7;
+    --color-neutral-text: #17457a;
     --radius: 10px;
   }
 
@@ -67,6 +73,59 @@
     max-width: 720px;
     margin: 0 auto;
     padding: 1rem;
+  }
+
+  .tab-bar {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0 1.25rem;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+  }
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.85rem 0.9rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .tab-btn:hover {
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  .tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+
+  .tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.3rem;
+    height: 1.3rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .tab-panel.hidden {
+    display: none;
   }
 
   .card {
@@ -196,13 +255,76 @@
     margin-bottom: 0.75rem;
   }
 
-  .intervention-row {
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--color-border);
+  .status-group + .status-group {
+    margin-top: 1.5rem;
   }
 
-  .intervention-row:last-child {
-    border-bottom: none;
+  .status-group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radius);
+  }
+
+  .status-group-title.status-group-1 {
+    background: var(--color-success-hover);
+    background: #e6f4ea;
+    color: var(--color-success);
+  }
+
+  .status-group-title.status-group-2 {
+    background: var(--color-pending-bg);
+    color: var(--color-pending-text);
+  }
+
+  .status-group-title.status-group-3 {
+    background: var(--color-neutral-bg);
+    color: var(--color-neutral-text);
+  }
+
+  .status-group-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .intervention-card {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .intervention-card.status-group-1 {
+    border-left-color: var(--color-success);
+  }
+
+  .intervention-card.status-group-2 {
+    border-left-color: var(--color-pending-text);
+  }
+
+  .intervention-card.status-group-3 {
+    border-left-color: var(--color-neutral-text);
+  }
+
+  .intervention-checkbox {
+    margin-top: 0.2rem;
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .intervention-body {
+    flex: 1;
+    min-width: 0;
   }
 
   .intervention-summary {
@@ -220,8 +342,19 @@
     font-size: 0.85rem;
   }
 
+  .intervention-published-badge {
+    display: inline-block;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: var(--color-success);
+    font-weight: 600;
+  }
+
   .intervention-row-actions {
     margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .intervention-detail {
@@ -245,7 +378,8 @@
     margin-top: 1rem;
   }
 
-  .intervention-save-status {
+  .intervention-save-status,
+  .intervention-delete-status {
     font-size: 0.85rem;
     color: var(--color-text-muted);
   }
@@ -254,7 +388,8 @@
     color: var(--color-success);
   }
 
-  .intervention-save-status.intervention-save-error {
+  .intervention-save-status.intervention-save-error,
+  .intervention-delete-status.intervention-save-error {
     color: var(--color-error-text);
   }
 
@@ -301,6 +436,25 @@
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
+  }
+
+  .corbeille-row {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .corbeille-row:last-child {
+    border-bottom: none;
+  }
+
+  .corbeille-contact {
+    font-weight: 600;
+  }
+
+  .corbeille-details {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.15rem;
   }
 
   .modal-overlay {
@@ -448,7 +602,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.03</span>
+        <span class="app-version">V1.04</span>
       </div>
     </header>
 
@@ -473,41 +627,69 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.03</span>
+        <span class="app-version">V1.04</span>
       </div>
-      <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer et fermer</button>
+      <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
     </header>
+
+    <nav class="tab-bar">
+      <button type="button" class="tab-btn active" data-tab="reparation">Suivi réparation <span id="reparation-tab-badge" class="tab-badge hidden">0</span></button>
+      <button type="button" class="tab-btn" data-tab="clients">Gestion clients</button>
+      <button type="button" class="tab-btn" data-tab="pret">Suivi prêt</button>
+      <button type="button" class="tab-btn" data-tab="config">Configuration</button>
+    </nav>
 
     <main>
       <div id="save-message" class="info-message hidden">
-        Configuration enregistrée. Vous pouvez fermer cet onglet.
+        Configuration enregistrée.
       </div>
 
-      <h2 class="screen-title">Interventions à traiter</h2>
-      <div class="card">
-        <div class="interventions-header">
-          <button type="button" id="refresh-interventions-btn" class="button-secondary button-small">🔄 Rafraîchir</button>
+      <section id="tab-panel-reparation" class="tab-panel">
+        <h2 class="screen-title">Interventions à traiter</h2>
+        <div class="card">
+          <div class="interventions-header">
+            <button type="button" id="publish-selection-btn" class="button-secondary button-small" disabled>📤 Publier la sélection</button>
+            <button type="button" id="refresh-interventions-btn" class="button-secondary button-small">🔄 Rafraîchir</button>
+          </div>
+          <p id="interventions-status" class="placeholder hidden"></p>
+          <div id="interventions-list"></div>
         </div>
-        <p id="interventions-status" class="placeholder hidden"></p>
-        <div id="interventions-list"></div>
-      </div>
+      </section>
 
-      <h2 class="screen-title">Gestion des clients</h2>
-      <div class="card">
-        <div class="clients-header">
-          <button type="button" id="import-technizen-btn" class="button-secondary">Importer depuis TECHNIZEN</button>
-          <button type="button" id="add-client-btn">+ Ajouter un client</button>
+      <section id="tab-panel-clients" class="tab-panel hidden">
+        <h2 class="screen-title">Gestion des clients</h2>
+        <div class="card">
+          <div class="clients-header">
+            <button type="button" id="import-technizen-btn" class="button-secondary">Importer depuis TECHNIZEN</button>
+            <button type="button" id="add-client-btn">+ Ajouter un client</button>
+          </div>
+          <input type="file" id="technizen-file-input" accept=".json" class="hidden">
+          <div id="clients-list"></div>
+          <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
         </div>
-        <input type="file" id="technizen-file-input" accept=".json" class="hidden">
-        <div id="clients-list"></div>
-        <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
-      </div>
+      </section>
 
-      <h2 class="screen-title">Suivi du matériel en prêt</h2>
-      <div class="card">
-        <div id="materiel-pret-list"></div>
-        <p id="materiel-pret-empty" class="placeholder hidden">Aucun matériel de prêt (importez un export TECHNIZEN contenant le client "TECHNIZEN")</p>
-      </div>
+      <section id="tab-panel-pret" class="tab-panel hidden">
+        <h2 class="screen-title">Suivi du matériel en prêt</h2>
+        <div class="card">
+          <div id="materiel-pret-list"></div>
+          <p id="materiel-pret-empty" class="placeholder hidden">Aucun matériel de prêt (importez un export TECHNIZEN contenant le client "TECHNIZEN")</p>
+        </div>
+      </section>
+
+      <section id="tab-panel-config" class="tab-panel hidden">
+        <h2 class="screen-title">Configuration</h2>
+        <div class="card">
+          <p class="field-note">Le relais et les clients se gèrent depuis l'onglet "Gestion clients" et le fichier de configuration chargé au démarrage.</p>
+        </div>
+
+        <h2 class="screen-title">Corbeille</h2>
+        <div class="card">
+          <p class="field-note">Interventions supprimées, conservées 90 jours à titre de vérification manuelle (aucune restauration automatique).</p>
+          <div id="corbeille-list"></div>
+          <p id="corbeille-empty" class="placeholder hidden">Corbeille vide</p>
+        </div>
+      </section>
     </main>
 
     <footer>SAV-tech — Appli bureau — configuration chargée en mémoire</footer>
@@ -591,14 +773,30 @@
     const REQUIRED_KEYS_RELAIS = ["url", "writePassword"];
 
     const GITHUB_API_CONTENTS = "https://api.github.com/repos/Matrice971/SAV-tech/contents/data/interventions";
+    const GITHUB_RAW_CLIENTS = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients";
     const ETAT_LABELS = {
       1: "Réparation finalisée",
       2: "En attente de pièce",
       3: "Livrée et testée",
     };
+    const ETAT_ORDER = [1, 2, 3];
+    const INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS = 90;
+    const PBKDF2_ITERATIONS = 100000;
 
     let configState = null;
     let configFileName = "config-bureau.json";
+    let hasUnsavedChanges = false;
+
+    function markDirty() {
+      hasUnsavedChanges = true;
+    }
+
+    window.addEventListener("beforeunload", (event) => {
+      if (hasUnsavedChanges) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    });
 
     const screenAccueilEl = document.getElementById("screen-accueil");
     const screenPrincipalEl = document.getElementById("screen-principal");
@@ -612,9 +810,22 @@
     const saveCloseBtnEl = document.getElementById("save-close-btn");
     const saveMessageEl = document.getElementById("save-message");
 
+    const tabButtonEls = document.querySelectorAll(".tab-btn");
+    const tabPanelEls = {
+      reparation: document.getElementById("tab-panel-reparation"),
+      clients: document.getElementById("tab-panel-clients"),
+      pret: document.getElementById("tab-panel-pret"),
+      config: document.getElementById("tab-panel-config"),
+    };
+    const reparationTabBadgeEl = document.getElementById("reparation-tab-badge");
+
     const refreshInterventionsBtnEl = document.getElementById("refresh-interventions-btn");
     const interventionsStatusEl = document.getElementById("interventions-status");
     const interventionsListEl = document.getElementById("interventions-list");
+    const publishSelectionBtnEl = document.getElementById("publish-selection-btn");
+
+    const corbeilleListEl = document.getElementById("corbeille-list");
+    const corbeilleEmptyEl = document.getElementById("corbeille-empty");
 
     const addClientBtnEl = document.getElementById("add-client-btn");
     const clientsListEl = document.getElementById("clients-list");
@@ -677,13 +888,29 @@
       return true;
     }
 
+    function switchTab(tabId) {
+      tabButtonEls.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === tabId);
+      });
+      Object.entries(tabPanelEls).forEach(([id, panel]) => {
+        panel.classList.toggle("hidden", id !== tabId);
+      });
+    }
+
+    tabButtonEls.forEach((btn) => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
     function enterMainScreen() {
       hideError();
       saveMessageEl.classList.add("hidden");
       screenAccueilEl.classList.add("hidden");
       screenPrincipalEl.classList.remove("hidden");
+      switchTab("reparation");
+      purgeOldDeletedInterventions();
       renderClients();
       renderMaterielPret();
+      renderCorbeille();
       fetchInterventions();
     }
 
@@ -752,6 +979,21 @@
       return new Date().toISOString().slice(0, 10);
     }
 
+    // Parse une date "AAAA-MM-JJ" en objet Date local (évite le décalage de
+    // fuseau horaire qu'introduirait new Date("AAAA-MM-JJ"), interprété en UTC).
+    function parseIsoDate(isoDate) {
+      const [year, month, day] = isoDate.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function daysSince(isoDate) {
+      const today = new Date();
+      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const target = parseIsoDate(isoDate);
+      const msPerDay = 24 * 60 * 60 * 1000;
+      return Math.round((todayMidnight - target) / msPerDay);
+    }
+
     function ensureMaterielPretDefaults() {
       if (!Array.isArray(configState.materielPret)) {
         configState.materielPret = [];
@@ -762,6 +1004,37 @@
       if (!Array.isArray(configState.recuperationsConfirmees)) {
         configState.recuperationsConfirmees = [];
       }
+      if (!Array.isArray(configState.interventionsSupprimees)) {
+        configState.interventionsSupprimees = [];
+      }
+    }
+
+    function purgeOldDeletedInterventions() {
+      configState.interventionsSupprimees = configState.interventionsSupprimees.filter(
+        (entry) => entry && entry.dateSuppression && daysSince(entry.dateSuppression) <= INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS
+      );
+    }
+
+    function renderCorbeille() {
+      const entries = (configState.interventionsSupprimees || [])
+        .slice()
+        .sort((a, b) => String(b.dateSuppression || "").localeCompare(String(a.dateSuppression || "")));
+
+      corbeilleListEl.innerHTML = "";
+      corbeilleEmptyEl.classList.toggle("hidden", entries.length > 0);
+
+      entries.forEach((entry) => {
+        const contact = entry.intervention && entry.intervention.contact;
+        const expiration = new Date(parseIsoDate(entry.dateSuppression).getTime() + INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS * 24 * 60 * 60 * 1000);
+        const expirationIso = `${expiration.getFullYear()}-${String(expiration.getMonth() + 1).padStart(2, "0")}-${String(expiration.getDate()).padStart(2, "0")}`;
+        const row = document.createElement("div");
+        row.className = "corbeille-row";
+        row.innerHTML = `
+          <div class="corbeille-contact">${escapeHtml(contact || "(contact inconnu)")} — ${escapeHtml(entry.filename)}</div>
+          <div class="corbeille-details">Supprimée le ${escapeHtml(entry.dateSuppression)} · expire le ${escapeHtml(expirationIso)}</div>
+        `;
+        corbeilleListEl.appendChild(row);
+      });
     }
 
     function renderMaterielPret() {
@@ -814,6 +1087,7 @@
 
     function markMaterielDisponible(serie) {
       setMaterielDisponible(serie);
+      markDirty();
       renderMaterielPret();
     }
 
@@ -823,6 +1097,7 @@
         configState.recuperationsConfirmees.push(filename);
       }
       recuperationsEnAttente = recuperationsEnAttente.filter((recup) => recup.filename !== filename);
+      markDirty();
       renderMaterielPret();
     }
 
@@ -962,54 +1237,140 @@
         refs.lieuSummaryEl.textContent = updatedData.lieu_prise_charge;
         refs.statusEl.textContent = "Modifications enregistrées";
         refs.statusEl.classList.add("intervention-save-success");
+        markDirty();
       } finally {
         refs.saveBtn.disabled = false;
         refs.saveBtn.textContent = "💾 Enregistrer les modifications";
       }
     }
 
+    let currentInterventions = [];
+    const selectedInterventionFilenames = new Set();
+    const publishedFilenames = new Map();
+
+    function updateReparationBadge() {
+      const count = currentInterventions.length;
+      reparationTabBadgeEl.textContent = String(count);
+      reparationTabBadgeEl.classList.toggle("hidden", count === 0);
+    }
+
+    function updatePublishButtonState() {
+      publishSelectionBtnEl.disabled = selectedInterventionFilenames.size === 0;
+    }
+
+    async function deleteIntervention(entry, deleteBtnEl, deleteStatusEl) {
+      const item = entry.data;
+      const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+      const confirmed = window.confirm(
+        `Supprimer définitivement l'intervention de ${item.contact || "(contact inconnu)"} — ${materiel.type || ""} n° série ${materiel.num_serie || ""} ?\n\nCette action supprime le fichier sur GitHub et ne peut pas être annulée (l'intervention reste consultable 90 jours dans la corbeille, onglet Configuration).`
+      );
+      if (!confirmed) {
+        return;
+      }
+
+      deleteBtnEl.disabled = true;
+      deleteStatusEl.textContent = "Suppression…";
+      deleteStatusEl.className = "intervention-save-status";
+
+      try {
+        const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
+        let res;
+        try {
+          res = await fetch(`${relaisUrl}/delete`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              password: configState.relais.writePassword,
+              filename: entry.filename,
+              dossier: "interventions",
+            }),
+          });
+        } catch {
+          deleteStatusEl.textContent = "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez.";
+          deleteStatusEl.classList.add("intervention-save-error");
+          return;
+        }
+
+        let result = null;
+        try {
+          result = await res.json();
+        } catch {
+          // corps de réponse non JSON, traité comme un échec ci-dessous
+        }
+
+        if (!res.ok || !result || result.success !== true) {
+          const errorMessage = result && typeof result.error === "string" ? result.error : `Erreur HTTP ${res.status}`;
+          deleteStatusEl.textContent = `Échec de la suppression : ${errorMessage}`;
+          deleteStatusEl.classList.add("intervention-save-error");
+          return;
+        }
+
+        configState.interventionsSupprimees.push({
+          intervention: item,
+          filename: entry.filename,
+          dateSuppression: todayISODate(),
+        });
+        currentInterventions = currentInterventions.filter((e) => e.filename !== entry.filename);
+        selectedInterventionFilenames.delete(entry.filename);
+        markDirty();
+        renderCorbeille();
+        renderInterventions(currentInterventions);
+      } finally {
+        deleteBtnEl.disabled = false;
+      }
+    }
+
     function buildInterventionRow(entry) {
       const item = entry.data;
       const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+      const statusClass = `status-group-${ETAT_ORDER.includes(item.etat) ? item.etat : 1}`;
+      const publishedAt = publishedFilenames.get(entry.filename);
+      const isPublished = !!publishedAt;
       const row = document.createElement("div");
-      row.className = "intervention-row";
+      row.className = `intervention-card ${statusClass}`;
       row.innerHTML = `
-        <div class="intervention-summary">
-          <div class="intervention-contact">${escapeHtml(item.contact)} — ${escapeHtml(item.centre)}</div>
-          <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
-          <div class="intervention-details">État : ${etatLabel(item.etat)}${item.piece_en_commande ? " · Pièce en commande" : ""}</div>
-          <div class="intervention-details">${escapeHtml(item.date)} · ${escapeHtml(item.technicien)} · <span class="intervention-lieu-summary"></span></div>
-        </div>
-        <div class="intervention-row-actions">
-          <button type="button" class="button-secondary button-small" data-action="toggle-detail">Voir détail</button>
-        </div>
-        <div class="intervention-detail hidden">
-          <p><strong>Commentaire technicien</strong><br>${hasContent(item.commentaire_technicien) ? formatListOrText(item.commentaire_technicien) : "(aucun)"}</p>
-          <p><strong>Rapport</strong><br>${hasContent(item.nom_rapport) ? formatListOrText(item.nom_rapport) : "(non renseigné)"}</p>
-          <p><strong>Matériel mis à disposition</strong><br>${hasContent(item.materiel_prete_num_serie) ? formatListOrText(item.materiel_prete_num_serie) : "(aucun)"}</p>
-          <p><strong>Pièces déjà montées</strong><br>${hasContent(item.pieces_montees) ? formatListOrText(item.pieces_montees) : "(aucune)"}</p>
-
-          <div class="form-field">
-            <label>Lieu de prise en charge</label>
-            <select class="intervention-lieu-select">
-              <option value="Site">Site</option>
-              <option value="Atelier">Atelier</option>
-            </select>
+        <input type="checkbox" class="intervention-checkbox" ${isPublished ? "disabled" : ""}>
+        <div class="intervention-body">
+          <div class="intervention-summary">
+            <div class="intervention-contact">${escapeHtml(item.contact)} — ${escapeHtml(item.centre)}</div>
+            <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
+            <div class="intervention-details">État : ${etatLabel(item.etat)}${item.piece_en_commande ? " · Pièce en commande" : ""}</div>
+            <div class="intervention-details">${escapeHtml(item.date)} · ${escapeHtml(item.technicien)} · <span class="intervention-lieu-summary"></span></div>
+            ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
           </div>
-
-          <div class="form-field">
-            <label>Pièces complémentaires</label>
-            <textarea class="intervention-pieces-input" rows="2"></textarea>
+          <div class="intervention-row-actions">
+            <button type="button" class="button-secondary button-small" data-action="toggle-detail">Voir détail</button>
+            <button type="button" class="button-secondary button-small button-danger" data-action="delete">🗑️ Supprimer</button>
+            <span class="intervention-delete-status"></span>
           </div>
+          <div class="intervention-detail hidden">
+            <p><strong>Commentaire technicien</strong><br>${hasContent(item.commentaire_technicien) ? formatListOrText(item.commentaire_technicien) : "(aucun)"}</p>
+            <p><strong>Rapport</strong><br>${hasContent(item.nom_rapport) ? formatListOrText(item.nom_rapport) : "(non renseigné)"}</p>
+            <p><strong>Matériel mis à disposition</strong><br>${hasContent(item.materiel_prete_num_serie) ? formatListOrText(item.materiel_prete_num_serie) : "(aucun)"}</p>
+            <p><strong>Pièces déjà montées</strong><br>${hasContent(item.pieces_montees) ? formatListOrText(item.pieces_montees) : "(aucune)"}</p>
 
-          <div class="form-field">
-            <label>Commentaire bureau</label>
-            <textarea class="intervention-bureau-input" rows="2"></textarea>
-          </div>
+            <div class="form-field">
+              <label>Lieu de prise en charge</label>
+              <select class="intervention-lieu-select">
+                <option value="Site">Site</option>
+                <option value="Atelier">Atelier</option>
+              </select>
+            </div>
 
-          <div class="intervention-save-row">
-            <button type="button" class="button-save button-small intervention-save-btn">💾 Enregistrer les modifications</button>
-            <span class="intervention-save-status"></span>
+            <div class="form-field">
+              <label>Pièces complémentaires</label>
+              <textarea class="intervention-pieces-input" rows="2"></textarea>
+            </div>
+
+            <div class="form-field">
+              <label>Commentaire bureau</label>
+              <textarea class="intervention-bureau-input" rows="2"></textarea>
+            </div>
+
+            <div class="intervention-save-row">
+              <button type="button" class="button-save button-small intervention-save-btn">💾 Enregistrer les modifications</button>
+              <span class="intervention-save-status"></span>
+            </div>
           </div>
         </div>
       `;
@@ -1020,12 +1381,27 @@
         toggleBtn.textContent = isHidden ? "Voir détail" : "Masquer détail";
       });
 
+      const checkboxEl = row.querySelector(".intervention-checkbox");
+      checkboxEl.checked = selectedInterventionFilenames.has(entry.filename);
+      checkboxEl.addEventListener("change", () => {
+        if (checkboxEl.checked) {
+          selectedInterventionFilenames.add(entry.filename);
+        } else {
+          selectedInterventionFilenames.delete(entry.filename);
+        }
+        updatePublishButtonState();
+      });
+
+      const deleteBtn = row.querySelector('[data-action="delete"]');
+      const deleteStatusEl = row.querySelector(".intervention-delete-status");
+      deleteBtn.addEventListener("click", () => deleteIntervention(entry, deleteBtn, deleteStatusEl));
+
       const lieuSummaryEl = row.querySelector(".intervention-lieu-summary");
       const lieuSelect = row.querySelector(".intervention-lieu-select");
       const piecesInput = row.querySelector(".intervention-pieces-input");
       const bureauInput = row.querySelector(".intervention-bureau-input");
       const saveBtn = row.querySelector(".intervention-save-btn");
-      const statusEl = row.querySelector(".intervention-save-status");
+      const statusEl = row.querySelector(".intervention-detail .intervention-save-status");
 
       lieuSummaryEl.textContent = item.lieu_prise_charge == null ? "" : String(item.lieu_prise_charge);
       lieuSelect.value = item.lieu_prise_charge || "";
@@ -1039,15 +1415,43 @@
     }
 
     function renderInterventions(interventions) {
+      currentInterventions = interventions;
+      updateReparationBadge();
+
       if (interventions.length === 0) {
         showInterventionsStatus("Aucune intervention à traiter pour le moment");
+        updatePublishButtonState();
         return;
       }
       hideInterventionsStatus();
       interventionsListEl.innerHTML = "";
+
+      const groups = new Map();
+      ETAT_ORDER.forEach((etat) => groups.set(etat, []));
       interventions.forEach((entry) => {
-        interventionsListEl.appendChild(buildInterventionRow(entry));
+        const etat = ETAT_ORDER.includes(entry.data && entry.data.etat) ? entry.data.etat : 1;
+        groups.get(etat).push(entry);
       });
+
+      ETAT_ORDER.forEach((etat) => {
+        const entries = groups.get(etat);
+        if (entries.length === 0) {
+          return;
+        }
+        const groupEl = document.createElement("div");
+        groupEl.className = "status-group";
+        groupEl.innerHTML = `
+          <h3 class="status-group-title status-group-${etat}">${escapeHtml(etatLabel(etat))} (${entries.length})</h3>
+          <div class="status-group-cards"></div>
+        `;
+        const cardsEl = groupEl.querySelector(".status-group-cards");
+        entries.forEach((entry) => {
+          cardsEl.appendChild(buildInterventionRow(entry));
+        });
+        interventionsListEl.appendChild(groupEl);
+      });
+
+      updatePublishButtonState();
     }
 
     async function fetchInterventions() {
@@ -1135,6 +1539,212 @@
 
     refreshInterventionsBtnEl.addEventListener("click", fetchInterventions);
 
+    function bytesToBase64(bytes) {
+      let binary = "";
+      bytes.forEach((b) => (binary += String.fromCharCode(b)));
+      return btoa(binary);
+    }
+
+    function base64ToBytes(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    async function deriveEncryptKey(password, saltBytes) {
+      const passwordBytes = new TextEncoder().encode(password);
+      const baseKey = await crypto.subtle.importKey("raw", passwordBytes, { name: "PBKDF2" }, false, ["deriveKey"]);
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: saltBytes, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["encrypt"]
+      );
+    }
+
+    async function deriveDecryptKey(password, saltBytes) {
+      const passwordBytes = new TextEncoder().encode(password);
+      const baseKey = await crypto.subtle.importKey("raw", passwordBytes, { name: "PBKDF2" }, false, ["deriveKey"]);
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: saltBytes, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+      );
+    }
+
+    async function encryptClientFile(plaintext, password) {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveEncryptKey(password, salt);
+      const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(plaintext));
+      return `${bytesToBase64(salt)}.${bytesToBase64(iv)}.${bytesToBase64(new Uint8Array(ciphertext))}`;
+    }
+
+    async function decryptClientFile(fileContent, password) {
+      const parts = fileContent.trim().split(".");
+      if (parts.length !== 3) {
+        throw new Error("format de fichier invalide");
+      }
+      const [saltB64, ivB64, ciphertextB64] = parts;
+      const salt = base64ToBytes(saltB64);
+      const iv = base64ToBytes(ivB64);
+      const ciphertext = base64ToBytes(ciphertextB64);
+      const key = await deriveDecryptKey(password, salt);
+      const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
+      return new TextDecoder().decode(decrypted);
+    }
+
+    function buildAppareilFromIntervention(item, existingAppareil, clientLienDrive) {
+      const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+      const appareil = {
+        type: materiel.type || "",
+        num_serie: materiel.num_serie || "",
+        centre_origine: item.centre || "",
+        adresse: (existingAppareil && existingAppareil.adresse) || "",
+        etat: item.etat,
+        date_prise_charge: item.date || "",
+        lieu_prise_charge: item.lieu_prise_charge || "",
+        piece_en_commande: !!item.piece_en_commande,
+        materiel_prete_num_serie: item.materiel_prete_num_serie || "",
+        commentaire_technicien: item.commentaire_technicien || "",
+        lien_drive: (existingAppareil && existingAppareil.lien_drive) || clientLienDrive || "",
+      };
+      if (item.etat === 3) {
+        appareil.date_remise_service = item.date || "";
+      } else if (existingAppareil && existingAppareil.date_remise_service) {
+        appareil.date_remise_service = existingAppareil.date_remise_service;
+      }
+      return appareil;
+    }
+
+    function showPublishError(message) {
+      window.alert(message);
+    }
+
+    async function publishSelection() {
+      const selectedEntries = currentInterventions.filter((entry) => selectedInterventionFilenames.has(entry.filename));
+      if (selectedEntries.length === 0) {
+        return;
+      }
+
+      const entriesBySlug = new Map();
+      selectedEntries.forEach((entry) => {
+        const slug = slugify(entry.data && entry.data.contact ? entry.data.contact : "");
+        if (!entriesBySlug.has(slug)) {
+          entriesBySlug.set(slug, []);
+        }
+        entriesBySlug.get(slug).push(entry);
+      });
+
+      const invalidContacts = [];
+      entriesBySlug.forEach((entries, slug) => {
+        const client = configState.clients[slug];
+        if (!slug || !client || !client.password) {
+          entries.forEach((entry) => invalidContacts.push(entry.data.contact || "(contact inconnu)"));
+        }
+      });
+
+      if (invalidContacts.length > 0) {
+        showPublishError(
+          `Publication annulée : aucun client valide (avec mot de passe défini) pour : ${invalidContacts.join(", ")}. ` +
+          "Créez ou complétez ces clients dans l'onglet \"Gestion clients\" avant de publier."
+        );
+        return;
+      }
+
+      publishSelectionBtnEl.disabled = true;
+      publishSelectionBtnEl.textContent = "Publication…";
+
+      const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
+      const failures = [];
+
+      try {
+        for (const [slug, entries] of entriesBySlug) {
+          const client = configState.clients[slug];
+          const filename = `${slug}.txt`;
+
+          try {
+            let merged = { contact: client.contact, email_contact: client.emailContact || "", appareils: [] };
+
+            const getRes = await fetch(`${GITHUB_RAW_CLIENTS}/${filename}`, { cache: "no-store" });
+            if (getRes.status === 200) {
+              const fileContent = await getRes.text();
+              const decrypted = await decryptClientFile(fileContent, client.password);
+              const parsed = JSON.parse(decrypted);
+              merged = {
+                contact: parsed.contact || client.contact,
+                email_contact: parsed.email_contact || client.emailContact || "",
+                appareils: Array.isArray(parsed.appareils) ? parsed.appareils : [],
+              };
+            } else if (getRes.status !== 404) {
+              throw new Error(`Erreur HTTP ${getRes.status} lors de la lecture du fichier existant`);
+            }
+
+            entries.forEach((entry) => {
+              const item = entry.data;
+              const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+              const index = merged.appareils.findIndex(
+                (a) => a.num_serie === materiel.num_serie && a.type === materiel.type
+              );
+              const existingAppareil = index >= 0 ? merged.appareils[index] : null;
+              const appareil = buildAppareilFromIntervention(item, existingAppareil, client.lienDrive);
+              if (index >= 0) {
+                merged.appareils[index] = appareil;
+              } else {
+                merged.appareils.push(appareil);
+              }
+            });
+
+            const encrypted = await encryptClientFile(JSON.stringify(merged), client.password);
+
+            const writeRes = await fetch(`${relaisUrl}/write`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                password: configState.relais.writePassword,
+                filename,
+                content: encrypted,
+                dossier: "clients",
+              }),
+            });
+            let writeResult = null;
+            try {
+              writeResult = await writeRes.json();
+            } catch {
+              // corps de réponse non JSON, traité comme un échec ci-dessous
+            }
+            if (!writeRes.ok || !writeResult || writeResult.success !== true) {
+              const errorMessage = writeResult && typeof writeResult.error === "string" ? writeResult.error : `Erreur HTTP ${writeRes.status}`;
+              throw new Error(errorMessage);
+            }
+
+            const publishedDate = todayISODate();
+            entries.forEach((entry) => {
+              publishedFilenames.set(entry.filename, publishedDate);
+              selectedInterventionFilenames.delete(entry.filename);
+            });
+          } catch (err) {
+            failures.push(`${client.contact} : ${err && err.message ? err.message : "erreur inconnue"}`);
+          }
+        }
+      } finally {
+        publishSelectionBtnEl.textContent = "📤 Publier la sélection";
+        renderInterventions(currentInterventions);
+      }
+
+      if (failures.length > 0) {
+        showPublishError(`Échec de publication pour :\n${failures.join("\n")}`);
+      }
+    }
+
+    publishSelectionBtnEl.addEventListener("click", publishSelection);
+
     function openAddClientForm() {
       editingSlug = null;
       clientModalTitleEl.textContent = "Ajouter un client";
@@ -1178,6 +1788,7 @@
         return;
       }
       delete configState.clients[slug];
+      markDirty();
       renderClients();
     }
 
@@ -1239,6 +1850,7 @@
         };
       }
 
+      markDirty();
       closeClientForm();
       renderClients();
     });
@@ -1344,6 +1956,7 @@
         .filter((slug) => !importedSlugs.has(slug))
         .map((slug) => configState.clients[slug].contact);
 
+      markDirty();
       showImportSummary({ added, unchanged, toReview, updatedFieldsCount });
     }
 
@@ -1358,6 +1971,7 @@
             serie: equipement.serie,
           }))
         : [];
+      markDirty();
       renderMaterielPret();
     }
 
@@ -1554,6 +2168,9 @@
     });
 
     saveCloseBtnEl.addEventListener("click", () => {
+      purgeOldDeletedInterventions();
+      renderCorbeille();
+
       const json = JSON.stringify(configState, null, 2);
       const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -1566,6 +2183,7 @@
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
+      hasUnsavedChanges = false;
       saveMessageEl.classList.remove("hidden");
     });
   </script>

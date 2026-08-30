@@ -152,6 +152,75 @@ async function handleWrite(request, env) {
   return jsonResponse({ success: true, filename, path });
 }
 
+async function handleDelete(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ success: false, error: "Corps JSON invalide." }, 400);
+  }
+
+  const { password, filename, dossier } = body;
+
+  if (!env.WRITE_PASSWORD || !env.GITHUB_TOKEN) {
+    return jsonResponse(
+      { success: false, error: "Configuration serveur incomplète (variables d'environnement manquantes)." },
+      500
+    );
+  }
+
+  if (!safeEqual(password, env.WRITE_PASSWORD)) {
+    return jsonResponse({ success: false, error: "Mot de passe incorrect." }, 401);
+  }
+
+  if (!isValidFilename(filename)) {
+    return jsonResponse(
+      { success: false, error: "Nom de fichier invalide (attendu : lettres/chiffres/-/_ et extension .txt)." },
+      400
+    );
+  }
+
+  const cleDossier = (typeof dossier === "string" && Object.prototype.hasOwnProperty.call(DOSSIERS_AUTORISES, dossier))
+    ? dossier
+    : DOSSIER_PAR_DEFAUT;
+  const dataDir = DOSSIERS_AUTORISES[cleDossier];
+
+  const path = `${dataDir}/${filename}`;
+
+  const existing = await githubRequest(env, path, { method: "GET" });
+  if (existing.status === 404) {
+    return jsonResponse({ success: false, error: "Fichier introuvable." }, 404);
+  }
+  if (existing.status !== 200) {
+    const errorText = await existing.text();
+    return jsonResponse(
+      { success: false, error: `Erreur GitHub lors de la lecture du fichier existant : ${errorText}` },
+      502
+    );
+  }
+  const existingData = await existing.json();
+  const sha = existingData.sha;
+
+  const deleteResponse = await githubRequest(env, path, {
+    method: "DELETE",
+    body: JSON.stringify({
+      message: `Suppression de ${filename} via relais SAV-tech`,
+      sha,
+      branch: GITHUB_BRANCH,
+    }),
+  });
+
+  if (!deleteResponse.ok) {
+    const errorText = await deleteResponse.text();
+    return jsonResponse(
+      { success: false, error: `Erreur GitHub lors de la suppression : ${errorText}` },
+      502
+    );
+  }
+
+  return jsonResponse({ success: true, filename });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -162,6 +231,10 @@ export default {
 
     if (url.pathname === "/write" && request.method === "POST") {
       return handleWrite(request, env);
+    }
+
+    if (url.pathname === "/delete" && request.method === "POST") {
+      return handleDelete(request, env);
     }
 
     return jsonResponse({ success: false, error: "Route inconnue." }, 404);

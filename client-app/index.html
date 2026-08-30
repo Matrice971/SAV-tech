@@ -98,7 +98,8 @@
     color: var(--color-text-muted);
   }
 
-  input[type="password"] {
+  input[type="password"],
+  input[type="text"] {
     font-size: 1rem;
     padding: 0.65rem 0.75rem;
     border: 1px solid var(--color-border);
@@ -106,7 +107,8 @@
     width: 100%;
   }
 
-  input[type="password"]:focus {
+  input[type="password"]:focus,
+  input[type="text"]:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
   }
@@ -302,13 +304,17 @@
 <body>
   <header>
     <h1>SAV-tech — Suivi de réparation</h1>
-    <span class="app-version">V1.01</span>
+    <span class="app-version">V1.02</span>
   </header>
 
   <main>
     <div id="screen-password">
       <div class="card">
         <form id="password-form">
+          <div>
+            <label for="client-id">Identifiant client</label>
+            <input type="text" id="client-id" name="client-id" autocomplete="username" required>
+          </div>
           <div>
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" autocomplete="current-password" required>
@@ -351,12 +357,22 @@
     </div>
   </main>
 
-  <footer>Étape C — liste et détail des appareils</footer>
+  <footer>SAV-tech — Suivi de réparation</footer>
 
   <script>
-    const FILE_URL = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients/test.txt";
+    const FILE_BASE_URL = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients";
     const PBKDF2_ITERATIONS = 100000;
     const REMISE_SERVICE_VISIBILITY_DAYS = 90;
+
+    function slugify(text) {
+      return text
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
 
     const ETAT_LABELS = {
       1: "Réparation finalisée",
@@ -374,6 +390,7 @@
     const screenDetailEl = document.getElementById("screen-detail");
 
     const formEl = document.getElementById("password-form");
+    const clientIdEl = document.getElementById("client-id");
     const passwordEl = document.getElementById("password");
     const submitBtnEl = document.getElementById("submit-btn");
     const statusEl = document.getElementById("status");
@@ -617,6 +634,7 @@
       deviceListEl.innerHTML = "";
       detailBodyEl.innerHTML = "";
       driveHeaderEl.classList.add("hidden");
+      clientIdEl.value = "";
       passwordEl.value = "";
       hideError();
       hideStatus();
@@ -642,15 +660,21 @@
       showStatus("Récupération du fichier…");
 
       try {
+        const slug = slugify(clientIdEl.value.trim());
+        if (!slug) {
+          throw { userMessage: "L'identifiant client doit contenir au moins une lettre ou un chiffre." };
+        }
+        const fileUrl = `${FILE_BASE_URL}/${slug}.txt`;
+
         let response;
         try {
-          response = await fetch(FILE_URL, { cache: "no-store" });
+          response = await fetch(fileUrl, { cache: "no-store" });
         } catch {
           throw { userMessage: "Connexion impossible. Vérifiez votre accès à internet et réessayez." };
         }
 
         if (response.status === 404) {
-          throw { userMessage: "Le fichier client est introuvable." };
+          throw { userMessage: "Identifiant client ou fichier introuvable." };
         }
         if (!response.ok) {
           throw { userMessage: `Le serveur a répondu avec une erreur (code ${response.status}).` };
