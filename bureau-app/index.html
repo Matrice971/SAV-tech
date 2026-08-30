@@ -448,7 +448,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.00</span>
+        <span class="app-version">V1.01</span>
       </div>
     </header>
 
@@ -473,7 +473,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.00</span>
+        <span class="app-version">V1.01</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer et fermer</button>
     </header>
@@ -586,10 +586,9 @@
 
     const GITHUB_API_CONTENTS = "https://api.github.com/repos/Matrice971/SAV-tech/contents/data/interventions";
     const ETAT_LABELS = {
-      1: "Prise en charge",
+      1: "Réparation finalisée",
       2: "En attente de pièce",
-      3: "Réparation en cours",
-      4: "Livré et testé",
+      3: "Livrée et testée",
     };
 
     let configState = null;
@@ -847,6 +846,9 @@
         </div>
         <div class="intervention-detail hidden">
           <p><strong>Commentaire technicien</strong><br>${hasContent(item.commentaire_technicien) ? formatListOrText(item.commentaire_technicien) : "(aucun)"}</p>
+          <p><strong>Rapport</strong><br>${hasContent(item.nom_rapport) ? formatListOrText(item.nom_rapport) : "(non renseigné)"}</p>
+          <p><strong>Matériel mis à disposition</strong><br>${hasContent(item.materiel_prete_num_serie) ? formatListOrText(item.materiel_prete_num_serie) : "(aucun)"}</p>
+          <p><strong>Pièces déjà montées</strong><br>${hasContent(item.pieces_montees) ? formatListOrText(item.pieces_montees) : "(aucune)"}</p>
 
           <div class="form-field">
             <label>Lieu de prise en charge</label>
