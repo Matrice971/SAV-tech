@@ -448,7 +448,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.01</span>
+        <span class="app-version">V1.02</span>
       </div>
     </header>
 
@@ -473,7 +473,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.01</span>
+        <span class="app-version">V1.02</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer et fermer</button>
     </header>
@@ -501,6 +501,12 @@
         <input type="file" id="technizen-file-input" accept=".json" class="hidden">
         <div id="clients-list"></div>
         <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
+      </div>
+
+      <h2 class="screen-title">Suivi du matériel en prêt</h2>
+      <div class="card">
+        <div id="materiel-pret-list"></div>
+        <p id="materiel-pret-empty" class="placeholder hidden">Aucun matériel de prêt (importez un export TECHNIZEN contenant le client "TECHNIZEN")</p>
       </div>
     </main>
 
@@ -614,6 +620,9 @@
     const clientsListEl = document.getElementById("clients-list");
     const clientsEmptyEl = document.getElementById("clients-empty");
 
+    const materielPretListEl = document.getElementById("materiel-pret-list");
+    const materielPretEmptyEl = document.getElementById("materiel-pret-empty");
+
     const importTechnizenBtnEl = document.getElementById("import-technizen-btn");
     const technizenFileInputEl = document.getElementById("technizen-file-input");
     const importConflictsModalOverlayEl = document.getElementById("import-conflicts-modal-overlay");
@@ -674,6 +683,7 @@
       screenAccueilEl.classList.add("hidden");
       screenPrincipalEl.classList.remove("hidden");
       renderClients();
+      renderMaterielPret();
       fetchInterventions();
     }
 
@@ -734,6 +744,75 @@
         row.querySelector('[data-action="delete"]').addEventListener("click", () => deleteClient(slug));
         clientsListEl.appendChild(row);
       });
+    }
+
+    function ensureMaterielPretDefaults() {
+      if (!Array.isArray(configState.materielPret)) {
+        configState.materielPret = [];
+      }
+      if (!configState.statutsMaterielPret || typeof configState.statutsMaterielPret !== "object" || Array.isArray(configState.statutsMaterielPret)) {
+        configState.statutsMaterielPret = {};
+      }
+    }
+
+    function renderMaterielPret() {
+      const materielPret = configState.materielPret || [];
+      materielPretListEl.innerHTML = "";
+      materielPretEmptyEl.classList.toggle("hidden", materielPret.length > 0);
+
+      materielPret.forEach((appareil) => {
+        const statutInfo = configState.statutsMaterielPret[appareil.serie];
+        const estPrete = !!statutInfo && statutInfo.statut === "preté";
+        const row = document.createElement("div");
+        row.className = "client-row";
+        row.innerHTML = `
+          <div>
+            <div class="client-contact">${escapeHtml(appareil.type)} ${escapeHtml(appareil.modele)} — n° série ${escapeHtml(appareil.serie)}</div>
+            <div class="client-details">${estPrete ? `🔴 Chez ${escapeHtml(statutInfo.client)} depuis ${escapeHtml(statutInfo.date)}` : "✅ Disponible"}</div>
+          </div>
+          <div class="client-row-actions">
+            ${estPrete ? '<button type="button" class="button-secondary button-small" data-action="marquer-disponible">Marquer comme récupéré/disponible</button>' : ""}
+          </div>
+        `;
+        if (estPrete) {
+          row.querySelector('[data-action="marquer-disponible"]').addEventListener("click", () => markMaterielDisponible(appareil.serie));
+        }
+        materielPretListEl.appendChild(row);
+      });
+    }
+
+    function markMaterielDisponible(serie) {
+      delete configState.statutsMaterielPret[serie];
+      renderMaterielPret();
+    }
+
+    function updateLoanStatusesFromInterventions(interventions) {
+      const catalogueSeries = new Set((configState.materielPret || []).map((appareil) => appareil.serie));
+
+      interventions.forEach(({ data }) => {
+        if (!data || !hasContent(data.materiel_prete_num_serie)) {
+          return;
+        }
+        const series = Array.isArray(data.materiel_prete_num_serie) ? data.materiel_prete_num_serie : [data.materiel_prete_num_serie];
+        const date = data.date || "";
+
+        series.forEach((serie) => {
+          if (!serie || !catalogueSeries.has(serie)) {
+            return;
+          }
+          const existing = configState.statutsMaterielPret[serie];
+          if (existing && existing.statut === "preté" && String(existing.date) >= String(date)) {
+            return;
+          }
+          configState.statutsMaterielPret[serie] = {
+            statut: "preté",
+            client: data.contact,
+            date,
+          };
+        });
+      });
+
+      renderMaterielPret();
     }
 
     function hasContent(value) {
@@ -987,6 +1066,7 @@
 
         interventions.sort((a, b) => String((b.data && b.data.date) || "").localeCompare(String((a.data && a.data.date) || "")));
 
+        updateLoanStatusesFromInterventions(interventions);
         renderInterventions(interventions);
       } finally {
         refreshInterventionsBtnEl.disabled = false;
@@ -1207,7 +1287,23 @@
       showImportSummary({ added, unchanged, toReview, updatedFieldsCount });
     }
 
+    function importMaterielPretFromTechnizen(actifs) {
+      const centreTechnizen = actifs.find(
+        (centre) => centre && typeof centre.nom === "string" && centre.nom === "TECHNIZEN"
+      );
+      configState.materielPret = (centreTechnizen && Array.isArray(centreTechnizen.equipements))
+        ? centreTechnizen.equipements.map((equipement) => ({
+            type: equipement.type,
+            modele: equipement.modele,
+            serie: equipement.serie,
+          }))
+        : [];
+      renderMaterielPret();
+    }
+
     function importFromTechnizen(actifs) {
+      importMaterielPretFromTechnizen(actifs);
+
       const contactsMap = buildTechnizenContactsMap(actifs);
       const conflicts = detectImportConflicts(contactsMap);
 
@@ -1381,6 +1477,7 @@
       }
 
       configState = data;
+      ensureMaterielPretDefaults();
       configFileName = file.name || configFileName;
       enterMainScreen();
     });
@@ -1391,6 +1488,7 @@
         relais: { url: "", writePassword: "" },
         clients: {},
       };
+      ensureMaterielPretDefaults();
       configFileName = "config-bureau.json";
       enterMainScreen();
     });
