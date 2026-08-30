@@ -248,6 +248,34 @@
     margin-bottom: 0.75rem;
   }
 
+  .clients-search-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .clients-search-input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+
+  .client-centres {
+    margin-top: 0.35rem;
+  }
+
+  .client-centre {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .client-centre-empty {
+    font-style: italic;
+  }
+
   .interventions-header {
     display: flex;
     justify-content: flex-end;
@@ -602,7 +630,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.04</span>
+        <span class="app-version">V1.05</span>
       </div>
     </header>
 
@@ -627,7 +655,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.04</span>
+        <span class="app-version">V1.05</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
     </header>
@@ -660,10 +688,9 @@
         <h2 class="screen-title">Gestion des clients</h2>
         <div class="card">
           <div class="clients-header">
-            <button type="button" id="import-technizen-btn" class="button-secondary">Importer depuis TECHNIZEN</button>
+            <input type="text" id="clients-search-input" class="clients-search-input" placeholder="Rechercher un responsable, un centre ou une commune…">
             <button type="button" id="add-client-btn">+ Ajouter un client</button>
           </div>
-          <input type="file" id="technizen-file-input" accept=".json" class="hidden">
           <div id="clients-list"></div>
           <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
         </div>
@@ -679,8 +706,29 @@
 
       <section id="tab-panel-config" class="tab-panel hidden">
         <h2 class="screen-title">Configuration</h2>
+
+        <h2 class="screen-title">Import TECHNIZEN</h2>
         <div class="card">
-          <p class="field-note">Le relais et les clients se gèrent depuis l'onglet "Gestion clients" et le fichier de configuration chargé au démarrage.</p>
+          <p class="field-note">Importe/actualise les clients et le matériel de prêt depuis un export TECHNIZEN (non destructif, résumé affiché après import).</p>
+          <div class="clients-header">
+            <button type="button" id="import-technizen-btn" class="button-secondary">Importer depuis TECHNIZEN</button>
+          </div>
+          <input type="file" id="technizen-file-input" accept=".json" class="hidden">
+        </div>
+
+        <h2 class="screen-title">Paramètres du relais</h2>
+        <div class="card">
+          <div class="form-field">
+            <label for="relais-url-input">URL du relais</label>
+            <input type="text" id="relais-url-input">
+          </div>
+          <div class="form-field">
+            <label for="relais-password-input">Mot de passe du relais</label>
+            <input type="text" id="relais-password-input">
+          </div>
+          <div class="modal-actions" style="justify-content: flex-start;">
+            <button type="button" id="save-relais-btn">Enregistrer les paramètres du relais</button>
+          </div>
         </div>
 
         <h2 class="screen-title">Corbeille</h2>
@@ -830,9 +878,14 @@
     const addClientBtnEl = document.getElementById("add-client-btn");
     const clientsListEl = document.getElementById("clients-list");
     const clientsEmptyEl = document.getElementById("clients-empty");
+    const clientsSearchInputEl = document.getElementById("clients-search-input");
 
     const materielPretListEl = document.getElementById("materiel-pret-list");
     const materielPretEmptyEl = document.getElementById("materiel-pret-empty");
+
+    const relaisUrlInputEl = document.getElementById("relais-url-input");
+    const relaisPasswordInputEl = document.getElementById("relais-password-input");
+    const saveRelaisBtnEl = document.getElementById("save-relais-btn");
 
     const importTechnizenBtnEl = document.getElementById("import-technizen-btn");
     const technizenFileInputEl = document.getElementById("technizen-file-input");
@@ -895,7 +948,21 @@
       Object.entries(tabPanelEls).forEach(([id, panel]) => {
         panel.classList.toggle("hidden", id !== tabId);
       });
+      if (tabId === "config") {
+        renderRelaisForm();
+      }
     }
+
+    function renderRelaisForm() {
+      relaisUrlInputEl.value = (configState.relais && configState.relais.url) || "";
+      relaisPasswordInputEl.value = (configState.relais && configState.relais.writePassword) || "";
+    }
+
+    saveRelaisBtnEl.addEventListener("click", () => {
+      configState.relais.url = relaisUrlInputEl.value.trim();
+      configState.relais.writePassword = relaisPasswordInputEl.value;
+      markDirty();
+    });
 
     tabButtonEls.forEach((btn) => {
       btn.addEventListener("click", () => switchTab(btn.dataset.tab));
@@ -947,20 +1014,47 @@
       clientFormErrorEl.classList.add("hidden");
     }
 
+    function normalizeSearchText(value) {
+      return (value == null ? "" : String(value))
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
+
+    function clientMatchesSearch(client, normalizedQuery) {
+      if (!normalizedQuery) {
+        return true;
+      }
+      const centres = Array.isArray(client.centres) ? client.centres : [];
+      const haystacks = [client.contact, ...centres.map((c) => c.nom), ...centres.map((c) => c.ville)];
+      return haystacks.some((text) => normalizeSearchText(text).includes(normalizedQuery));
+    }
+
     function renderClients() {
-      const slugs = Object.keys(configState.clients);
+      const normalizedQuery = normalizeSearchText(clientsSearchInputEl.value.trim());
+      const allSlugs = Object.keys(configState.clients);
+      const slugs = allSlugs.filter((slug) => clientMatchesSearch(configState.clients[slug], normalizedQuery));
+
       clientsListEl.innerHTML = "";
       clientsEmptyEl.classList.toggle("hidden", slugs.length > 0);
+      clientsEmptyEl.textContent = allSlugs.length === 0
+        ? "Aucun client configuré pour le moment"
+        : "Aucun client ne correspond à la recherche";
 
       slugs.forEach((slug) => {
         const client = configState.clients[slug];
         const passwordDisplay = client.password ? "••••••••" : "⚠️ Mot de passe à définir";
+        const centres = Array.isArray(client.centres) ? client.centres : [];
+        const centresHtml = centres.length > 0
+          ? centres.map((c) => `<div class="client-centre">${escapeHtml(c.nom)} — ${escapeHtml(c.adresse)}</div>`).join("")
+          : `<div class="client-centre client-centre-empty">(aucun centre associé)</div>`;
         const row = document.createElement("div");
         row.className = "client-row";
         row.innerHTML = `
           <div>
             <div class="client-contact">${escapeHtml(client.contact)}</div>
-            <div class="client-details">${passwordDisplay}  ·  ${escapeHtml(client.emailContact || "(pas d'email)")}  ·  ${escapeHtml(client.lienDrive || "(pas de lien Drive)")}</div>
+            <div class="client-details">${passwordDisplay}</div>
+            <div class="client-centres">${centresHtml}</div>
           </div>
           <div class="client-row-actions">
             <button type="button" class="button-secondary button-small" data-action="edit">Modifier</button>
@@ -972,6 +1066,8 @@
         clientsListEl.appendChild(row);
       });
     }
+
+    clientsSearchInputEl.addEventListener("input", renderClients);
 
     let recuperationsEnAttente = [];
 
@@ -1869,7 +1965,7 @@
           return;
         }
         if (!contactsMap.has(contact)) {
-          contactsMap.set(contact, { lienDrive: "", email: "" });
+          contactsMap.set(contact, { lienDrive: "", email: "", centres: [] });
         }
         const infos = contactsMap.get(contact);
         if (!infos.lienDrive) {
@@ -1884,6 +1980,11 @@
             infos.email = email;
           }
         }
+        infos.centres.push({
+          nom: centre && typeof centre.nom === "string" ? centre.nom.trim() : "",
+          adresse: centre && typeof centre.adresse === "string" ? centre.adresse.trim() : "",
+          ville: centre && typeof centre.ville === "string" ? centre.ville.trim() : "",
+        });
       });
 
       return contactsMap;
@@ -1927,7 +2028,7 @@
       const importedSlugs = new Set();
       let updatedFieldsCount = 0;
 
-      contactsMap.forEach(({ lienDrive, email }, contact) => {
+      contactsMap.forEach(({ lienDrive, email, centres }, contact) => {
         const slug = slugify(contact);
         if (!slug) {
           return;
@@ -1940,6 +2041,7 @@
               updatedFieldsCount++;
             }
           });
+          configState.clients[slug].centres = centres;
           unchanged.push(configState.clients[slug].contact);
         } else {
           configState.clients[slug] = {
@@ -1947,6 +2049,7 @@
             password: "",
             emailContact: email,
             lienDrive,
+            centres,
           };
           added.push(contact);
         }
