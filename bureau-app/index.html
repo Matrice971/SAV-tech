@@ -448,7 +448,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.02</span>
+        <span class="app-version">V1.03</span>
       </div>
     </header>
 
@@ -473,7 +473,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.02</span>
+        <span class="app-version">V1.03</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer et fermer</button>
     </header>
@@ -746,12 +746,21 @@
       });
     }
 
+    let recuperationsEnAttente = [];
+
+    function todayISODate() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
     function ensureMaterielPretDefaults() {
       if (!Array.isArray(configState.materielPret)) {
         configState.materielPret = [];
       }
       if (!configState.statutsMaterielPret || typeof configState.statutsMaterielPret !== "object" || Array.isArray(configState.statutsMaterielPret)) {
         configState.statutsMaterielPret = {};
+      }
+      if (!Array.isArray(configState.recuperationsConfirmees)) {
+        configState.recuperationsConfirmees = [];
       }
     }
 
@@ -762,13 +771,24 @@
 
       materielPret.forEach((appareil) => {
         const statutInfo = configState.statutsMaterielPret[appareil.serie];
-        const estPrete = !!statutInfo && statutInfo.statut === "preté";
+        const estPrete = !!statutInfo && statutInfo.statut === "prete";
+        const enAttente = estPrete ? recuperationsEnAttente.filter((r) => r.serie === appareil.serie) : [];
         const row = document.createElement("div");
         row.className = "client-row";
         row.innerHTML = `
-          <div>
+          <div style="flex: 1;">
             <div class="client-contact">${escapeHtml(appareil.type)} ${escapeHtml(appareil.modele)} — n° série ${escapeHtml(appareil.serie)}</div>
             <div class="client-details">${estPrete ? `🔴 Chez ${escapeHtml(statutInfo.client)} depuis ${escapeHtml(statutInfo.date)}` : "✅ Disponible"}</div>
+            ${enAttente
+              .map(
+                (recup) => `
+              <div class="warning" data-filename="${escapeHtml(recup.filename)}">
+                ⏳ Le technicien signale la récupération de ce matériel (chez ${escapeHtml(recup.client)}, le ${escapeHtml(recup.date)})
+                <button type="button" class="button-secondary button-small confirmer-recuperation-btn">✅ Confirmer la récupération</button>
+              </div>
+            `
+              )
+              .join("")}
           </div>
           <div class="client-row-actions">
             ${estPrete ? '<button type="button" class="button-secondary button-small" data-action="marquer-disponible">Marquer comme récupéré/disponible</button>' : ""}
@@ -777,39 +797,79 @@
         if (estPrete) {
           row.querySelector('[data-action="marquer-disponible"]').addEventListener("click", () => markMaterielDisponible(appareil.serie));
         }
+        row.querySelectorAll(".confirmer-recuperation-btn").forEach((btn) => {
+          const filename = btn.closest(".warning").dataset.filename;
+          btn.addEventListener("click", () => confirmerRecuperation(appareil.serie, filename));
+        });
         materielPretListEl.appendChild(row);
       });
     }
 
+    function setMaterielDisponible(serie) {
+      configState.statutsMaterielPret[serie] = {
+        statut: "disponible",
+        date: todayISODate(),
+      };
+    }
+
     function markMaterielDisponible(serie) {
-      delete configState.statutsMaterielPret[serie];
+      setMaterielDisponible(serie);
+      renderMaterielPret();
+    }
+
+    function confirmerRecuperation(serie, filename) {
+      setMaterielDisponible(serie);
+      if (!configState.recuperationsConfirmees.includes(filename)) {
+        configState.recuperationsConfirmees.push(filename);
+      }
+      recuperationsEnAttente = recuperationsEnAttente.filter((recup) => recup.filename !== filename);
       renderMaterielPret();
     }
 
     function updateLoanStatusesFromInterventions(interventions) {
       const catalogueSeries = new Set((configState.materielPret || []).map((appareil) => appareil.serie));
+      const confirmees = new Set(configState.recuperationsConfirmees || []);
 
-      interventions.forEach(({ data }) => {
-        if (!data || !hasContent(data.materiel_prete_num_serie)) {
+      interventions.forEach(({ filename, data }) => {
+        if (!data) {
           return;
         }
-        const series = Array.isArray(data.materiel_prete_num_serie) ? data.materiel_prete_num_serie : [data.materiel_prete_num_serie];
-        const date = data.date || "";
 
-        series.forEach((serie) => {
-          if (!serie || !catalogueSeries.has(serie)) {
-            return;
-          }
-          const existing = configState.statutsMaterielPret[serie];
-          if (existing && existing.statut === "preté" && String(existing.date) >= String(date)) {
-            return;
-          }
-          configState.statutsMaterielPret[serie] = {
-            statut: "preté",
-            client: data.contact,
-            date,
-          };
-        });
+        if (hasContent(data.materiel_prete_num_serie)) {
+          const series = Array.isArray(data.materiel_prete_num_serie) ? data.materiel_prete_num_serie : [data.materiel_prete_num_serie];
+          const date = data.date || "";
+
+          series.forEach((serie) => {
+            if (!serie || !catalogueSeries.has(serie)) {
+              return;
+            }
+            const existing = configState.statutsMaterielPret[serie];
+            if (existing && existing.date && String(existing.date) >= String(date)) {
+              return;
+            }
+            configState.statutsMaterielPret[serie] = {
+              statut: "prete",
+              client: data.contact,
+              date,
+            };
+          });
+        }
+
+        if (hasContent(data.materiel_recupere_num_serie) && !confirmees.has(filename)) {
+          const series = Array.isArray(data.materiel_recupere_num_serie) ? data.materiel_recupere_num_serie : [data.materiel_recupere_num_serie];
+          const date = data.date || "";
+
+          series.forEach((serie) => {
+            if (!serie || !catalogueSeries.has(serie)) {
+              return;
+            }
+            const dejaSignale = recuperationsEnAttente.some((recup) => recup.filename === filename && recup.serie === serie);
+            if (dejaSignale) {
+              return;
+            }
+            recuperationsEnAttente.push({ serie, client: data.contact, date, filename });
+          });
+        }
       });
 
       renderMaterielPret();
