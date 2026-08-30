@@ -1,193 +1,124 @@
-# Résumé projet — Appli de suivi de réparations (client + technicien + gestion)
+# Résumé projet — SAV-tech + TECHNIZEN
 
-*Document de reprise — dernière mise à jour : 12/08/2026*
-
----
-
-## 1. Objectif général
-
-Donner à chaque client (71 centres de contrôle technique) un accès en ligne, simple et sécurisé, au suivi d'avancement des réparations de leur matériel — sans serveur ni base de données centralisée, dans la continuité de l'approche déjà utilisée pour TECHNIZEN. Objectif secondaire assumé : professionnaliser le service pour se démarquer de la concurrence (secteur où tout le monde se connaît et se sait déjà en concurrence sur les mêmes clients).
-
-**Décision de gouvernance** : le collaborateur hiérarchique consulté laisse Phip libre du choix ("il trouve cela inutile"), comme pour TECHNIZEN à l'époque — projet qui est aujourd'hui utilisé au quotidien. Phip poursuit donc sur sa vision.
+*Document de reprise — mise à jour du 30/08/2026 (session complémentaire, suite à la refonte ergonomique de bureau-app)*
+*À partager en tout premier message d'une nouvelle conversation.*
 
 ---
 
-## 2. Dépôt du projet
+## 0. À LIRE EN PREMIER — où on en est
 
-- **GitHub créé** : github.com/Matrice971/sav.tech (dépôt public, "sav technizen")
-- **Reste public volontairement** : la confidentialité des données matériel n'est pas jugée critique dans ce secteur (concurrents et clients partagent déjà largement l'information). La protection réelle repose sur le **chiffrement des fichiers clients**, pas sur la confidentialité du dépôt.
-- Sert à la fois de stockage des fichiers d'échange et d'hébergement de l'appli client via **GitHub Pages**.
+Le chantier "améliorer l'ergonomie/présentation de bureau-app" est **terminé et validé en usage réel** : navigation par onglets, suppression sécurisée avec corbeille, publication vers les clients, recherche, gestion des paramètres du relais — tout est en place et bureau-app est passé de **V1.03 à V1.06**.
 
----
+**Étape majeure franchie cette session : la chaîne complète fonctionne de bout en bout pour la première fois**, confirmé par un test réel (Will Sainte-Rose, Gaz n° série 25294) : TECHNIZEN → intervention sur GitHub → bureau-app traite et publie → client-app affiche l'intervention après déchiffrement. Avant cette session, la fonction "Publier" décrite dans un résumé précédent comme déjà fonctionnelle **n'existait en réalité pas du tout** dans le code — c'est maintenant corrigé.
 
-## 3. Architecture générale — 3 applications distinctes
-
-| | Appli client | Appli technicien (terrain) | Programme de gestion |
-|---|---|---|---|
-| **Rôle** | Consultation statut uniquement | Déclaration prise en charge + suivi initial | Déclaration/modification complète, alimentation statuts |
-| **Utilisateurs** | Clients (71 centres) | Techniciens en intervention | Phip / collègue / secrétaire |
-| **Format** | HTML (page web) | HTML (page web) | Windows — Python (tkinter) + PyInstaller |
-| **Plateforme** | Tout support, tout OS (mobile + PC) | Mobile/PC terrain, connexion instable | PC Windows fixe (bureau) |
-| **Hébergement** | GitHub Pages (dépôt sav.tech) | GitHub Pages ou fichier local à trancher | Local, installé sur PC pro/perso |
-| **Accès** | Mot de passe par client | Identifiant + mot de passe technicien | Libre (usage interne bureau) |
-| **Écriture vers GitHub** | Aucune (lecture seule) | Oui — via relais sécurisé | Oui — via relais sécurisé |
+**🎯 CHANTIER IMMÉDIAT DE LA PROCHAINE SESSION : passer à client-app.** Deux volets :
+1. Un dernier correctif en attente côté bureau-app (voir section 5, point 1) — à valider avant de basculer, mais ne bloque pas de commencer à réfléchir à client-app en parallèle.
+2. Refonte de la présentation visuelle de client-app pour la rendre agréable pour les clients (rien de figé actuellement, client-app n'a jamais été déployé publiquement — on peut la refaire librement si besoin, y compris changer la façon dont un client s'identifie).
 
 ---
 
-## 4. Sécurité des écritures vers GitHub — point technique central
+## 1. Où trouver le code
 
-**Problème identifié** : un token GitHub avec droits d'écriture ne doit **jamais** être intégré en clair (ni même chiffré côté client) dans une appli HTML — il serait récupérable via les outils développeur du navigateur, donnant un accès complet en lecture/écriture à tout le dépôt.
+- **TECHNIZEN** : dépôt Git séparé, racine du dépôt = `index.html` + `src/js/app.js` + `src/js/database.js`. Fichier `PROJET_ETAT.md` + `PROJET_HISTORIQUE.md` à la racine. **Nouveau cette session** : `CLAUDE.md` créé à la racine de ce dépôt (sur le modèle de celui de SAV-tech) imposant l'incrémentation automatique du numéro de version affiché dans le header à chaque modification d'`index.html`.
+- **SAV-tech** : dépôt GitHub `Matrice971/SAV-tech`, **public**. Structure : `client-app/`, `bureau-app/`, `worker/`, `docs/`. `CLAUDE.md` à la racine avec incrémentation automatique de version pour `client-app/index.html` et `bureau-app/index.html`.
+- **Dossier Drive partagé** `SAV-tech-TECHNIZEN/` : copie miroir pour lecture par Claude (chat) — contient `bureau-app/index.html`, `client-app/index.html`, TECHNIZEN (`index.html`, `app.js`, `database.js`), et maintenant aussi `worker/index.js`. Toujours demander à Phip de resynchroniser avant de diagnostiquer un bug.
+- **Pour lire un gros fichier Drive** : `download_file_content`, décoder le base64 stocké proprement (jamais retaper à la main).
 
-**Solution retenue** : un **service intermédiaire (relais)**, probablement **Cloudflare Workers** (gratuit pour ce volume d'usage), qui :
-- Détient seul le token GitHub, jamais exposé au navigateur
-- Reçoit de l'appli technicien/gestion : identifiant + mot de passe + données à écrire
-- Vérifie l'authentification, puis effectue lui-même l'écriture réelle vers GitHub
-
-**S'applique aux deux** : appli technicien terrain **et** programme de gestion Windows — aucun accès direct au token, pour cohérence et sécurité sur toute la ligne (même le programme de gestion, utilisé aussi par le collègue et la secrétaire, passe par ce relais).
-
-**Lecture** : ne nécessite aucun token — dépôt public, fetch() simple suffit (utilisé par l'appli client).
+Tout le travail se fait directement sur la branche `main`, dans les deux dépôts.
 
 ---
 
-## 5. Chiffrement des fichiers clients
+## 2. Architecture actuelle — vue d'ensemble (inchangée, désormais opérationnelle de bout en bout)
 
-- **Algorithme** : AES-GCM + dérivation de mot de passe via PBKDF2
-- **Compatibilité native des deux côtés** : Web Crypto API (JS, tous navigateurs y compris Safari desktop/mobile) et librairie Python (cryptography ou pycryptodome) côté gestion
-- **Format du fichier** : .txt, IV + données chiffrées encodées en Base64
-- **Un fichier par client** (isolation — pas de fichier global pour les 71 centres), nommé avec un identifiant opaque (pas de nom devinable)
-
----
-
-## 6. Structure des données — statut de réparation
-
-**4 états d'avancement retenus** ("pièce en commande" est un champ annexe de l'état 2, pas un état séparé) :
-1. Prise en charge (site/atelier) — date
-2. En attente de pièce — date + pièce commandée (oui/non)
-3. Réparation en cours — date
-4. Matériel livré et testé — date
-
-Seuls les appareils **pris en charge** (pas encore livrés) apparaissent sur l'écran d'accueil client.
-
-**Exemple de structure JSON (avant chiffrement)** :
-
-```json
-{
-  "compte_client": "12345",
-  "appareils": [
-    {
-      "type": "Banc de frein",
-      "num_serie": "BF-2024-0088",
-      "centre": "Centre Contrôle Nord",
-      "adresse": "...",
-      "etat": 2,
-      "date_etat": "2026-07-25",
-      "piece_en_commande": true,
-      "description_panne": "...",
-      "pieces_montees": ["..."],
-      "pieces_a_prevoir": ["..."],
-      "photos": ["..."]
-    }
-  ]
-}
+```
+TECHNIZEN (technicien, terrain, hors-ligne) — affiche désormais V10.29 dans le header
+    │  bouton "Envoyer vers SAV-tech" sur la fiche d'intervention standard
+    ▼
+data/interventions/*.txt (GitHub, non chiffré, écrit via le relais Cloudflare /write)
+    │  lu par bureau-app (API GitHub publique)
+    ▼
+bureau-app (V1.06, onglets : Suivi réparation / Gestion clients / Suivi prêt / Configuration)
+    │  "📤 Publier la sélection" → déchiffre le fichier client existant (si présent),
+    │  fusionne les interventions sélectionnées, rechiffre, republie
+    ▼
+data/clients/{contact-slug}.txt (GitHub, chiffré AES-GCM/PBKDF2) — ✅ confirmé fonctionnel
+    │  lu par client-app (identifiant client + mot de passe)
+    ▼
+client-app (V1.02, appli HTML publique, jamais déployée publiquement à ce jour)
 ```
 
 ---
 
-## 7. Appli client (HTML)
+## 3. TECHNIZEN — état actuel
 
-- Une appli par client, lien Drive/GitHub du client en dur dans le code (ou paramètre d'URL si hébergement en ligne)
-- Demande le mot de passe → déchiffre le fichier → affiche la liste des appareils pris en charge :
-  - Nom du centre + adresse
-  - Type de matériel + n° de série
-- Clic sur un appareil → détail de son état d'avancement
-- Doit fonctionner identiquement sur mobile (iOS/Android) et PC (tout navigateur, y compris Safari)
-- **Hébergement en ligne retenu** (GitHub Pages) plutôt que fichier local distribué, pour résoudre les limitations de fetch() en file:// sur mobile
+- **V10.29** : ajout de l'affichage du numéro de version dans le header (`<span class="app-version">`), à côté du sous-titre. Règle d'incrémentation automatique posée dans un nouveau `CLAUDE.md`.
+- Reste par ailleurs inchangé depuis le dernier résumé (système de suivi de complétude par équipement, bouton "Envoyer vers SAV-tech" à 3 états, etc. — voir résumé précédent pour le détail si besoin).
+- Le champ "Mot de passe du relais" demandé dans la fenêtre "Envoyer vers SAV-tech" est normal et attendu — il correspond au secret Cloudflare `WRITE_PASSWORD` (voir section 6).
 
 ---
 
-## 8. Appli technicien terrain (HTML) — fonctionnalités détaillées
+## 4. SAV-tech — état actuel
 
-- **Authentification** : identifiant + mot de passe technicien
-- **Sélecteurs** client + matériel, sur le modèle de l'appli TECHNIZEN existante
-- **Nouvelle prise en charge** :
-  - Description de la panne
-  - Ajout de photo(s) — **à compresser/redimensionner automatiquement avant stockage** pour limiter la taille des fichiers
-  - Pièces déjà montées / pièces à prévoir (champs texte libres)
-- **Client occasionnel (garage) / matériel hors base** :
-  - Saisie libre simple (texte), sans structure complexe
-  - **Pas de suivi après intervention, pas d'accès client, pas de synchronisation vers une fiche permanente** — ces clients sont déjà gérés manuellement en dehors du système, la mention sert uniquement de traçabilité de l'intervention
-- **Mode hors-ligne obligatoire** : le technicien travaille souvent plusieurs semaines sur d'autres îles sans connexion fiable
-  - Enregistrement local (navigateur — IndexedDB envisagé pour gérer les photos)
-  - Synchronisation vers GitHub (via le relais) dès qu'une connexion redevient disponible, automatique ou via bouton "synchroniser"
-- **Écriture vers GitHub** : jamais directe, toujours via le relais Cloudflare Workers (voir section 4)
+### bureau-app (V1.03 → V1.06 cette session)
 
----
+**Navigation** : 4 onglets (Suivi réparation avec badge du nombre d'interventions non traitées / Gestion clients / Suivi prêt / Configuration). Onglet Configuration regroupe désormais : import TECHNIZEN, paramètres du relais (URL + mot de passe, éditables et sauvegardés dans la config), et la corbeille.
 
-## 9. Programme de gestion (Windows, Python/PyInstaller)
+**Bouton de sauvegarde** : renommé "💾 Enregistrer" (ne prétend plus fermer l'onglet). Protection `beforeunload` native si modifications non sauvegardées (`hasUnsavedChanges`).
 
-### Rôle
-- Déclare/modifie les prises en charge
-- Alimente les statuts de réparation en continu
-- Utilisé par Phip, le collègue, et la secrétaire (donc pas d'accès direct au token — passe par le relais comme l'appli terrain)
+**Interventions à traiter** : cartes groupées par statut (Réparation finalisée / En attente de pièce / Livrée et testée), code couleur, triées par date.
 
-### Structure de base déjà cadrée précédemment
-- Chemin de stockage local **configurable** via une commande dans l'appli
-- Bouton de fermeture en haut à droite → déclenche l'export/sauvegarde
-- **Import base clients/matériel** : boîte de dialogue, depuis un export TECHNIZEN
-- **Import base techniciens intervenants** : également depuis un export TECHNIZEN
-- **Fichier de sauvegarde interne** (suivi de travail, différent du fichier client) :
-  - Pas de chiffrement (usage interne uniquement)
-  - Nom horodaté au format français : hh-mm__jj-mm-aa__data-repar.txt
-  - Chargement manuel via boîte de dialogue ouvrant dans le dossier configuré
-  - Sauvegarde automatique vers ce dossier
-  - Synchronisation entre machines (PC pro/perso) via dossier cloud synchronisé (Drive/Dropbox/Nextcloud — **outil final à trancher selon rapidité de synchro**)
-  - Suppression des anciens fichiers : manuelle
-  - Risque connu : écrasement possible si une machine charge une version non à jour avant synchro complète — géré par discipline de travail, pas de fusion automatique prévue
+**Suppression sécurisée** : bouton 🗑️ avec confirmation → copie dans `configState.interventionsSupprimees` (config JSON) → suppression réelle sur GitHub via la nouvelle route `/delete` du relais → purge automatique après 90 jours → écran "Corbeille" consultable dans Configuration (pas de restauration automatique, juste vérification manuelle).
 
-### Interface de saisie
-- Menu sélection client → menu sélection matériel → validation
-- Écran de saisie des 4 états + dates (+ champs panne/pièces/photos si alimentés depuis la gestion aussi)
-- Export du fichier client chiffré, avec chemin suggéré affiché à l'écran
+**Publication ("📤 Publier la sélection")** — ✅ **fonctionnalité qui n'existait pas du tout avant cette session**, entièrement créée :
+- Sélection multiple par cases à cocher sur les interventions à traiter.
+- Pour chaque client concerné : télécharge `data/clients/{slug}.txt` s'il existe (404 = premier envoi), déchiffre (mot de passe client), fusionne les interventions dans `appareils` (clé : `num_serie` + `type`), rechiffre (AES-GCM/PBKDF2, format `salt.iv.ciphertext` en base64, identique au format attendu par client-app), republie via `/write` avec `dossier: "clients"`.
+- **Publication partielle** : si un client de la sélection n'a pas de mot de passe défini, il est exclu de la publication mais **les autres clients valides sont publiés quand même** — un message final liste séparément les échecs réseau et les clients non publiés faute de mot de passe.
+- Badge "✅ Publié le JJ/MM" sur les interventions publiées avec succès.
+
+**Gestion des clients** : vue condensée (contact + statut mot de passe + liste des centres attribués avec leur adresse), reste modifiable en détail (email, lien Drive) uniquement via "Modifier". Barre de recherche (contact, nom de centre, ou commune), insensible à la casse et aux accents. Import TECHNIZEN enrichi : capture désormais aussi la liste des centres (nom, adresse, ville) par contact, non-destructif comme avant.
+
+**Paramètres du relais** : formulaire dans Configuration pour éditer `relais.url` et `relais.writePassword` directement depuis l'appli (avant, modification uniquement possible en éditant le JSON à la main).
+
+### client-app (V1.01 → V1.02)
+
+- **Corrigé** : `FILE_URL` n'est plus codé en dur sur `test.txt` — un champ "Identifiant client" (slug) a été ajouté à l'écran de connexion, combiné au mot de passe.
+- **Corrigé** : texte de dev "Étape C — liste et détail des appareils" retiré du footer.
+- **Testé et confirmé fonctionnel** avec un vrai client (Will Sainte-Rose / slug `will-sainte-rose`) : appareil publié depuis bureau-app bien visible après déchiffrement.
+- N'a jamais été déployé publiquement — reste entièrement libre à retravailler (présentation, voire logique d'identification) sans contrainte de compatibilité avec des clients existants.
+
+### Relais Cloudflare Workers (`worker/index.js`)
+
+- Nouvelle route **`POST /delete`** ajoutée et déployée (`wrangler deploy` confirmé fait, testé via `curl` avec réponse JSON correcte).
+- CORS géré au niveau global (`OPTIONS` → 204 avec les bons en-têtes), commun à `/write` et `/delete` — pas de régression CORS malgré l'ajout de la route.
+- `dossier` reste une clé de correspondance stricte (`clients` → `data/clients`, `interventions` → `data/interventions`), jamais interpolée directement — protection contre le path traversal confirmée dans le code.
+- Le mot de passe (`WRITE_PASSWORD`) est comparé en temps constant (`safeEqual`) — bonne pratique déjà en place.
 
 ---
 
-## 10. Points tranchés au fil des sessions
+## 5. Sujets ouverts / évolutions à discuter
 
-- Fichier par client (isolation sécurité), nom opaque, format .txt
-- Chiffrement AES-GCM + PBKDF2, compatible Web Crypto API (JS) et Python
-- Dépôt GitHub public assumé — chiffrement suffisant, pas besoin de dépôt privé
-- Programme de gestion en Python/PyInstaller (accès disque direct, pas de restriction navigateur)
-- Chemin de sauvegarde technicien (gestion) : configurable, pas fixe
-- Synchronisation entre machines de gestion : dossier cloud automatique (pas de clé USB manuelle)
-- Écriture vers GitHub : jamais de token direct côté client/terrain — toujours via relais (Cloudflare Workers)
-- Clients occasionnels/garages : traçabilité simple uniquement, aucun suivi ni accès portail
-- Photos autorisées côté terrain, avec compression nécessaire pour maîtriser la taille des fichiers
-- Odoo (ERP) évalué et écarté pour ce besoin précis : Field Service exclu du plan gratuit "Une App Gratuite", nécessite une licence Enterprise payante ; solution jugée surdimensionnée et dépendante d'une connexion fiable, incompatible avec le travail terrain sur zones peu connectées
+1. **Correctif en attente sur bureau-app (prochaine session)** : un premier correctif tentait de bloquer l'envoi réseau si `configState.relais.url` était vide, mais ça n'a pas fonctionné comme prévu en test réel (donnait encore une erreur "HTTP 501" au lieu du message clair). Remplacé par une approche plus simple, déjà spécifiée mais **pas encore testée** : ajouter la phrase *"Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration."* à la fin de tout message d'échec réseau (dans `saveInterventionChanges`, `deleteIntervention`, `publishSelection`), sans tenter de pré-valider l'URL. Prompt prêt, à lancer et tester en priorité à la reprise.
+2. **Refonte visuelle de client-app** : à faire, sans contrainte de compatibilité (jamais déployée publiquement). Réfléchir à la présentation ET à l'ergonomie de l'écran de connexion (identifiant + mot de passe) pendant cette refonte.
+3. **Écran de comparaison à l'import TECHNIZEN** (local vs importé, champ par champ) — toujours pas codé, l'import reste non-destructif par défaut. Note : l'import capture désormais aussi les centres (nom/adresse/ville), donc si cet écran est fait un jour, il faudra aussi couvrir les conflits sur ce nouveau champ.
+4. **Mode de fonctionnement de la base clients à trancher en équipe** (préférence technicien / admin / bases indépendantes / synchro protégée) — toujours en suspens. Rappel : ne jamais publier la base clients complète en clair sur le dépôt public GitHub si une synchro automatique est un jour choisie.
+5. **Point de vigilance GitHub Pages** inchangé : ne jamais rendre le dépôt `SAV-tech` privé sans upgrade payant (couperait `client-app`).
+6. Les 2 bugs anciens de `client-app` (section précédente) sont **résolus** cette session (`FILE_URL` dynamique + texte de dev retiré) — à retirer du suivi.
+7. Compléter les filtres opacimètre AT605/ECOPA100 (toujours en attente, non traité cette session).
 
 ---
 
-## 11. Points encore ouverts
+## 6. Repères pratiques utiles
 
-1. **Hébergement de l'appli technicien terrain** : GitHub Pages (comme l'appli client) ou distribution locale — à trancher en fonction du besoin hors-ligne
-2. **Choix final Google Drive / Dropbox / Nextcloud** pour la synchro du dossier de gestion entre machines
-3. **Alignement du format d'export TECHNIZEN** avec les champs attendus par la nouvelle appli (clients, matériel, ET techniciens intervenants)
-4. **Mise en place concrète du relais Cloudflare Workers** (configuration, authentification technicien/gestion côté relais)
-5. **Gestion du stockage local des photos en mode hors-ligne prolongé** (plusieurs semaines sans connexion) — capacité, nettoyage après synchro réussie
-
----
-
-## 12. Découpage prévu des prompts pour Claude Code
-
-Le nombre de prompts va probablement augmenter par rapport à l'estimation initiale (3), compte tenu de l'ajout du relais Cloudflare, du mode hors-ligne, et des photos. Prompts envisagés à ce stade :
-
-- **Prompt 1** — Appli client HTML : mot de passe → déchiffrement AES-GCM → liste appareils → détail état
-- **Prompt 2** — Relais Cloudflare Workers : réception identifiant/mot de passe + données, vérification, écriture sécurisée vers GitHub
-- **Prompt 3** — Appli technicien terrain HTML : authentification, sélecteurs, formulaire prise en charge (panne, photos compressées, pièces), client occasionnel, mode hors-ligne + sync
-- **Prompt 4** — Programme de gestion Windows, structure de base : config chemin, import TECHNIZEN (clients + techniciens), chargement/sauvegarde horodatée, écriture vers relais
-- **Prompt 5** — Programme de gestion Windows, interface de saisie : sélection client/matériel → saisie des 4 états → déclaration/modification prise en charge
-
-*(Ce découpage sera affiné une fois les points ouverts de la section 11 tranchés.)*
+- **Git qui refuse de pousser (branches divergentes)** : `git pull --no-rebase`, puis `git commit --no-edit` si un message de fusion s'ouvre (l'éditeur `nano` peut s'ouvrir : `Ctrl+O` puis `Entrée` pour valider, `Ctrl+X` pour quitter), puis `git push`. Rencontré et résolu cette session (des interventions techniciens avaient été poussées entre-temps par TECHNIZEN — comportement normal, pas une erreur).
+- **Vérifier si un déploiement Worker est à jour** : `wrangler deployments list` (comparer l'horodatage au dernier commit concerné), ou tester directement la route via `curl -X POST .../[route] -d '{...}'` — une réponse JSON du Worker (même une erreur du type "mot de passe incorrect") confirme que le déploiement est bien en place.
+- **Diagnostiquer un échec réseau dans le navigateur** : ouvrir les outils de développement (F12) → onglet Réseau, reproduire l'action, inspecter la requête en échec (URL complète, réponse). A permis de découvrir que le champ "URL du relais" vide provoque un `fetch()` en URL relative vers la page elle-même (`http://localhost:8000/write`) plutôt que vers le relais Cloudflare — d'où des erreurs cryptiques ("HTTP 501") qui n'ont rien à voir avec Cloudflare, GitHub ou le code métier.
+- **Changer le mot de passe du relais (`WRITE_PASSWORD`)** — 3 endroits à synchroniser, sinon "Mot de passe incorrect" partout :
+  1. Le secret Cloudflare lui-même : `wrangler secret put WRITE_PASSWORD` (depuis `worker/`), ou via le tableau de bord web [dash.cloudflare.com](https://dash.cloudflare.com) → Workers & Pages → `sav-tech-relay` → Settings → Variables and Secrets (utile si on change de PC, ex. PC Windows du travail — aucune installation requise par cette voie).
+  2. Le champ "Mot de passe du relais" dans bureau-app (onglet Configuration → Enregistrer les paramètres du relais → 💾 Enregistrer).
+  3. Le champ équivalent dans TECHNIZEN (fenêtre "Envoyer vers SAV-tech") — emplacement exact dans le code encore à vérifier si besoin.
+- **`wrangler deploy`** : nécessaire après toute modification de `worker/index.js` — un `git push` seul ne redéploie pas le worker.
+- **Fichiers HTML ouverts en `file://` sous Linux (Zorin OS)** : peuvent afficher une version périmée à cause du portail XDG — préférer `python3 -m http.server` + `http://localhost:8000/`. Nuance découverte cette session : ce n'est pas systématique (le fichier TECHNIZEN ouvert en `file://` était bien à jour lors d'un test) — donc utile pour vérifier via le numéro de version affiché, mais ne pas assumer que `file://` est *toujours* périmé ni *jamais* périmé.
 
 ---
 
-*Fin du résumé — reprendre au point 11 (points ouverts) à la prochaine session.*
+*Fin du résumé.*
