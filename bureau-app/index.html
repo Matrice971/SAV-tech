@@ -630,7 +630,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.05</span>
+        <span class="app-version">V1.07</span>
       </div>
     </header>
 
@@ -655,7 +655,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.05</span>
+        <span class="app-version">V1.07</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
     </header>
@@ -1310,7 +1310,7 @@
             }),
           });
         } catch {
-          refs.statusEl.textContent = "Erreur réseau, les modifications n'ont pas été envoyées. Vérifiez votre connexion et réessayez.";
+          refs.statusEl.textContent = "Erreur réseau, les modifications n'ont pas été envoyées. Vérifiez votre connexion et réessayez. Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.";
           refs.statusEl.classList.add("intervention-save-error");
           return;
         }
@@ -1324,7 +1324,7 @@
 
         if (!res.ok || !result || result.success !== true) {
           const errorMessage = result && typeof result.error === "string" ? result.error : `Erreur HTTP ${res.status}`;
-          refs.statusEl.textContent = `Échec de l'enregistrement : ${errorMessage}`;
+          refs.statusEl.textContent = `Échec de l'enregistrement : ${errorMessage} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`;
           refs.statusEl.classList.add("intervention-save-error");
           return;
         }
@@ -1382,7 +1382,7 @@
             }),
           });
         } catch {
-          deleteStatusEl.textContent = "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez.";
+          deleteStatusEl.textContent = "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez. Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.";
           deleteStatusEl.classList.add("intervention-save-error");
           return;
         }
@@ -1396,7 +1396,7 @@
 
         if (!res.ok || !result || result.success !== true) {
           const errorMessage = result && typeof result.error === "string" ? result.error : `Erreur HTTP ${res.status}`;
-          deleteStatusEl.textContent = `Échec de la suppression : ${errorMessage}`;
+          deleteStatusEl.textContent = `Échec de la suppression : ${errorMessage} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`;
           deleteStatusEl.classList.add("intervention-save-error");
           return;
         }
@@ -1739,25 +1739,21 @@
       });
 
       const invalidContacts = [];
+      const invalidSlugs = [];
       entriesBySlug.forEach((entries, slug) => {
         const client = configState.clients[slug];
         if (!slug || !client || !client.password) {
           entries.forEach((entry) => invalidContacts.push(entry.data.contact || "(contact inconnu)"));
+          invalidSlugs.push(slug);
         }
       });
+      invalidSlugs.forEach((slug) => entriesBySlug.delete(slug));
 
-      if (invalidContacts.length > 0) {
-        showPublishError(
-          `Publication annulée : aucun client valide (avec mot de passe défini) pour : ${invalidContacts.join(", ")}. ` +
-          "Créez ou complétez ces clients dans l'onglet \"Gestion clients\" avant de publier."
-        );
-        return;
-      }
+      const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
 
       publishSelectionBtnEl.disabled = true;
       publishSelectionBtnEl.textContent = "Publication…";
 
-      const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
       const failures = [];
 
       try {
@@ -1826,7 +1822,7 @@
               selectedInterventionFilenames.delete(entry.filename);
             });
           } catch (err) {
-            failures.push(`${client.contact} : ${err && err.message ? err.message : "erreur inconnue"}`);
+            failures.push(`${client.contact} : ${err && err.message ? err.message : "erreur inconnue"} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`);
           }
         }
       } finally {
@@ -1834,8 +1830,15 @@
         renderInterventions(currentInterventions);
       }
 
+      const messageParts = [];
       if (failures.length > 0) {
-        showPublishError(`Échec de publication pour :\n${failures.join("\n")}`);
+        messageParts.push(`Échec de publication pour :\n${failures.join("\n")}`);
+      }
+      if (invalidContacts.length > 0) {
+        messageParts.push(`Client(s) sans mot de passe valide (non publiés) :\n${invalidContacts.join(", ")}`);
+      }
+      if (messageParts.length > 0) {
+        showPublishError(messageParts.join("\n\n"));
       }
     }
 
