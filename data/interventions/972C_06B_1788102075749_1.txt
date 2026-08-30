@@ -1,0 +1,22 @@
+{
+  "centre": "DEKRA Long Pré",
+  "centre_numero": "972C.06B",
+  "client_adresse": "Immeuble Landy Long Pré, 97232 LE LAMENTIN",
+  "contact": "LAMEYNARDIE Marc",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "13834"
+  },
+  "etat": 1,
+  "date": "2026-08-30",
+  "piece_en_commande": true,
+  "commentaire_technicien": "_Texte Travaux réalisé_\n\n-Texte Observation-",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "-Texte Pièces Complémentaire-",
+  "commentaire_bureau": "*texte Commentaire interne*",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-DEKRALongPre-300826.pdf",
+  "pieces_montees": [
+    "Pièces 2"
+  ]
+}
