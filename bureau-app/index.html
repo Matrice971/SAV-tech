@@ -630,7 +630,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.07</span>
+        <span class="app-version">V1.08</span>
       </div>
     </header>
 
@@ -655,7 +655,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.07</span>
+        <span class="app-version">V1.08</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
     </header>
@@ -1696,13 +1696,19 @@
       return new TextDecoder().decode(decrypted);
     }
 
-    function buildAppareilFromIntervention(item, existingAppareil, clientLienDrive) {
+    function buildAppareilFromIntervention(item, existingAppareil, clientLienDrive, clientCentres) {
       const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+      let adresse = existingAppareil && existingAppareil.adresse;
+      if (!adresse) {
+        const centres = Array.isArray(clientCentres) ? clientCentres : [];
+        const centreMatch = centres.find((c) => c.nom === item.centre);
+        adresse = (centreMatch && centreMatch.adresse) || "";
+      }
       const appareil = {
         type: materiel.type || "",
         num_serie: materiel.num_serie || "",
         centre_origine: item.centre || "",
-        adresse: (existingAppareil && existingAppareil.adresse) || "",
+        adresse,
         etat: item.etat,
         date_prise_charge: item.date || "",
         lieu_prise_charge: item.lieu_prise_charge || "",
@@ -1785,7 +1791,7 @@
                 (a) => a.num_serie === materiel.num_serie && a.type === materiel.type
               );
               const existingAppareil = index >= 0 ? merged.appareils[index] : null;
-              const appareil = buildAppareilFromIntervention(item, existingAppareil, client.lienDrive);
+              const appareil = buildAppareilFromIntervention(item, existingAppareil, client.lienDrive, client.centres);
               if (index >= 0) {
                 merged.appareils[index] = appareil;
               } else {
