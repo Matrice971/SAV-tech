@@ -1,0 +1,21 @@
+{
+  "centre": "ACT Bas du Fort",
+  "centre_numero": "971C.01A",
+  "client_adresse": "BAS DU FORT, 97190 LE GOSIER",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "00619"
+  },
+  "etat": 1,
+  "date": "2026-08-31",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Texte travaux",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ACTBasduFort-310826.pdf",
+  "pieces_montees": [],
+  "materiel_recupere_num_serie": "123456"
+}
