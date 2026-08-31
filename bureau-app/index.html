@@ -399,6 +399,34 @@
     margin-bottom: 0;
   }
 
+  .intervention-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .intervention-column {
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+
+  .intervention-column-title {
+    margin: 0 0 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-text-muted);
+  }
+
+  .pieces-montees-box {
+    background: var(--color-pending-bg);
+    border: 1px solid var(--color-pending-border);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.75rem;
+    margin: 0 0 0.5rem;
+  }
+
   .intervention-save-row {
     display: flex;
     align-items: center;
@@ -630,7 +658,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.09</span>
+        <span class="app-version">V1.10</span>
       </div>
     </header>
 
@@ -655,7 +683,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.09</span>
+        <span class="app-version">V1.10</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
     </header>
@@ -1127,7 +1155,7 @@
       corbeilleEmptyEl.classList.toggle("hidden", entries.length > 0);
 
       entries.forEach((entry) => {
-        const contact = entry.intervention && entry.intervention.contact;
+        const contact = entry.intervention && entry.intervention.technicien && entry.intervention.technicien.contact;
         const expiration = new Date(parseIsoDate(entry.dateSuppression).getTime() + INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS * 24 * 60 * 60 * 1000);
         const expirationIso = `${expiration.getFullYear()}-${String(expiration.getMonth() + 1).padStart(2, "0")}-${String(expiration.getDate()).padStart(2, "0")}`;
         const row = document.createElement("div");
@@ -1209,13 +1237,14 @@
       const confirmees = new Set(configState.recuperationsConfirmees || []);
 
       interventions.forEach(({ filename, data }) => {
-        if (!data) {
+        const tech = data && data.technicien;
+        if (!tech) {
           return;
         }
 
-        if (hasContent(data.materiel_prete_num_serie)) {
-          const series = Array.isArray(data.materiel_prete_num_serie) ? data.materiel_prete_num_serie : [data.materiel_prete_num_serie];
-          const date = data.date || "";
+        if (hasContent(tech.materiel_prete_num_serie)) {
+          const series = Array.isArray(tech.materiel_prete_num_serie) ? tech.materiel_prete_num_serie : [tech.materiel_prete_num_serie];
+          const date = tech.date || "";
 
           series.forEach((serie) => {
             if (!serie || !catalogueSeries.has(serie)) {
@@ -1227,15 +1256,15 @@
             }
             configState.statutsMaterielPret[serie] = {
               statut: "prete",
-              client: data.contact,
+              client: tech.contact,
               date,
             };
           });
         }
 
-        if (hasContent(data.materiel_recupere_num_serie) && !confirmees.has(filename)) {
-          const series = Array.isArray(data.materiel_recupere_num_serie) ? data.materiel_recupere_num_serie : [data.materiel_recupere_num_serie];
-          const date = data.date || "";
+        if (hasContent(tech.materiel_recupere_num_serie) && !confirmees.has(filename)) {
+          const series = Array.isArray(tech.materiel_recupere_num_serie) ? tech.materiel_recupere_num_serie : [tech.materiel_recupere_num_serie];
+          const date = tech.date || "";
 
           series.forEach((serie) => {
             if (!serie || !catalogueSeries.has(serie)) {
@@ -1245,7 +1274,7 @@
             if (dejaSignale) {
               return;
             }
-            recuperationsEnAttente.push({ serie, client: data.contact, date, filename });
+            recuperationsEnAttente.push({ serie, client: tech.contact, date, filename });
           });
         }
       });
@@ -1289,13 +1318,57 @@
       return value == null ? "" : String(value);
     }
 
+    function centreCommuneFor(slug, centreNom) {
+      const client = configState.clients[slug];
+      const centres = client && Array.isArray(client.centres) ? client.centres : [];
+      const centreMatch = centres.find((c) => c.nom === centreNom);
+      return (centreMatch && centreMatch.ville) || "";
+    }
+
+    function normalizeIntervention(data) {
+      if (data && typeof data.technicien === "object" && data.technicien && typeof data.publication === "object" && data.publication) {
+        return data;
+      }
+      const technicien = {
+        contact: data.contact,
+        centre: data.centre,
+        materiel: data.materiel,
+        etat: data.etat,
+        date: data.date,
+        technicien: data.technicien,
+        commentaire_technicien: data.commentaire_technicien,
+        piece_en_commande: data.piece_en_commande,
+        pieces_montees: data.pieces_montees,
+        nom_rapport: data.nom_rapport,
+        materiel_prete_num_serie: data.materiel_prete_num_serie,
+        materiel_recupere_num_serie: data.materiel_recupere_num_serie,
+      };
+      const slug = slugify(technicien.contact || "");
+      const publication = {
+        centre_nom: technicien.centre || "",
+        centre_commune: centreCommuneFor(slug, technicien.centre),
+        date_prise_charge: technicien.date || "",
+        lieu_prise_charge: data.lieu_prise_charge || "",
+        etat: technicien.etat,
+        commentaire_technicien: textFieldValue(technicien.commentaire_technicien),
+        pieces_complementaires: data.pieces_complementaires || "",
+        commentaire_bureau: data.commentaire_bureau || "",
+      };
+      return { technicien, publication };
+    }
+
     async function saveInterventionChanges(entry, refs) {
-      const updatedData = {
-        ...entry.data,
+      const updatedPublication = {
+        centre_nom: entry.data.publication.centre_nom,
+        centre_commune: entry.data.publication.centre_commune,
+        date_prise_charge: refs.dateInput.value,
         lieu_prise_charge: refs.lieuSelect.value,
+        etat: Number(refs.etatSelect.value),
+        commentaire_technicien: refs.commentaireTechnicienInput.value,
         pieces_complementaires: refs.piecesInput.value,
         commentaire_bureau: refs.bureauInput.value,
       };
+      const updatedData = { technicien: entry.data.technicien, publication: updatedPublication };
 
       refs.saveBtn.disabled = true;
       refs.saveBtn.textContent = "Enregistrement...";
@@ -1336,11 +1409,11 @@
           return;
         }
 
-        entry.data = updatedData;
-        refs.lieuSummaryEl.textContent = updatedData.lieu_prise_charge;
-        refs.statusEl.textContent = "Modifications enregistrées";
-        refs.statusEl.classList.add("intervention-save-success");
+        entry.data.publication = updatedPublication;
         markDirty();
+        lastSaveMessages.set(entry.filename, "Modifications enregistrées");
+        expandedInterventionFilenames.add(entry.filename);
+        renderInterventions(currentInterventions);
       } finally {
         refs.saveBtn.disabled = false;
         refs.saveBtn.textContent = "💾 Enregistrer les modifications";
@@ -1350,6 +1423,8 @@
     let currentInterventions = [];
     const selectedInterventionFilenames = new Set();
     const publishedFilenames = new Map();
+    const expandedInterventionFilenames = new Set();
+    const lastSaveMessages = new Map();
 
     function updateReparationBadge() {
       const count = currentInterventions.length;
@@ -1363,9 +1438,10 @@
 
     async function deleteIntervention(entry, deleteBtnEl, deleteStatusEl) {
       const item = entry.data;
-      const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+      const tech = item.technicien;
+      const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
       const confirmed = window.confirm(
-        `Supprimer définitivement l'intervention de ${item.contact || "(contact inconnu)"} — ${materiel.type || ""} n° série ${materiel.num_serie || ""} ?\n\nCette action supprime le fichier sur GitHub et ne peut pas être annulée (l'intervention reste consultable 90 jours dans la corbeille, onglet Configuration).`
+        `Supprimer définitivement l'intervention de ${tech.contact || "(contact inconnu)"} — ${materiel.type || ""} n° série ${materiel.num_serie || ""} ?\n\nCette action supprime le fichier sur GitHub et ne peut pas être annulée (l'intervention reste consultable 90 jours dans la corbeille, onglet Configuration).`
       );
       if (!confirmed) {
         return;
@@ -1415,6 +1491,7 @@
         });
         currentInterventions = currentInterventions.filter((e) => e.filename !== entry.filename);
         selectedInterventionFilenames.delete(entry.filename);
+        expandedInterventionFilenames.delete(entry.filename);
         markDirty();
         renderCorbeille();
         renderInterventions(currentInterventions);
@@ -1424,55 +1501,91 @@
     }
 
     function buildInterventionRow(entry) {
-      const item = entry.data;
-      const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
-      const statusClass = `status-group-${ETAT_ORDER.includes(item.etat) ? item.etat : 1}`;
+      const tech = entry.data.technicien;
+      const pub = entry.data.publication;
+      const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
+      const statusClass = `status-group-${ETAT_ORDER.includes(pub.etat) ? pub.etat : 1}`;
       const publishedAt = publishedFilenames.get(entry.filename);
       const isPublished = !!publishedAt;
+      const isExpanded = expandedInterventionFilenames.has(entry.filename);
+      const etatOptionsHtml = ETAT_ORDER.map((e) => `<option value="${e}">${escapeHtml(etatLabel(e))}</option>`).join("");
       const row = document.createElement("div");
       row.className = `intervention-card ${statusClass}`;
       row.innerHTML = `
         <input type="checkbox" class="intervention-checkbox" ${isPublished ? "disabled" : ""}>
         <div class="intervention-body">
           <div class="intervention-summary">
-            <div class="intervention-contact">${escapeHtml(item.contact)} — ${escapeHtml(item.centre)}</div>
+            <div class="intervention-contact">${escapeHtml(tech.contact)} — ${escapeHtml(pub.centre_nom)}</div>
             <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
-            <div class="intervention-details">État : ${etatLabel(item.etat)}${item.piece_en_commande ? " · Pièce en commande" : ""}</div>
-            <div class="intervention-details">${escapeHtml(item.date)} · ${escapeHtml(item.technicien)} · <span class="intervention-lieu-summary"></span></div>
+            <div class="intervention-details">État : ${etatLabel(pub.etat)}${tech.piece_en_commande ? " · Pièce en attente" : ""}</div>
+            <div class="intervention-details">${escapeHtml(pub.date_prise_charge)} · ${escapeHtml(tech.technicien)} · ${escapeHtml(pub.lieu_prise_charge)}</div>
             ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
           </div>
           <div class="intervention-row-actions">
-            <button type="button" class="button-secondary button-small" data-action="toggle-detail">Voir détail</button>
+            <button type="button" class="button-secondary button-small" data-action="toggle-detail">${isExpanded ? "Masquer détail" : "Voir détail"}</button>
             <button type="button" class="button-secondary button-small button-danger" data-action="delete">🗑️ Supprimer</button>
             <span class="intervention-delete-status"></span>
           </div>
-          <div class="intervention-detail hidden">
-            <p><strong>Commentaire technicien</strong><br>${hasContent(item.commentaire_technicien) ? formatListOrText(item.commentaire_technicien) : "(aucun)"}</p>
-            <p><strong>Rapport</strong><br>${hasContent(item.nom_rapport) ? formatListOrText(item.nom_rapport) : "(non renseigné)"}</p>
-            <p><strong>Matériel mis à disposition</strong><br>${hasContent(item.materiel_prete_num_serie) ? formatListOrText(item.materiel_prete_num_serie) : "(aucun)"}</p>
-            <p><strong>Pièces déjà montées</strong><br>${hasContent(item.pieces_montees) ? formatListOrText(item.pieces_montees) : "(aucune)"}</p>
+          <div class="intervention-detail ${isExpanded ? "" : "hidden"}">
+            <div class="intervention-columns">
+              <div class="intervention-column">
+                <h4 class="intervention-column-title">Déclaré par le technicien</h4>
+                <p><strong>Contact</strong><br>${escapeHtml(tech.contact)}</p>
+                <p><strong>Centre</strong><br>${escapeHtml(tech.centre)}</p>
+                <p><strong>Matériel</strong><br>${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</p>
+                <p><strong>État déclaré</strong><br>${etatLabel(tech.etat)}</p>
+                <p><strong>Date</strong><br>${escapeHtml(tech.date)}</p>
+                <p><strong>Technicien</strong><br>${escapeHtml(tech.technicien)}</p>
+                <p><strong>Commentaire technicien</strong><br>${hasContent(tech.commentaire_technicien) ? formatListOrText(tech.commentaire_technicien) : "(aucun)"}</p>
+                <p><strong>Pièce en attente</strong><br>${tech.piece_en_commande ? "Oui — à vérifier en stock ou à commander" : "Non"}</p>
+                <div class="pieces-montees-box"><strong>Pièces déjà montées</strong><br>${hasContent(tech.pieces_montees) ? formatListOrText(tech.pieces_montees) : "(aucune)"}</div>
+                <p><strong>Rapport</strong><br>${hasContent(tech.nom_rapport) ? formatListOrText(tech.nom_rapport) : "(non renseigné)"}</p>
+                <p><strong>Matériel mis à disposition</strong><br>${hasContent(tech.materiel_prete_num_serie) ? formatListOrText(tech.materiel_prete_num_serie) : "(aucun)"}</p>
+                <p><strong>Matériel récupéré</strong><br>${hasContent(tech.materiel_recupere_num_serie) ? formatListOrText(tech.materiel_recupere_num_serie) : "(aucun)"}</p>
+              </div>
 
-            <div class="form-field">
-              <label>Lieu de prise en charge</label>
-              <select class="intervention-lieu-select">
-                <option value="Site">Site</option>
-                <option value="Atelier">Atelier</option>
-              </select>
-            </div>
+              <div class="intervention-column">
+                <h4 class="intervention-column-title">Publication (éditable)</h4>
+                <p><strong>Centre</strong><br>${escapeHtml(pub.centre_nom)}${pub.centre_commune ? " — " + escapeHtml(pub.centre_commune) : ""}</p>
 
-            <div class="form-field">
-              <label>Pièces complémentaires</label>
-              <textarea class="intervention-pieces-input" rows="2"></textarea>
-            </div>
+                <div class="form-field">
+                  <label>Date de prise en charge</label>
+                  <input type="date" class="intervention-date-input">
+                </div>
 
-            <div class="form-field">
-              <label>Commentaire bureau</label>
-              <textarea class="intervention-bureau-input" rows="2"></textarea>
-            </div>
+                <div class="form-field">
+                  <label>Lieu de prise en charge</label>
+                  <select class="intervention-lieu-select">
+                    <option value="Site">Site</option>
+                    <option value="Atelier">Atelier</option>
+                  </select>
+                </div>
 
-            <div class="intervention-save-row">
-              <button type="button" class="button-save button-small intervention-save-btn">💾 Enregistrer les modifications</button>
-              <span class="intervention-save-status"></span>
+                <div class="form-field">
+                  <label>État</label>
+                  <select class="intervention-etat-select">${etatOptionsHtml}</select>
+                </div>
+
+                <div class="form-field">
+                  <label>Commentaire technicien (publié)</label>
+                  <textarea class="intervention-commentaire-technicien-input" rows="2"></textarea>
+                </div>
+
+                <div class="form-field">
+                  <label>Pièces complémentaires</label>
+                  <textarea class="intervention-pieces-input" rows="2"></textarea>
+                </div>
+
+                <div class="form-field">
+                  <label>Commentaire bureau</label>
+                  <textarea class="intervention-bureau-input" rows="2"></textarea>
+                </div>
+
+                <div class="intervention-save-row">
+                  <button type="button" class="button-save button-small intervention-save-btn">💾 Enregistrer les modifications</button>
+                  <span class="intervention-save-status"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1482,6 +1595,11 @@
       toggleBtn.addEventListener("click", () => {
         const isHidden = detailEl.classList.toggle("hidden");
         toggleBtn.textContent = isHidden ? "Voir détail" : "Masquer détail";
+        if (isHidden) {
+          expandedInterventionFilenames.delete(entry.filename);
+        } else {
+          expandedInterventionFilenames.add(entry.filename);
+        }
       });
 
       const checkboxEl = row.querySelector(".intervention-checkbox");
@@ -1499,19 +1617,30 @@
       const deleteStatusEl = row.querySelector(".intervention-delete-status");
       deleteBtn.addEventListener("click", () => deleteIntervention(entry, deleteBtn, deleteStatusEl));
 
-      const lieuSummaryEl = row.querySelector(".intervention-lieu-summary");
+      const dateInput = row.querySelector(".intervention-date-input");
       const lieuSelect = row.querySelector(".intervention-lieu-select");
+      const etatSelect = row.querySelector(".intervention-etat-select");
+      const commentaireTechnicienInput = row.querySelector(".intervention-commentaire-technicien-input");
       const piecesInput = row.querySelector(".intervention-pieces-input");
       const bureauInput = row.querySelector(".intervention-bureau-input");
       const saveBtn = row.querySelector(".intervention-save-btn");
       const statusEl = row.querySelector(".intervention-detail .intervention-save-status");
 
-      lieuSummaryEl.textContent = item.lieu_prise_charge == null ? "" : String(item.lieu_prise_charge);
-      lieuSelect.value = item.lieu_prise_charge || "";
-      piecesInput.value = textFieldValue(item.pieces_complementaires);
-      bureauInput.value = textFieldValue(item.commentaire_bureau);
+      dateInput.value = pub.date_prise_charge || "";
+      lieuSelect.value = pub.lieu_prise_charge || "";
+      etatSelect.value = String(ETAT_ORDER.includes(pub.etat) ? pub.etat : 1);
+      commentaireTechnicienInput.value = textFieldValue(pub.commentaire_technicien);
+      piecesInput.value = textFieldValue(pub.pieces_complementaires);
+      bureauInput.value = textFieldValue(pub.commentaire_bureau);
 
-      const refs = { lieuSummaryEl, lieuSelect, piecesInput, bureauInput, saveBtn, statusEl };
+      const savedMessage = lastSaveMessages.get(entry.filename);
+      if (savedMessage) {
+        statusEl.textContent = savedMessage;
+        statusEl.classList.add("intervention-save-success");
+        lastSaveMessages.delete(entry.filename);
+      }
+
+      const refs = { dateInput, lieuSelect, etatSelect, commentaireTechnicienInput, piecesInput, bureauInput, saveBtn, statusEl };
       saveBtn.addEventListener("click", () => saveInterventionChanges(entry, refs));
 
       return row;
@@ -1532,7 +1661,8 @@
       const groups = new Map();
       ETAT_ORDER.forEach((etat) => groups.set(etat, []));
       interventions.forEach((entry) => {
-        const etat = ETAT_ORDER.includes(entry.data && entry.data.etat) ? entry.data.etat : 1;
+        const pub = entry.data && entry.data.publication;
+        const etat = ETAT_ORDER.includes(pub && pub.etat) ? pub.etat : 1;
         groups.get(etat).push(entry);
       });
 
@@ -1625,13 +1755,13 @@
             if (data && data.traitee === true) {
               continue;
             }
-            interventions.push({ filename: file.name, data });
+            interventions.push({ filename: file.name, data: normalizeIntervention(data) });
           } catch (err) {
             console.warn(`Intervention ignorée (erreur réseau) : ${file.name}`, err);
           }
         }
 
-        interventions.sort((a, b) => String((b.data && b.data.date) || "").localeCompare(String((a.data && a.data.date) || "")));
+        interventions.sort((a, b) => String((b.data && b.data.technicien && b.data.technicien.date) || "").localeCompare(String((a.data && a.data.technicien && a.data.technicien.date) || "")));
 
         updateLoanStatusesFromInterventions(interventions);
         renderInterventions(interventions);
@@ -1703,29 +1833,29 @@
       return new TextDecoder().decode(decrypted);
     }
 
-    function buildAppareilFromIntervention(item, existingAppareil, clientLienDrive, clientCentres) {
-      const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+    function buildAppareilFromIntervention(tech, pub, existingAppareil, clientLienDrive, clientCentres) {
+      const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
       let adresse = existingAppareil && existingAppareil.adresse;
       if (!adresse) {
         const centres = Array.isArray(clientCentres) ? clientCentres : [];
-        const centreMatch = centres.find((c) => c.nom === item.centre);
+        const centreMatch = centres.find((c) => c.nom === pub.centre_nom);
         adresse = (centreMatch && centreMatch.adresse) || "";
       }
       const appareil = {
         type: materiel.type || "",
         num_serie: materiel.num_serie || "",
-        centre_origine: item.centre || "",
+        centre_origine: pub.centre_nom || "",
         adresse,
-        etat: item.etat,
-        date_prise_charge: item.date || "",
-        lieu_prise_charge: item.lieu_prise_charge || "",
-        piece_en_commande: !!item.piece_en_commande,
-        materiel_prete_num_serie: item.materiel_prete_num_serie || "",
-        commentaire_technicien: item.commentaire_technicien || "",
+        etat: pub.etat,
+        date_prise_charge: pub.date_prise_charge || "",
+        lieu_prise_charge: pub.lieu_prise_charge || "",
+        piece_en_commande: !!tech.piece_en_commande,
+        materiel_prete_num_serie: tech.materiel_prete_num_serie || "",
+        commentaire_technicien: pub.commentaire_technicien || "",
         lien_drive: (existingAppareil && existingAppareil.lien_drive) || clientLienDrive || "",
       };
-      if (item.etat === 3) {
-        appareil.date_remise_service = item.date || "";
+      if (pub.etat === 3) {
+        appareil.date_remise_service = pub.date_prise_charge || "";
       } else if (existingAppareil && existingAppareil.date_remise_service) {
         appareil.date_remise_service = existingAppareil.date_remise_service;
       }
@@ -1744,7 +1874,7 @@
 
       const entriesBySlug = new Map();
       selectedEntries.forEach((entry) => {
-        const slug = slugify(entry.data && entry.data.contact ? entry.data.contact : "");
+        const slug = slugify(entry.data && entry.data.technicien && entry.data.technicien.contact ? entry.data.technicien.contact : "");
         if (!entriesBySlug.has(slug)) {
           entriesBySlug.set(slug, []);
         }
@@ -1756,7 +1886,7 @@
       entriesBySlug.forEach((entries, slug) => {
         const client = configState.clients[slug];
         if (!slug || !client || !client.password) {
-          entries.forEach((entry) => invalidContacts.push(entry.data.contact || "(contact inconnu)"));
+          entries.forEach((entry) => invalidContacts.push(entry.data.technicien.contact || "(contact inconnu)"));
           invalidSlugs.push(slug);
         }
       });
@@ -1792,13 +1922,14 @@
             }
 
             entries.forEach((entry) => {
-              const item = entry.data;
-              const materiel = item && typeof item.materiel === "object" && item.materiel ? item.materiel : {};
+              const tech = entry.data.technicien;
+              const pub = entry.data.publication;
+              const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
               const index = merged.appareils.findIndex(
                 (a) => a.num_serie === materiel.num_serie && a.type === materiel.type
               );
               const existingAppareil = index >= 0 ? merged.appareils[index] : null;
-              const appareil = buildAppareilFromIntervention(item, existingAppareil, client.lienDrive, client.centres);
+              const appareil = buildAppareilFromIntervention(tech, pub, existingAppareil, client.lienDrive, client.centres);
               if (index >= 0) {
                 merged.appareils[index] = appareil;
               } else {
