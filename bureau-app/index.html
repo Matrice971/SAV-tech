@@ -427,6 +427,11 @@
     margin: 0 0 0.5rem;
   }
 
+  .pieces-montees-box ul {
+    margin: 0.35rem 0 0;
+    padding-left: 1.2rem;
+  }
+
   .intervention-save-row {
     display: flex;
     align-items: center;
@@ -658,7 +663,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.10</span>
+        <span class="app-version">V1.11</span>
       </div>
     </header>
 
@@ -683,7 +688,7 @@
     <header>
       <div class="header-title-group">
         <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.10</span>
+        <span class="app-version">V1.11</span>
       </div>
       <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
     </header>
@@ -1296,6 +1301,20 @@
       return escapeHtml(value);
     }
 
+    function formatPiecesAPrevoir(pieces) {
+      if (!Array.isArray(pieces) || pieces.length === 0) {
+        return "(aucune)";
+      }
+      return `<ul>${pieces
+        .map((p) => {
+          const designation = (p && p.designation) || "";
+          const quantite = p && p.quantite != null && p.quantite !== "" ? p.quantite : "";
+          const label = quantite ? `${quantite}x ${designation}` : designation;
+          return `<li>${escapeHtml(label)}</li>`;
+        })
+        .join("")}</ul>`;
+    }
+
     function etatLabel(etat) {
       return ETAT_LABELS[etat] || `État inconnu (${escapeHtml(etat)})`;
     }
@@ -1337,7 +1356,7 @@
         date: data.date,
         technicien: data.technicien,
         commentaire_technicien: data.commentaire_technicien,
-        piece_en_commande: data.piece_en_commande,
+        pieces_a_prevoir: data.pieces_a_prevoir,
         pieces_montees: data.pieces_montees,
         nom_rapport: data.nom_rapport,
         materiel_prete_num_serie: data.materiel_prete_num_serie,
@@ -1517,7 +1536,7 @@
           <div class="intervention-summary">
             <div class="intervention-contact">${escapeHtml(tech.contact)} — ${escapeHtml(pub.centre_nom)}</div>
             <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
-            <div class="intervention-details">État : ${etatLabel(pub.etat)}${tech.piece_en_commande ? " · Pièce en attente" : ""}</div>
+            <div class="intervention-details">État : ${etatLabel(pub.etat)}${hasContent(tech.pieces_a_prevoir) ? " · Pièce en attente" : ""}</div>
             <div class="intervention-details">${escapeHtml(pub.date_prise_charge)} · ${escapeHtml(tech.technicien)} · ${escapeHtml(pub.lieu_prise_charge)}</div>
             ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
           </div>
@@ -1537,8 +1556,8 @@
                 <p><strong>Date</strong><br>${escapeHtml(tech.date)}</p>
                 <p><strong>Technicien</strong><br>${escapeHtml(tech.technicien)}</p>
                 <p><strong>Commentaire technicien</strong><br>${hasContent(tech.commentaire_technicien) ? formatListOrText(tech.commentaire_technicien) : "(aucun)"}</p>
-                <p><strong>Pièce en attente</strong><br>${tech.piece_en_commande ? "Oui — à vérifier en stock ou à commander" : "Non"}</p>
                 <div class="pieces-montees-box"><strong>Pièces déjà montées</strong><br>${hasContent(tech.pieces_montees) ? formatListOrText(tech.pieces_montees) : "(aucune)"}</div>
+                <div class="pieces-montees-box"><strong>Pièces à prévoir</strong><br>${formatPiecesAPrevoir(tech.pieces_a_prevoir)}</div>
                 <p><strong>Rapport</strong><br>${hasContent(tech.nom_rapport) ? formatListOrText(tech.nom_rapport) : "(non renseigné)"}</p>
                 <p><strong>Matériel mis à disposition</strong><br>${hasContent(tech.materiel_prete_num_serie) ? formatListOrText(tech.materiel_prete_num_serie) : "(aucun)"}</p>
                 <p><strong>Matériel récupéré</strong><br>${hasContent(tech.materiel_recupere_num_serie) ? formatListOrText(tech.materiel_recupere_num_serie) : "(aucun)"}</p>
@@ -1849,7 +1868,7 @@
         etat: pub.etat,
         date_prise_charge: pub.date_prise_charge || "",
         lieu_prise_charge: pub.lieu_prise_charge || "",
-        piece_en_commande: !!tech.piece_en_commande,
+        piece_en_commande: hasContent(tech.pieces_a_prevoir),
         materiel_prete_num_serie: tech.materiel_prete_num_serie || "",
         commentaire_technicien: pub.commentaire_technicien || "",
         lien_drive: (existingAppareil && existingAppareil.lien_drive) || clientLienDrive || "",
