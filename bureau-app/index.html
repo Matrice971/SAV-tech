@@ -24,6 +24,10 @@
     --color-neutral-bg: #eaf3ff;
     --color-neutral-border: #bcd6f7;
     --color-neutral-text: #17457a;
+    --color-success-bg: #e6f4ea;
+    --tint-success: #f3faf5;
+    --tint-pending: #fffaf0;
+    --tint-neutral: #f4f9ff;
     --radius: 10px;
   }
 
@@ -44,9 +48,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-surface);
+    padding: 1.25rem 2rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: #fff;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -54,31 +58,60 @@
 
   header h1 {
     margin: 0;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
+    color: #fff;
   }
 
   .header-title-group {
     display: flex;
     align-items: baseline;
-    gap: 0.5rem;
+    gap: 0.85rem;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
   }
 
   .app-version {
     font-size: 0.75rem;
     font-weight: 400;
-    color: var(--color-text-muted);
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .header-brand {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.2rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+  }
+
+  header .button-secondary {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+
+  header .button-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
   }
 
   main {
-    max-width: 720px;
+    max-width: 1560px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1.75rem 2rem;
   }
 
   .tab-bar {
     display: flex;
     gap: 0.25rem;
-    padding: 0 1.25rem;
+    padding: 0 2rem;
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     overflow-x: auto;
@@ -132,21 +165,21 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: 1.25rem;
-    margin-top: 1rem;
+    padding: 1.75rem;
+    margin-top: 1.5rem;
   }
 
   .actions {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
     align-items: stretch;
   }
 
   button {
     font-size: 1rem;
     font-weight: 600;
-    padding: 0.7rem 1rem;
+    padding: 0.8rem 1.25rem;
     border: none;
     border-radius: var(--radius);
     background: var(--color-primary);
@@ -244,8 +277,8 @@
   .clients-header {
     display: flex;
     justify-content: flex-end;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
   }
 
   .clients-search-input {
@@ -279,28 +312,42 @@
   .interventions-header {
     display: flex;
     justify-content: flex-end;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .interventions-search-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .interventions-search-input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
   }
 
   .status-group + .status-group {
-    margin-top: 1.5rem;
+    margin-top: 2.25rem;
   }
 
   .status-group-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 0 0 0.6rem;
+    margin: 0 0 1rem;
     font-size: 0.95rem;
     font-weight: 700;
-    padding: 0.4rem 0.7rem;
+    padding: 0.5rem 0.85rem;
     border-radius: var(--radius);
   }
 
   .status-group-title.status-group-1 {
-    background: var(--color-success-hover);
-    background: #e6f4ea;
+    background: var(--color-success-bg);
     color: var(--color-success);
   }
 
@@ -315,31 +362,46 @@
   }
 
   .status-group-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.1rem;
+    align-items: start;
   }
 
   .intervention-card {
     display: flex;
+    flex-direction: column;
     gap: 0.75rem;
-    padding: 0.9rem 1rem;
+    padding: 1.1rem 1.25rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-left: 4px solid var(--color-border);
+    border-top: 4px solid var(--color-border);
     border-radius: var(--radius);
   }
 
   .intervention-card.status-group-1 {
-    border-left-color: var(--color-success);
+    border-top-color: var(--color-success);
+    background: var(--tint-success);
   }
 
   .intervention-card.status-group-2 {
-    border-left-color: var(--color-pending-text);
+    border-top-color: var(--color-pending-text);
+    background: var(--tint-pending);
   }
 
   .intervention-card.status-group-3 {
-    border-left-color: var(--color-neutral-text);
+    border-top-color: var(--color-neutral-text);
+    background: var(--tint-neutral);
+  }
+
+  .intervention-card.is-expanded {
+    grid-column: 1 / -1;
+  }
+
+  .intervention-condensed {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
   .intervention-checkbox {
@@ -358,7 +420,20 @@
   .intervention-summary {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.2rem;
+  }
+
+  .intervention-condensed-type {
+    font-weight: 700;
+  }
+
+  .intervention-condensed-centre {
+    color: var(--color-text);
+  }
+
+  .intervention-condensed-date {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
   }
 
   .intervention-contact {
@@ -372,22 +447,25 @@
 
   .intervention-published-badge {
     display: inline-block;
-    margin-top: 0.35rem;
+    margin-top: 0.25rem;
     font-size: 0.78rem;
     color: var(--color-success);
     font-weight: 600;
   }
 
   .intervention-row-actions {
-    margin-top: 0.5rem;
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
   }
 
+  .intervention-row-actions button {
+    flex: 1;
+  }
+
   .intervention-detail {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
+    margin-top: 0.25rem;
+    padding-top: 1rem;
     border-top: 1px dashed var(--color-border);
   }
 
@@ -402,16 +480,28 @@
   .intervention-columns {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 1.75rem;
   }
 
   .intervention-column {
     flex: 1 1 260px;
     min-width: 0;
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+
+  .intervention-column-technicien {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+  }
+
+  .intervention-column-publication {
+    background: var(--color-surface);
+    border: 2px solid var(--color-primary);
   }
 
   .intervention-column-title {
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.85rem;
     font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -474,7 +564,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem 0;
+    padding: 1.1rem 0;
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -500,7 +590,7 @@
   }
 
   .corbeille-row {
-    padding: 0.75rem 0;
+    padding: 1.1rem 0;
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -532,7 +622,7 @@
   .modal-card {
     background: var(--color-surface);
     border-radius: var(--radius);
-    padding: 1.5rem;
+    padding: 2rem;
     max-width: 480px;
     width: 100%;
     max-height: 90vh;
@@ -593,8 +683,8 @@
   .form-field {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    margin-top: 0.85rem;
+    gap: 0.4rem;
+    margin-top: 1.15rem;
   }
 
   .form-field:first-child {
@@ -662,8 +752,9 @@
   <div id="screen-accueil">
     <header>
       <div class="header-title-group">
-        <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.11</span>
+        <h1>Gestion suivi réparation</h1>
+        <span class="app-version">V2.14</span>
+        <span class="header-brand">TechniZen</span>
       </div>
     </header>
 
@@ -687,10 +778,14 @@
   <div id="screen-principal" class="hidden">
     <header>
       <div class="header-title-group">
-        <h1>SAV-tech — Appli bureau</h1>
-        <span class="app-version">V1.11</span>
+        <h1>Gestion suivi réparation</h1>
+        <span class="app-version">V2.14</span>
+        <span class="header-brand">TechniZen</span>
       </div>
-      <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
+      <div class="header-actions">
+        <button type="button" id="check-client-mails-btn" class="button-secondary">📬 Vérifier les mails clients</button>
+        <button type="button" id="save-close-btn" class="button-save">💾 Enregistrer</button>
+      </div>
     </header>
 
     <nav class="tab-bar">
@@ -709,6 +804,7 @@
         <h2 class="screen-title">Interventions à traiter</h2>
         <div class="card">
           <div class="interventions-header">
+            <input type="text" id="interventions-search-input" class="interventions-search-input" placeholder="Rechercher (client, centre, matériel, commentaires, pièces…)">
             <button type="button" id="publish-selection-btn" class="button-secondary button-small" disabled>📤 Publier la sélection</button>
             <button type="button" id="refresh-interventions-btn" class="button-secondary button-small">🔄 Rafraîchir</button>
           </div>
@@ -765,7 +861,7 @@
             <input type="text" id="relais-password-input">
           </div>
           <div class="modal-actions" style="justify-content: flex-start;">
-            <button type="button" id="save-relais-btn">Enregistrer les paramètres du relais</button>
+            <button type="button" id="save-relais-btn">💾 Enregistrer les paramètres du relais</button>
           </div>
         </div>
 
@@ -849,7 +945,7 @@
 
         <div class="modal-actions">
           <button type="button" id="client-cancel-btn" class="button-secondary">Annuler</button>
-          <button type="submit" id="client-save-btn">Enregistrer</button>
+          <button type="submit" id="client-save-btn">💾 Enregistrer</button>
         </div>
       </form>
     </div>
@@ -861,11 +957,12 @@
     const GITHUB_API_CONTENTS = "https://api.github.com/repos/Matrice971/SAV-tech/contents/data/interventions";
     const GITHUB_RAW_CLIENTS = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients";
     const ETAT_LABELS = {
-      1: "Réparation finalisée",
-      2: "En attente de pièce",
+      1: "Réparation terminée",
+      2: "Réparation en cours",
       3: "Livrée et testée",
     };
-    const ETAT_ORDER = [1, 2, 3];
+    const ETAT_ORDER = [2, 1, 3];
+    const MOIS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
     const INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS = 90;
     const PBKDF2_ITERATIONS = 100000;
     const CONFIG_CACHE_KEY = "bureau_config_cache";
@@ -895,6 +992,7 @@
     const errorMessageEl = document.getElementById("error-message");
 
     const saveCloseBtnEl = document.getElementById("save-close-btn");
+    const checkClientMailsBtnEl = document.getElementById("check-client-mails-btn");
     const saveMessageEl = document.getElementById("save-message");
     const changeConfigBtnEl = document.getElementById("change-config-btn");
 
@@ -911,6 +1009,7 @@
     const interventionsStatusEl = document.getElementById("interventions-status");
     const interventionsListEl = document.getElementById("interventions-list");
     const publishSelectionBtnEl = document.getElementById("publish-selection-btn");
+    const interventionsSearchInputEl = document.getElementById("interventions-search-input");
 
     const corbeilleListEl = document.getElementById("corbeille-list");
     const corbeilleEmptyEl = document.getElementById("corbeille-empty");
@@ -1093,12 +1192,13 @@
         row.innerHTML = `
           <div>
             <div class="client-contact">${escapeHtml(client.contact)}</div>
+            <div class="client-details">Identifiant : ${escapeHtml(slug)}</div>
             <div class="client-details">${passwordDisplay}</div>
             <div class="client-centres">${centresHtml}</div>
           </div>
           <div class="client-row-actions">
-            <button type="button" class="button-secondary button-small" data-action="edit">Modifier</button>
-            <button type="button" class="button-secondary button-small button-danger" data-action="delete">Supprimer</button>
+            <button type="button" class="button-secondary button-small" data-action="edit">✏️ Modifier</button>
+            <button type="button" class="button-secondary button-small button-danger" data-action="delete">🗑️ Supprimer</button>
           </div>
         `;
         row.querySelector('[data-action="edit"]').addEventListener("click", () => openEditClientForm(slug));
@@ -1319,6 +1419,47 @@
       return ETAT_LABELS[etat] || `État inconnu (${escapeHtml(etat)})`;
     }
 
+    function formatDateCondensed(isoDate) {
+      if (!isoDate) {
+        return "";
+      }
+      const d = parseIsoDate(isoDate);
+      if (Number.isNaN(d.getTime())) {
+        return "";
+      }
+      return `${d.getDate()} ${MOIS_FR[d.getMonth()]} ${String(d.getFullYear()).slice(-2)}`;
+    }
+
+    function interventionMatchesSearch(entry, normalizedQuery) {
+      if (!normalizedQuery) {
+        return true;
+      }
+      const tech = entry.data.technicien || {};
+      const pub = entry.data.publication || {};
+      const materiel = tech.materiel && typeof tech.materiel === "object" ? tech.materiel : {};
+      const piecesAPrevoirText = Array.isArray(tech.pieces_a_prevoir)
+        ? tech.pieces_a_prevoir.map((p) => (p && p.designation) || "").join(" ")
+        : "";
+      const haystacks = [
+        tech.contact,
+        tech.centre,
+        pub.centre_nom,
+        pub.centre_commune,
+        materiel.type,
+        materiel.num_serie,
+        tech.technicien,
+        pub.lieu_prise_charge,
+        textFieldValue(tech.commentaire_technicien),
+        textFieldValue(pub.commentaire_technicien),
+        textFieldValue(pub.commentaire_bureau),
+        textFieldValue(pub.pieces_complementaires),
+        textFieldValue(tech.pieces_montees),
+        piecesAPrevoirText,
+        textFieldValue(tech.nom_rapport),
+      ];
+      return haystacks.some((text) => normalizeSearchText(text).includes(normalizedQuery));
+    }
+
     function showInterventionsStatus(message) {
       interventionsListEl.innerHTML = "";
       interventionsStatusEl.textContent = message;
@@ -1377,15 +1518,20 @@
     }
 
     async function saveInterventionChanges(entry, refs) {
+      const previousEtat = entry.data.publication.etat;
+      const newEtat = Number(refs.etatSelect.value);
       const updatedPublication = {
         centre_nom: entry.data.publication.centre_nom,
         centre_commune: entry.data.publication.centre_commune,
         date_prise_charge: refs.dateInput.value,
         lieu_prise_charge: refs.lieuSelect.value,
-        etat: Number(refs.etatSelect.value),
+        etat: newEtat,
         commentaire_technicien: refs.commentaireTechnicienInput.value,
         pieces_complementaires: refs.piecesInput.value,
         commentaire_bureau: refs.bureauInput.value,
+        date_passage_livree: newEtat === 3
+          ? (Number(previousEtat) === 3 ? entry.data.publication.date_passage_livree : todayISODate())
+          : undefined,
       };
       const updatedData = { technicien: entry.data.technicien, publication: updatedPublication };
 
@@ -1455,6 +1601,97 @@
       publishSelectionBtnEl.disabled = selectedInterventionFilenames.size === 0;
     }
 
+    async function deleteInterventionFile(entry) {
+      const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
+      let res;
+      try {
+        res = await fetch(`${relaisUrl}/delete`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            password: configState.relais.writePassword,
+            filename: entry.filename,
+            dossier: "interventions",
+          }),
+        });
+      } catch {
+        return { success: false, networkError: true };
+      }
+
+      let result = null;
+      try {
+        result = await res.json();
+      } catch {
+        // corps de réponse non JSON, traité comme un échec ci-dessous
+      }
+
+      if (!res.ok || !result || result.success !== true) {
+        const errorMessage = result && typeof result.error === "string" ? result.error : `Erreur HTTP ${res.status}`;
+        return { success: false, error: errorMessage };
+      }
+
+      return { success: true };
+    }
+
+    // Regénère un fichier client "vide" (appareils: []) dès qu'un client n'a plus
+    // aucune intervention active, avec le mot de passe client courant.
+    async function ensureClientFileReflectsInterventions(slug) {
+      if (!slug) {
+        return;
+      }
+      const client = configState.clients[slug];
+      if (!client || !client.password) {
+        return;
+      }
+      const hasActiveIntervention = currentInterventions.some((e) => {
+        const contact = e.data && e.data.technicien && e.data.technicien.contact;
+        return slugify(contact || "") === slug;
+      });
+      if (hasActiveIntervention) {
+        return;
+      }
+
+      try {
+        const merged = { contact: client.contact, email_contact: client.emailContact || "", appareils: [] };
+        const encrypted = await encryptClientFile(JSON.stringify(merged), client.password);
+        const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
+        const writeRes = await fetch(`${relaisUrl}/write`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            password: configState.relais.writePassword,
+            filename: `${slug}.txt`,
+            content: encrypted,
+            dossier: "clients",
+          }),
+        });
+        const writeResult = await writeRes.json().catch(() => null);
+        if (!writeRes.ok || !writeResult || writeResult.success !== true) {
+          console.warn(`Échec de la génération du fichier client vide pour ${slug}`, writeResult && writeResult.error);
+        }
+      } catch (err) {
+        console.warn(`Échec de la génération du fichier client vide pour ${slug}`, err);
+      }
+    }
+
+    // Finalise une suppression d'intervention déjà confirmée côté relais : corbeille,
+    // retrait de la liste affichée, et régénération du fichier client si nécessaire.
+    async function finalizeInterventionDeletion(entry) {
+      configState.interventionsSupprimees.push({
+        intervention: entry.data,
+        filename: entry.filename,
+        dateSuppression: todayISODate(),
+      });
+      currentInterventions = currentInterventions.filter((e) => e.filename !== entry.filename);
+      selectedInterventionFilenames.delete(entry.filename);
+      expandedInterventionFilenames.delete(entry.filename);
+      markDirty();
+      renderCorbeille();
+
+      const slug = slugify((entry.data.technicien && entry.data.technicien.contact) || "");
+      await ensureClientFileReflectsInterventions(slug);
+    }
+
     async function deleteIntervention(entry, deleteBtnEl, deleteStatusEl) {
       const item = entry.data;
       const tech = item.technicien;
@@ -1471,48 +1708,16 @@
       deleteStatusEl.className = "intervention-save-status";
 
       try {
-        const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
-        let res;
-        try {
-          res = await fetch(`${relaisUrl}/delete`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              password: configState.relais.writePassword,
-              filename: entry.filename,
-              dossier: "interventions",
-            }),
-          });
-        } catch {
-          deleteStatusEl.textContent = "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez. Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.";
+        const result = await deleteInterventionFile(entry);
+        if (!result.success) {
+          deleteStatusEl.textContent = result.networkError
+            ? "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez. Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration."
+            : `Échec de la suppression : ${result.error} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`;
           deleteStatusEl.classList.add("intervention-save-error");
           return;
         }
 
-        let result = null;
-        try {
-          result = await res.json();
-        } catch {
-          // corps de réponse non JSON, traité comme un échec ci-dessous
-        }
-
-        if (!res.ok || !result || result.success !== true) {
-          const errorMessage = result && typeof result.error === "string" ? result.error : `Erreur HTTP ${res.status}`;
-          deleteStatusEl.textContent = `Échec de la suppression : ${errorMessage} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`;
-          deleteStatusEl.classList.add("intervention-save-error");
-          return;
-        }
-
-        configState.interventionsSupprimees.push({
-          intervention: item,
-          filename: entry.filename,
-          dateSuppression: todayISODate(),
-        });
-        currentInterventions = currentInterventions.filter((e) => e.filename !== entry.filename);
-        selectedInterventionFilenames.delete(entry.filename);
-        expandedInterventionFilenames.delete(entry.filename);
-        markDirty();
-        renderCorbeille();
+        await finalizeInterventionDeletion(entry);
         renderInterventions(currentInterventions);
       } finally {
         deleteBtnEl.disabled = false;
@@ -1529,25 +1734,27 @@
       const isExpanded = expandedInterventionFilenames.has(entry.filename);
       const etatOptionsHtml = ETAT_ORDER.map((e) => `<option value="${e}">${escapeHtml(etatLabel(e))}</option>`).join("");
       const row = document.createElement("div");
-      row.className = `intervention-card ${statusClass}`;
+      row.className = `intervention-card ${statusClass}${isExpanded ? " is-expanded" : ""}`;
       row.innerHTML = `
-        <input type="checkbox" class="intervention-checkbox" ${isPublished ? "disabled" : ""}>
-        <div class="intervention-body">
-          <div class="intervention-summary">
-            <div class="intervention-contact">${escapeHtml(tech.contact)} — ${escapeHtml(pub.centre_nom)}</div>
-            <div class="intervention-details">${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</div>
-            <div class="intervention-details">État : ${etatLabel(pub.etat)}${hasContent(tech.pieces_a_prevoir) ? " · Pièce en attente" : ""}</div>
-            <div class="intervention-details">${escapeHtml(pub.date_prise_charge)} · ${escapeHtml(tech.technicien)} · ${escapeHtml(pub.lieu_prise_charge)}</div>
-            ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
+        <div class="intervention-condensed">
+          <input type="checkbox" class="intervention-checkbox" ${isPublished ? "disabled" : ""}>
+          <div class="intervention-body">
+            <div class="intervention-summary">
+              <div class="intervention-condensed-type">${escapeHtml(materiel.type)}</div>
+              <div class="intervention-condensed-centre">${escapeHtml(pub.centre_nom)}</div>
+              <div class="intervention-condensed-date">${escapeHtml(formatDateCondensed(pub.date_prise_charge))}</div>
+              ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
+            </div>
           </div>
-          <div class="intervention-row-actions">
-            <button type="button" class="button-secondary button-small" data-action="toggle-detail">${isExpanded ? "Masquer détail" : "Voir détail"}</button>
-            <button type="button" class="button-secondary button-small button-danger" data-action="delete">🗑️ Supprimer</button>
-            <span class="intervention-delete-status"></span>
-          </div>
-          <div class="intervention-detail ${isExpanded ? "" : "hidden"}">
+        </div>
+        <div class="intervention-row-actions">
+          <button type="button" class="button-secondary button-small" data-action="toggle-detail">${isExpanded ? "🔍 Masquer détail" : "🔍 Détail"}</button>
+          <button type="button" class="button-secondary button-small button-danger" data-action="delete">🗑️ Supprimer</button>
+        </div>
+        <span class="intervention-delete-status"></span>
+        <div class="intervention-detail ${isExpanded ? "" : "hidden"}">
             <div class="intervention-columns">
-              <div class="intervention-column">
+              <div class="intervention-column intervention-column-technicien">
                 <h4 class="intervention-column-title">Déclaré par le technicien</h4>
                 <p><strong>Contact</strong><br>${escapeHtml(tech.contact)}</p>
                 <p><strong>Centre</strong><br>${escapeHtml(tech.centre)}</p>
@@ -1563,7 +1770,7 @@
                 <p><strong>Matériel récupéré</strong><br>${hasContent(tech.materiel_recupere_num_serie) ? formatListOrText(tech.materiel_recupere_num_serie) : "(aucun)"}</p>
               </div>
 
-              <div class="intervention-column">
+              <div class="intervention-column intervention-column-publication">
                 <h4 class="intervention-column-title">Publication (éditable)</h4>
                 <p><strong>Centre</strong><br>${escapeHtml(pub.centre_nom)}${pub.centre_commune ? " — " + escapeHtml(pub.centre_commune) : ""}</p>
 
@@ -1607,13 +1814,13 @@
               </div>
             </div>
           </div>
-        </div>
       `;
       const toggleBtn = row.querySelector('[data-action="toggle-detail"]');
       const detailEl = row.querySelector(".intervention-detail");
       toggleBtn.addEventListener("click", () => {
         const isHidden = detailEl.classList.toggle("hidden");
-        toggleBtn.textContent = isHidden ? "Voir détail" : "Masquer détail";
+        toggleBtn.textContent = isHidden ? "🔍 Détail" : "🔍 Masquer détail";
+        row.classList.toggle("is-expanded", !isHidden);
         if (isHidden) {
           expandedInterventionFilenames.delete(entry.filename);
         } else {
@@ -1674,12 +1881,21 @@
         updatePublishButtonState();
         return;
       }
+
+      const normalizedQuery = normalizeSearchText(interventionsSearchInputEl.value.trim());
+      const filtered = interventions.filter((entry) => interventionMatchesSearch(entry, normalizedQuery));
+
+      if (filtered.length === 0) {
+        showInterventionsStatus("Aucune intervention ne correspond à la recherche");
+        updatePublishButtonState();
+        return;
+      }
       hideInterventionsStatus();
       interventionsListEl.innerHTML = "";
 
       const groups = new Map();
       ETAT_ORDER.forEach((etat) => groups.set(etat, []));
-      interventions.forEach((entry) => {
+      filtered.forEach((entry) => {
         const pub = entry.data && entry.data.publication;
         const etat = ETAT_ORDER.includes(pub && pub.etat) ? pub.etat : 1;
         groups.get(etat).push(entry);
@@ -1690,6 +1906,11 @@
         if (entries.length === 0) {
           return;
         }
+        entries.sort((a, b) =>
+          String((a.data.publication && a.data.publication.date_prise_charge) || "").localeCompare(
+            String((b.data.publication && b.data.publication.date_prise_charge) || "")
+          )
+        );
         const groupEl = document.createElement("div");
         groupEl.className = "status-group";
         groupEl.innerHTML = `
@@ -1704,6 +1925,54 @@
       });
 
       updatePublishButtonState();
+    }
+
+    interventionsSearchInputEl.addEventListener("input", () => renderInterventions(currentInterventions));
+
+    // Efface silencieusement les interventions "Livrée et testée" depuis plus de
+    // INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS jours (même procédure qu'une suppression
+    // manuelle : relais /delete, corbeille, régénération du fichier client si besoin).
+    async function purgeExpiredLivreesInterventions(interventions) {
+      const remaining = [];
+      const affectedSlugs = new Set();
+
+      for (const entry of interventions) {
+        const pub = entry.data && entry.data.publication;
+        const isExpiredLivree =
+          pub &&
+          pub.etat === 3 &&
+          pub.date_passage_livree &&
+          daysSince(pub.date_passage_livree) > INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS;
+
+        if (isExpiredLivree) {
+          const result = await deleteInterventionFile(entry);
+          if (result.success) {
+            configState.interventionsSupprimees.push({
+              intervention: entry.data,
+              filename: entry.filename,
+              dateSuppression: todayISODate(),
+            });
+            markDirty();
+            const slug = slugify((entry.data.technicien && entry.data.technicien.contact) || "");
+            if (slug) {
+              affectedSlugs.add(slug);
+            }
+            continue;
+          }
+          console.warn(`Échec de l'effacement automatique (Livrée et testée > 90 jours) : ${entry.filename}`, result.error || "erreur réseau");
+        }
+        remaining.push(entry);
+      }
+
+      if (affectedSlugs.size > 0) {
+        renderCorbeille();
+        currentInterventions = remaining;
+        for (const slug of affectedSlugs) {
+          await ensureClientFileReflectsInterventions(slug);
+        }
+      }
+
+      return remaining;
     }
 
     async function fetchInterventions() {
@@ -1782,8 +2051,10 @@
 
         interventions.sort((a, b) => String((b.data && b.data.technicien && b.data.technicien.date) || "").localeCompare(String((a.data && a.data.technicien && a.data.technicien.date) || "")));
 
-        updateLoanStatusesFromInterventions(interventions);
-        renderInterventions(interventions);
+        const remaining = await purgeExpiredLivreesInterventions(interventions);
+
+        updateLoanStatusesFromInterventions(remaining);
+        renderInterventions(remaining);
       } finally {
         refreshInterventionsBtnEl.disabled = false;
       }
@@ -2010,7 +2281,7 @@
     function openAddClientForm() {
       editingSlug = null;
       clientModalTitleEl.textContent = "Ajouter un client";
-      clientSaveBtnEl.textContent = "Enregistrer";
+      clientSaveBtnEl.textContent = "💾 Enregistrer";
       clientFormEl.reset();
       clientContactEl.readOnly = false;
       clientContactNoteEl.classList.add("hidden");
@@ -2023,7 +2294,7 @@
       const client = configState.clients[slug];
       editingSlug = slug;
       clientModalTitleEl.textContent = "Modifier le client";
-      clientSaveBtnEl.textContent = "Enregistrer les modifications";
+      clientSaveBtnEl.textContent = "💾 Enregistrer les modifications";
       clientContactEl.value = client.contact;
       clientPasswordEl.value = client.password;
       clientEmailEl.value = client.emailContact || "";
@@ -2063,7 +2334,7 @@
       }
     });
 
-    clientFormEl.addEventListener("submit", (event) => {
+    clientFormEl.addEventListener("submit", async (event) => {
       event.preventDefault();
       hideClientFormError();
 
@@ -2103,6 +2374,13 @@
           emailContact: email,
           lienDrive: drive,
         };
+
+        markDirty();
+        closeClientForm();
+        renderClients();
+
+        await ensureClientFileReflectsInterventions(slug);
+        return;
       } else {
         configState.clients[editingSlug] = {
           contact: configState.clients[editingSlug].contact,
@@ -2180,7 +2458,7 @@
       return conflicts;
     }
 
-    function applyImport(contactsMap, conflicts) {
+    async function applyImport(contactsMap, conflicts) {
       const conflictsBySlug = new Map();
       conflicts.forEach((conflict) => {
         if (!conflictsBySlug.has(conflict.slug)) {
@@ -2190,6 +2468,7 @@
       });
 
       const added = [];
+      const addedSlugs = [];
       const unchanged = [];
       const importedSlugs = new Set();
       let updatedFieldsCount = 0;
@@ -2218,6 +2497,7 @@
             centres,
           };
           added.push(contact);
+          addedSlugs.push(slug);
         }
       });
 
@@ -2227,6 +2507,10 @@
 
       markDirty();
       showImportSummary({ added, unchanged, toReview, updatedFieldsCount });
+
+      for (const slug of addedSlugs) {
+        await ensureClientFileReflectsInterventions(slug);
+      }
     }
 
     function importMaterielPretFromTechnizen(actifs) {
@@ -2244,14 +2528,14 @@
       renderMaterielPret();
     }
 
-    function importFromTechnizen(actifs) {
+    async function importFromTechnizen(actifs) {
       importMaterielPretFromTechnizen(actifs);
 
       const contactsMap = buildTechnizenContactsMap(actifs);
       const conflicts = detectImportConflicts(contactsMap);
 
       if (conflicts.length === 0) {
-        applyImport(contactsMap, []);
+        await applyImport(contactsMap, []);
         return;
       }
 
@@ -2295,14 +2579,14 @@
     conflictsKeepAllBtnEl.addEventListener("click", () => setAllImportConflictsChoice("local"));
     conflictsUseAllBtnEl.addEventListener("click", () => setAllImportConflictsChoice("imported"));
 
-    conflictsConfirmBtnEl.addEventListener("click", () => {
+    conflictsConfirmBtnEl.addEventListener("click", async () => {
       if (!pendingImport) {
         return;
       }
       const { contactsMap, conflicts } = pendingImport;
       importConflictsModalOverlayEl.classList.add("hidden");
       pendingImport = null;
-      applyImport(contactsMap, conflicts);
+      await applyImport(contactsMap, conflicts);
     });
 
     importConflictsModalOverlayEl.addEventListener("click", (event) => {
@@ -2374,7 +2658,7 @@
         return;
       }
 
-      importFromTechnizen(data.actifs);
+      await importFromTechnizen(data.actifs);
     });
 
     importSummaryCloseBtnEl.addEventListener("click", closeImportSummary);
@@ -2434,6 +2718,10 @@
       ensureMaterielPretDefaults();
       configFileName = "config-bureau.json";
       enterMainScreen();
+    });
+
+    checkClientMailsBtnEl.addEventListener("click", () => {
+      window.open("https://mail.google.com/mail/u/0/?authuser=contact.technizen@gmail.com#inbox", "_blank");
     });
 
     saveCloseBtnEl.addEventListener("click", () => {

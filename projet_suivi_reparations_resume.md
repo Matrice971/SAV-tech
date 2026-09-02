@@ -1,124 +1,133 @@
 # Résumé projet — SAV-tech + TECHNIZEN
 
-*Document de reprise — mise à jour du 30/08/2026 (session complémentaire, suite à la refonte ergonomique de bureau-app)*
+*Document de reprise — mise à jour du 31/08/2026 (session ergonomie bureau-app + fichier client vide + effacement auto 90j)*
 *À partager en tout premier message d'une nouvelle conversation.*
 
 ---
 
 ## 0. À LIRE EN PREMIER — où on en est
 
-Le chantier "améliorer l'ergonomie/présentation de bureau-app" est **terminé et validé en usage réel** : navigation par onglets, suppression sécurisée avec corbeille, publication vers les clients, recherche, gestion des paramètres du relais — tout est en place et bureau-app est passé de **V1.03 à V1.06**.
+**Contexte** : la présentation au patron et le test terrain client du 31/08 ont eu lieu. Suite à ça, deux chantiers ont été menés dans la foulée : une refonte ergonomique complète de bureau-app (structure, couleurs, tri, recherche), puis deux correctifs/fonctionnalités liés à l'usage réel avec un vrai client test (mailto de retour client, gestion des clients sans matériel en réparation).
 
-**Étape majeure franchie cette session : la chaîne complète fonctionne de bout en bout pour la première fois**, confirmé par un test réel (Will Sainte-Rose, Gaz n° série 25294) : TECHNIZEN → intervention sur GitHub → bureau-app traite et publie → client-app affiche l'intervention après déchiffrement. Avant cette session, la fonction "Publier" décrite dans un résumé précédent comme déjà fonctionnelle **n'existait en réalité pas du tout** dans le code — c'est maintenant corrigé.
+**État des versions à la fin de cette session** :
+- **TECHNIZEN** : V10.30 (inchangé cette session)
+- **bureau-app** : V2.13
+- **client-app** : V1.03
 
-**🎯 CHANTIER IMMÉDIAT DE LA PROCHAINE SESSION : passer à client-app.** Deux volets :
-1. Un dernier correctif en attente côté bureau-app (voir section 5, point 1) — à valider avant de basculer, mais ne bloque pas de commencer à réfléchir à client-app en parallèle.
-2. Refonte de la présentation visuelle de client-app pour la rendre agréable pour les clients (rien de figé actuellement, client-app n'a jamais été déployé publiquement — on peut la refaire librement si besoin, y compris changer la façon dont un client s'identifie).
+**Point de vigilance récurrent** : le dossier Drive partagé `SAV-tech-TECHNIZEN/` est fréquemment désynchronisé par rapport au dernier commit — **toujours vérifier `modifiedTime` du fichier avant de s'y fier**, et demander à Phip de resynchroniser (ou reteléverser en pièce jointe) avant tout diagnostic ou avant de préparer un nouveau prompt Claude Code.
+
+**À vérifier par Phip (non fait à la fin de cette session)** :
+- Confirmer que la 3ᵉ catégorie de statut ("Réparation terminée", ex-"Réparation finalisée") s'affiche bien avec sa couleur propre dans la grille — les tests Playwright de la refonte V2.12 n'ont montré que 2 des 3 groupes de statut sur les données démo utilisées.
+- Redemander un retour au client test sur le mailto de retour corrigé.
 
 ---
 
 ## 1. Où trouver le code
 
-- **TECHNIZEN** : dépôt Git séparé, racine du dépôt = `index.html` + `src/js/app.js` + `src/js/database.js`. Fichier `PROJET_ETAT.md` + `PROJET_HISTORIQUE.md` à la racine. **Nouveau cette session** : `CLAUDE.md` créé à la racine de ce dépôt (sur le modèle de celui de SAV-tech) imposant l'incrémentation automatique du numéro de version affiché dans le header à chaque modification d'`index.html`.
-- **SAV-tech** : dépôt GitHub `Matrice971/SAV-tech`, **public**. Structure : `client-app/`, `bureau-app/`, `worker/`, `docs/`. `CLAUDE.md` à la racine avec incrémentation automatique de version pour `client-app/index.html` et `bureau-app/index.html`.
-- **Dossier Drive partagé** `SAV-tech-TECHNIZEN/` : copie miroir pour lecture par Claude (chat) — contient `bureau-app/index.html`, `client-app/index.html`, TECHNIZEN (`index.html`, `app.js`, `database.js`), et maintenant aussi `worker/index.js`. Toujours demander à Phip de resynchroniser avant de diagnostiquer un bug.
-- **Pour lire un gros fichier Drive** : `download_file_content`, décoder le base64 stocké proprement (jamais retaper à la main).
-
-Tout le travail se fait directement sur la branche `main`, dans les deux dépôts.
+- **TECHNIZEN** : dépôt Git séparé, racine = `index.html` + `src/js/app.js` + `src/js/database.js`. `PROJET_ETAT.md` + `PROJET_HISTORIQUE.md` à la racine. `CLAUDE.md` impose l'incrémentation automatique de version — actuellement **V10.30**.
+- **SAV-tech** : dépôt GitHub `Matrice971/SAV-tech`, **public**, branche `main` uniquement. Structure : `client-app/`, `bureau-app/`, `worker/`, `docs/`. `CLAUDE.md` à la racine, incrémentation automatique de version — bureau-app actuellement **V2.13**, client-app **V1.03**.
+- **Dossier Drive partagé** `SAV-tech-TECHNIZEN/` : copie miroir pour lecture par Claude (chat). Vérifier systématiquement la date de modification avant de s'y fier.
+- Tout le travail se fait directement sur la branche `main`, dans les deux dépôts.
 
 ---
 
-## 2. Architecture actuelle — vue d'ensemble (inchangée, désormais opérationnelle de bout en bout)
+## 2. Architecture actuelle — vue d'ensemble
 
 ```
-TECHNIZEN (technicien, terrain, hors-ligne) — affiche désormais V10.29 dans le header
-    │  bouton "Envoyer vers SAV-tech" sur la fiche d'intervention standard
+TECHNIZEN (V10.30, technicien, terrain, hors-ligne)
+    │  bouton "Envoyer vers SAV-tech" — état à 3 valeurs, boutons radio,
+    │  pieces_montees, pieces_a_prevoir, nom_rapport, matériel prêt/récupéré
     ▼
-data/interventions/*.txt (GitHub, non chiffré, écrit via le relais Cloudflare /write)
-    │  lu par bureau-app (API GitHub publique)
+data/interventions/*.txt (GitHub, non chiffré, via relais Cloudflare /write)
     ▼
-bureau-app (V1.06, onglets : Suivi réparation / Gestion clients / Suivi prêt / Configuration)
-    │  "📤 Publier la sélection" → déchiffre le fichier client existant (si présent),
-    │  fusionne les interventions sélectionnées, rechiffre, republie
+bureau-app (V2.13, onglets : Suivi réparation / Gestion clients / Suivi prêt / Configuration)
+    │  Cache config auto (localStorage), structure {technicien, publication}
+    │  Refonte ergonomique complète (voir section 4)
+    │  Effacement auto à 90j des "Livrée et testée" + génération auto de
+    │  fichier client vide quand plus aucune intervention active (voir section 4)
+    │
+    │  "📤 Publier la sélection" → construit l'appareil client à partir de
+    │  "publication", chiffre et republie
     ▼
-data/clients/{contact-slug}.txt (GitHub, chiffré AES-GCM/PBKDF2) — ✅ confirmé fonctionnel
-    │  lu par client-app (identifiant client + mot de passe)
+data/clients/{contact-slug}.txt (GitHub, chiffré AES-GCM/PBKDF2)
     ▼
-client-app (V1.02, appli HTML publique, jamais déployée publiquement à ce jour)
+client-app (V1.03) — lit et déchiffre UNIQUEMENT ce fichier
+    │  Mailto de retour client fixé en dur sur contact.technizen@gmail.com
+    │  (au lieu de l'email du client) — objet/corps inchangés
+    │  Dates affichées au format français JJ Mois AAAA (plus de format ISO)
+    │  Message déjà existant "Aucun matériel actuellement en réparation."
+    │  pour les clients sans appareil — réutilisé tel quel par le fichier vide
 ```
 
 ---
 
-## 3. TECHNIZEN — état actuel
+## 3. TECHNIZEN — état actuel (V10.30)
 
-- **V10.29** : ajout de l'affichage du numéro de version dans le header (`<span class="app-version">`), à côté du sous-titre. Règle d'incrémentation automatique posée dans un nouveau `CLAUDE.md`.
-- Reste par ailleurs inchangé depuis le dernier résumé (système de suivi de complétude par équipement, bouton "Envoyer vers SAV-tech" à 3 états, etc. — voir résumé précédent pour le détail si besoin).
-- Le champ "Mot de passe du relais" demandé dans la fenêtre "Envoyer vers SAV-tech" est normal et attendu — il correspond au secret Cloudflare `WRITE_PASSWORD` (voir section 6).
+Aucun changement cette session. Voir résumés précédents pour le détail (`CATEGORIES_CONTROLE`, bouton "Envoyer vers SAV-tech", suivi de complétude par équipement, etc.).
 
 ---
 
-## 4. SAV-tech — état actuel
+## 4. SAV-tech — évolutions de cette session
 
-### bureau-app (V1.03 → V1.06 cette session)
+### bureau-app — Refonte ergonomique (V2.12)
 
-**Navigation** : 4 onglets (Suivi réparation avec badge du nombre d'interventions non traitées / Gestion clients / Suivi prêt / Configuration). Onglet Configuration regroupe désormais : import TECHNIZEN, paramètres du relais (URL + mot de passe, éditables et sauvegardés dans la config), et la corbeille.
+Suite à un retour du patron peu enthousiaste, refonte visuelle complète pour un rendu plus "produit fini" :
+1. **Statuts renommés + triés** : "Réparation en cours" (ex-En attente de pièce, ambre) → "Réparation terminée" (ex-Réparation finalisée) → "Livrée et testée" (bleu), chacun avec sa couleur. Tri chronologique croissant (plus ancien en premier) dans chaque catégorie. Valeurs internes des états (1/2/3) inchangées, seuls les libellés affichés changent.
+2. **Grille responsive pleine largeur** (1/2/3 colonnes selon l'espace, optimisée PC 1920×1080) remplaçant l'ancienne liste. Cartes condensées : type de matériel / centre / date (JJ Mois AA) + boutons "🔍 Détail" et "🗑️ Supprimer" tous deux toujours visibles.
+3. **En-tête** avec dégradé de fond, "Gestion suivi réparation" + version + pastille "TechniZen", sans logo.
+4. **Colonnes technicien/publication** différenciées visuellement (grise/verrouillée vs blanche/bordure active).
+5. Espacement généralement augmenté (pensé pour usage PC en local d'entreprise).
+6. Icônes cohérentes sur les actions.
+7. Recherche globale (client, centre, matériel, commentaires, pièces — tous les champs).
 
-**Bouton de sauvegarde** : renommé "💾 Enregistrer" (ne prétend plus fermer l'onglet). Protection `beforeunload` native si modifications non sauvegardées (`hasUnsavedChanges`).
+Vérifié par Playwright (screenshots en scratchpad local, non commités) : en-tête, grille, colonnes détail, client add/edit/delete, aucune erreur console.
 
-**Interventions à traiter** : cartes groupées par statut (Réparation finalisée / En attente de pièce / Livrée et testée), code couleur, triées par date.
+### bureau-app — Correctifs et fonctionnalités liés à l'usage réel (V2.13)
 
-**Suppression sécurisée** : bouton 🗑️ avec confirmation → copie dans `configState.interventionsSupprimees` (config JSON) → suppression réelle sur GitHub via la nouvelle route `/delete` du relais → purge automatique après 90 jours → écran "Corbeille" consultable dans Configuration (pas de restauration automatique, juste vérification manuelle).
+Suite à un premier retour terrain d'un client test :
 
-**Publication ("📤 Publier la sélection")** — ✅ **fonctionnalité qui n'existait pas du tout avant cette session**, entièrement créée :
-- Sélection multiple par cases à cocher sur les interventions à traiter.
-- Pour chaque client concerné : télécharge `data/clients/{slug}.txt` s'il existe (404 = premier envoi), déchiffre (mot de passe client), fusionne les interventions dans `appareils` (clé : `num_serie` + `type`), rechiffre (AES-GCM/PBKDF2, format `salt.iv.ciphertext` en base64, identique au format attendu par client-app), republie via `/write` avec `dossier: "clients"`.
-- **Publication partielle** : si un client de la sélection n'a pas de mot de passe défini, il est exclu de la publication mais **les autres clients valides sont publiés quand même** — un message final liste séparément les échecs réseau et les clients non publiés faute de mot de passe.
-- Badge "✅ Publié le JJ/MM" sur les interventions publiées avec succès.
+1. **Bouton "📬 Vérifier les mails clients"** dans l'en-tête, à côté d'Enregistrer — ouvre `https://mail.google.com/mail/u/0/?authuser=contact.technizen@gmail.com#inbox` dans un nouvel onglet. Le compte `contact.technizen@gmail.com` (déjà utilisé pour héberger les liens Drive clients) sert désormais aussi de boîte de réception dédiée aux retours clients — ne reçoit normalement aucun autre mail, ce qui permet de repérer facilement une demande.
+2. **Effacement automatique à 90 jours des interventions "Livrée et testée"** : un nouveau champ `date_passage_livree` est horodaté quand une intervention passe à l'état 3 (effacé si l'état repasse à 1/2). Au chargement, toute intervention "Livrée et testée" avec `date_passage_livree` > 90 jours est automatiquement supprimée (relais `/delete`) et déplacée en corbeille, silencieusement — même rétention 90 jours que la suppression manuelle.
+3. **Génération automatique d'un fichier client "vide"** : dès qu'un client (identifié par son slug) n'a plus aucune intervention active — suite à une suppression manuelle ou à l'effacement automatique du point 2 — un fichier `data/clients/{slug}.txt` est généré et chiffré avec le **mot de passe client courant** (jamais figé en dur), contenant `{contact, email_contact, appareils: []}`. Résout le problème où un client sans matériel en réparation recevait un message "Identifiant client ou fichier introuvable" indiscernable d'une erreur de mot de passe.
+4. **Identifiant client visible** : le slug de connexion apparaît désormais sous chaque contact dans l'onglet Gestion clients ("Identifiant : {slug}"), pour que Phip puisse le communiquer facilement aux clients.
 
-**Gestion des clients** : vue condensée (contact + statut mot de passe + liste des centres attribués avec leur adresse), reste modifiable en détail (email, lien Drive) uniquement via "Modifier". Barre de recherche (contact, nom de centre, ou commune), insensible à la casse et aux accents. Import TECHNIZEN enrichi : capture désormais aussi la liste des centres (nom, adresse, ville) par contact, non-destructif comme avant.
+Vérifié par Playwright : purge d'une intervention "Livrée et testée" fictivement vieille de 100 jours + génération correcte du fichier vide chiffré ; test négatif confirmant qu'un client avec une 2ᵉ intervention encore active ne déclenche pas la génération du fichier vide à tort. Aucune erreur console.
 
-**Paramètres du relais** : formulaire dans Configuration pour éditer `relais.url` et `relais.writePassword` directement depuis l'appli (avant, modification uniquement possible en éditant le JSON à la main).
+### client-app — Évolutions de cette session
 
-### client-app (V1.01 → V1.02)
-
-- **Corrigé** : `FILE_URL` n'est plus codé en dur sur `test.txt` — un champ "Identifiant client" (slug) a été ajouté à l'écran de connexion, combiné au mot de passe.
-- **Corrigé** : texte de dev "Étape C — liste et détail des appareils" retiré du footer.
-- **Testé et confirmé fonctionnel** avec un vrai client (Will Sainte-Rose / slug `will-sainte-rose`) : appareil publié depuis bureau-app bien visible après déchiffrement.
-- N'a jamais été déployé publiquement — reste entièrement libre à retravailler (présentation, voire logique d'identification) sans contrainte de compatibilité avec des clients existants.
+- **V1.03** : mailto de retour client fixé en dur sur `contact.technizen@gmail.com` (au lieu de l'email du client). Objet/corps du mail inchangés.
+- Dates affichées au format français **JJ Mois AAAA** (ex: 31 Août 2026) au lieu du format ISO (2026-08-31), dans la liste comme dans le détail.
+- Le message existant pour liste d'appareils vide ("Aucun matériel actuellement en réparation.") a été confirmé suffisant pour le fichier client vide — aucune modification nécessaire côté client-app pour ce point.
 
 ### Relais Cloudflare Workers (`worker/index.js`)
 
-- Nouvelle route **`POST /delete`** ajoutée et déployée (`wrangler deploy` confirmé fait, testé via `curl` avec réponse JSON correcte).
-- CORS géré au niveau global (`OPTIONS` → 204 avec les bons en-têtes), commun à `/write` et `/delete` — pas de régression CORS malgré l'ajout de la route.
-- `dossier` reste une clé de correspondance stricte (`clients` → `data/clients`, `interventions` → `data/interventions`), jamais interpolée directement — protection contre le path traversal confirmée dans le code.
-- Le mot de passe (`WRITE_PASSWORD`) est comparé en temps constant (`safeEqual`) — bonne pratique déjà en place.
+Inchangé cette session.
 
 ---
 
 ## 5. Sujets ouverts / évolutions à discuter
 
-1. **Correctif en attente sur bureau-app (prochaine session)** : un premier correctif tentait de bloquer l'envoi réseau si `configState.relais.url` était vide, mais ça n'a pas fonctionné comme prévu en test réel (donnait encore une erreur "HTTP 501" au lieu du message clair). Remplacé par une approche plus simple, déjà spécifiée mais **pas encore testée** : ajouter la phrase *"Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration."* à la fin de tout message d'échec réseau (dans `saveInterventionChanges`, `deleteIntervention`, `publishSelection`), sans tenter de pré-valider l'URL. Prompt prêt, à lancer et tester en priorité à la reprise.
-2. **Refonte visuelle de client-app** : à faire, sans contrainte de compatibilité (jamais déployée publiquement). Réfléchir à la présentation ET à l'ergonomie de l'écran de connexion (identifiant + mot de passe) pendant cette refonte.
-3. **Écran de comparaison à l'import TECHNIZEN** (local vs importé, champ par champ) — toujours pas codé, l'import reste non-destructif par défaut. Note : l'import capture désormais aussi les centres (nom/adresse/ville), donc si cet écran est fait un jour, il faudra aussi couvrir les conflits sur ce nouveau champ.
-4. **Mode de fonctionnement de la base clients à trancher en équipe** (préférence technicien / admin / bases indépendantes / synchro protégée) — toujours en suspens. Rappel : ne jamais publier la base clients complète en clair sur le dépôt public GitHub si une synchro automatique est un jour choisie.
-5. **Point de vigilance GitHub Pages** inchangé : ne jamais rendre le dépôt `SAV-tech` privé sans upgrade payant (couperait `client-app`).
-6. Les 2 bugs anciens de `client-app` (section précédente) sont **résolus** cette session (`FILE_URL` dynamique + texte de dev retiré) — à retirer du suivi.
-7. Compléter les filtres opacimètre AT605/ECOPA100 (toujours en attente, non traité cette session).
+1. **Vérifier la 3ᵉ catégorie de statut** ("Réparation terminée") avec une vraie intervention dans cet état — non testé explicitement pendant la session (données démo n'avaient que 2 des 3 catégories représentées).
+2. Recueillir un retour du client test sur le mailto corrigé et sur l'ergonomie globale.
+3. Mode de fonctionnement de la base clients à trancher en équipe (préférence technicien / admin / bases indépendantes / synchro protégée) — toujours en suspens, sujet à raborder avec le patron.
+4. Écran de comparaison à l'import TECHNIZEN (local vs importé) — toujours pas codé, non prioritaire (Phip a confirmé que l'écran d'import actuel lui convient tel quel).
+5. Ne jamais rendre le dépôt `SAV-tech` privé sans upgrade payant (casserait GitHub Pages pour client-app).
+6. Filtres opacimètre AT605/ECOPA100 — confirmés fonctionnels par Phip, sujet clos.
 
 ---
 
 ## 6. Repères pratiques utiles
 
-- **Git qui refuse de pousser (branches divergentes)** : `git pull --no-rebase`, puis `git commit --no-edit` si un message de fusion s'ouvre (l'éditeur `nano` peut s'ouvrir : `Ctrl+O` puis `Entrée` pour valider, `Ctrl+X` pour quitter), puis `git push`. Rencontré et résolu cette session (des interventions techniciens avaient été poussées entre-temps par TECHNIZEN — comportement normal, pas une erreur).
-- **Vérifier si un déploiement Worker est à jour** : `wrangler deployments list` (comparer l'horodatage au dernier commit concerné), ou tester directement la route via `curl -X POST .../[route] -d '{...}'` — une réponse JSON du Worker (même une erreur du type "mot de passe incorrect") confirme que le déploiement est bien en place.
-- **Diagnostiquer un échec réseau dans le navigateur** : ouvrir les outils de développement (F12) → onglet Réseau, reproduire l'action, inspecter la requête en échec (URL complète, réponse). A permis de découvrir que le champ "URL du relais" vide provoque un `fetch()` en URL relative vers la page elle-même (`http://localhost:8000/write`) plutôt que vers le relais Cloudflare — d'où des erreurs cryptiques ("HTTP 501") qui n'ont rien à voir avec Cloudflare, GitHub ou le code métier.
-- **Changer le mot de passe du relais (`WRITE_PASSWORD`)** — 3 endroits à synchroniser, sinon "Mot de passe incorrect" partout :
-  1. Le secret Cloudflare lui-même : `wrangler secret put WRITE_PASSWORD` (depuis `worker/`), ou via le tableau de bord web [dash.cloudflare.com](https://dash.cloudflare.com) → Workers & Pages → `sav-tech-relay` → Settings → Variables and Secrets (utile si on change de PC, ex. PC Windows du travail — aucune installation requise par cette voie).
-  2. Le champ "Mot de passe du relais" dans bureau-app (onglet Configuration → Enregistrer les paramètres du relais → 💾 Enregistrer).
-  3. Le champ équivalent dans TECHNIZEN (fenêtre "Envoyer vers SAV-tech") — emplacement exact dans le code encore à vérifier si besoin.
+- **Git qui refuse de pousser (branches divergentes)** : `git pull --no-rebase`, puis `git commit --no-edit` si un message de fusion s'ouvre, puis `git push`. Cas normal et fréquent, pas une erreur à corriger dans le code.
+- **Vérifier qu'un push a bien été publié** : `git status`, ou comparer avec `https://github.com/Matrice971/SAV-tech/commits/main`.
+- **Tester bureau-app/client-app sans serveur (`file://`)** : fonctionne, mais attention au cache navigateur (`Ctrl+Shift+R`) et au portail XDG qui peut servir une version périmée — préférer taper l'URL `file:///chemin/complet/index.html` directement.
+- **Lancer via serveur local** : `python3 -m http.server 8000` depuis le dossier de l'appli, puis `http://localhost:8000/`.
+- **Changer le mot de passe du relais** — 3 endroits à synchroniser : secret Cloudflare (`wrangler secret put WRITE_PASSWORD`), champ bureau-app (Configuration), champ TECHNIZEN (fenêtre d'envoi).
 - **`wrangler deploy`** : nécessaire après toute modification de `worker/index.js` — un `git push` seul ne redéploie pas le worker.
-- **Fichiers HTML ouverts en `file://` sous Linux (Zorin OS)** : peuvent afficher une version périmée à cause du portail XDG — préférer `python3 -m http.server` + `http://localhost:8000/`. Nuance découverte cette session : ce n'est pas systématique (le fichier TECHNIZEN ouvert en `file://` était bien à jour lors d'un test) — donc utile pour vérifier via le numéro de version affiché, mais ne pas assumer que `file://` est *toujours* périmé ni *jamais* périmé.
+- **Supprimer des fichiers sur GitHub en masse** : plus simple en local via `git rm fichier1 fichier2 ... && git commit -m "..." && git push`.
+- **Adresse mail commune de retour client** : `contact.technizen@gmail.com` (Gmail), utilisée à la fois pour héberger les liens Drive clients et recevoir les retours via le mailto de client-app. Le lien "Vérifier les mails clients" dans bureau-app (`https://mail.google.com/mail/u/0/?authuser=...`) est spécifique à Gmail — à adapter si le fournisseur mail change un jour.
+- **Vérifier le dossier Drive avant tout diagnostic** : comparer `modifiedTime` du fichier Drive avec l'heure attendue du dernier commit ; demander à Phip de resynchroniser sinon.
 
 ---
 
-*Fin du résumé.*
+*Fin du résumé. Bonne continuation, Phip !*

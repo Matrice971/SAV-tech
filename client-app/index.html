@@ -304,7 +304,7 @@
 <body>
   <header>
     <h1>SAV-tech — Suivi de réparation</h1>
-    <span class="app-version">V1.02</span>
+    <span class="app-version">V1.03</span>
   </header>
 
   <main>
@@ -612,7 +612,7 @@
         const body =
           `Bonjour, j'ai une question concernant la réparation de mon matériel ${appareil.type} ` +
           `(n° série ${appareil.num_serie}) situé à ${appareil.centre_origine} :`;
-        const mailtoUrl = `mailto:${emailContact}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailtoUrl = `mailto:contact.technizen@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         links.push(`<a href="${escapeHtml(mailtoUrl)}" class="link-button">Un commentaire ou une question sur cette réparation ?</a>`);
       }
 
