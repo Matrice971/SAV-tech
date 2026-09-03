@@ -1,0 +1,20 @@
+{
+  "centre": "CT CARBUR",
+  "centre_numero": "971C.14A",
+  "client_adresse": "ZAC FORT ILE, 97128 GOYAVE",
+  "contact": "BURAN Jean-Marc",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "0587"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CTCARBUR-020926.pdf",
+  "pieces_montees": []
+}
