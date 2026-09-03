@@ -1,0 +1,20 @@
+{
+  "centre": "JO Contrôle",
+  "centre_numero": "971C.04A",
+  "client_adresse": "VOIE N°0 JARRY, 97122 BAIE-MAHAULT",
+  "contact": "VOLET Evariste",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "3574"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JOControle-020926.pdf",
+  "pieces_montees": []
+}
