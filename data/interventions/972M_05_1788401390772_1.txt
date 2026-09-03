@@ -1,0 +1,20 @@
+{
+  "centre": "CT VATABLE SARL",
+  "centre_numero": "972M.05",
+  "client_adresse": "ZAE Vatable, 97229 TROIS ILETS",
+  "contact": "VAILLANT Ulrick",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "475"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CTVATABLESARL-020926.pdf",
+  "pieces_montees": []
+}
