@@ -1,0 +1,20 @@
+{
+  "centre": "JP Contrôle",
+  "centre_numero": "972M.03",
+  "client_adresse": "Fond d'Or, 97224 DUCOS",
+  "contact": "PELOPONESE Corrine",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "3012"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JPControle-020926.pdf",
+  "pieces_montees": []
+}
