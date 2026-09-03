@@ -1,0 +1,20 @@
+{
+  "centre": "Centre Auto Contrôle 2000",
+  "centre_numero": "971M.10",
+  "client_adresse": "Rue Henri Becquerel, 97122 BAIE-MAHAULT",
+  "contact": "SIARRAS",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "1509"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CentreAutoControle2000-020926.pdf",
+  "pieces_montees": []
+}
