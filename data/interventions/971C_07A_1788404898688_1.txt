@@ -1,0 +1,20 @@
+{
+  "centre": "Morne à l'Eau CT",
+  "centre_numero": "971C.07A",
+  "client_adresse": "POINTE A RETZ, 97111 MORNE-A-L'EAU",
+  "contact": "QUILLIN Maël",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "23199"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-MornealEauCT-020926.pdf",
+  "pieces_montees": []
+}
