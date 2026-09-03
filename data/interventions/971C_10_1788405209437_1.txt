@@ -1,0 +1,20 @@
+{
+  "centre": "TONY Contrôle",
+  "centre_numero": "971C.10",
+  "client_adresse": "35 ZAC DE BEAUSOLEIL, 97122 BAIE MAHAULT",
+  "contact": "TONY",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "4178"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-TONYControle-020926.pdf",
+  "pieces_montees": []
+}
