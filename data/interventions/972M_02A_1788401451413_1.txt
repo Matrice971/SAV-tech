@@ -1,0 +1,20 @@
+{
+  "centre": "CTA Trinité",
+  "centre_numero": "972M.02A",
+  "client_adresse": "19 zone BAC, 97220 LA TRINITE",
+  "contact": "JEAN-LOUIS Marie-Louise",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "00514"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CTATrinite-020926.pdf",
+  "pieces_montees": []
+}
