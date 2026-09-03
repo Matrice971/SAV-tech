@@ -1,0 +1,20 @@
+{
+  "centre": "PHICOTEC",
+  "centre_numero": "971C.06",
+  "client_adresse": "SECTION MARQUISAT, 97130 CAPESTERRE B.E.",
+  "contact": "PHILOMIN Joël",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24451"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-PHICOTEC-020926.pdf",
+  "pieces_montees": []
+}
