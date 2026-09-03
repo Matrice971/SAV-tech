@@ -453,6 +453,18 @@
     font-weight: 600;
   }
 
+  .intervention-hors-contrat-badge {
+    display: inline-block;
+    margin-top: 0.25rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-border);
+    width: fit-content;
+  }
+
   .intervention-row-actions {
     display: flex;
     gap: 0.5rem;
@@ -753,7 +765,7 @@
     <header>
       <div class="header-title-group">
         <h1>Gestion suivi réparation</h1>
-        <span class="app-version">V2.14</span>
+        <span class="app-version">V2.15</span>
         <span class="header-brand">TechniZen</span>
       </div>
     </header>
@@ -779,7 +791,7 @@
     <header>
       <div class="header-title-group">
         <h1>Gestion suivi réparation</h1>
-        <span class="app-version">V2.14</span>
+        <span class="app-version">V2.15</span>
         <span class="header-brand">TechniZen</span>
       </div>
       <div class="header-actions">
@@ -1502,6 +1514,7 @@
         nom_rapport: data.nom_rapport,
         materiel_prete_num_serie: data.materiel_prete_num_serie,
         materiel_recupere_num_serie: data.materiel_recupere_num_serie,
+        hors_contrat: data.hors_contrat,
       };
       const slug = slugify(technicien.contact || "");
       const publication = {
@@ -1731,19 +1744,21 @@
       const statusClass = `status-group-${ETAT_ORDER.includes(pub.etat) ? pub.etat : 1}`;
       const publishedAt = publishedFilenames.get(entry.filename);
       const isPublished = !!publishedAt;
+      const isHorsContrat = tech.hors_contrat === true;
       const isExpanded = expandedInterventionFilenames.has(entry.filename);
       const etatOptionsHtml = ETAT_ORDER.map((e) => `<option value="${e}">${escapeHtml(etatLabel(e))}</option>`).join("");
       const row = document.createElement("div");
       row.className = `intervention-card ${statusClass}${isExpanded ? " is-expanded" : ""}`;
       row.innerHTML = `
         <div class="intervention-condensed">
-          <input type="checkbox" class="intervention-checkbox" ${isPublished ? "disabled" : ""}>
+          <input type="checkbox" class="intervention-checkbox" ${isPublished || isHorsContrat ? "disabled" : ""} ${isHorsContrat ? 'title="Hors contrat : pas de compte client, publication impossible"' : ""}>
           <div class="intervention-body">
             <div class="intervention-summary">
               <div class="intervention-condensed-type">${escapeHtml(materiel.type)}</div>
               <div class="intervention-condensed-centre">${escapeHtml(pub.centre_nom)}</div>
               <div class="intervention-condensed-date">${escapeHtml(formatDateCondensed(pub.date_prise_charge))}</div>
               ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
+              ${isHorsContrat ? `<span class="intervention-hors-contrat-badge">🚫 Hors contrat — suivi interne</span>` : ""}
             </div>
           </div>
         </div>
@@ -2157,7 +2172,9 @@
     }
 
     async function publishSelection() {
-      const selectedEntries = currentInterventions.filter((entry) => selectedInterventionFilenames.has(entry.filename));
+      const selectedEntries = currentInterventions.filter(
+        (entry) => selectedInterventionFilenames.has(entry.filename) && entry.data.technicien.hors_contrat !== true
+      );
       if (selectedEntries.length === 0) {
         return;
       }
