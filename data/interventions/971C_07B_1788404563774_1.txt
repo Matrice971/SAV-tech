@@ -1,0 +1,20 @@
+{
+  "centre": "DEKRA Saint François",
+  "centre_numero": "971C.07B",
+  "client_adresse": "80 Rue du Général de Gaulle, 97118 SAINT FRANCOIS",
+  "contact": "QUILLIN Maël",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "22982"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-DEKRASaintFrancois-020926.pdf",
+  "pieces_montees": []
+}
