@@ -1,0 +1,20 @@
+{
+  "centre": "TACT SARL",
+  "centre_numero": "972C.01",
+  "client_adresse": "VOIE N°4 JEANNE D ARC, 97232 LE LAMENTIN",
+  "contact": "LITTEE Serge",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "1201"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-TACTSARL-020926.pdf",
+  "pieces_montees": []
+}
