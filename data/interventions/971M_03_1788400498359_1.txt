@@ -1,0 +1,20 @@
+{
+  "centre": "AGAPE Frères Auto Contrôle",
+  "centre_numero": "971M.03",
+  "client_adresse": "RUE SCHOELCHER, 97117 PORT LOUIS",
+  "contact": "AGAPE Jeremy",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "3490"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-AGAPEFreresAutoControle-020926.pdf",
+  "pieces_montees": []
+}
