@@ -1,0 +1,20 @@
+{
+  "centre": "ZARRU Controle",
+  "centre_numero": "971M.05",
+  "client_adresse": "QUATRE CHEMINS, 97139 ABYMES",
+  "contact": "MOZART Eugène",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "3129"
+  },
+  "etat": 1,
+  "date": "2026-09-02",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ZARRUControle-020926.pdf",
+  "pieces_montees": []
+}
