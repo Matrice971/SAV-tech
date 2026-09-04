@@ -1,0 +1,27 @@
+{
+  "centre": "9 Sécurité",
+  "centre_numero": "972C.10",
+  "client_adresse": "Quartier Gachette, 97231 LE ROBERT",
+  "contact": "Will Sainte-Rose",
+  "materiel": {
+    "type": "type",
+    "num_serie": "1234"
+  },
+  "etat": 2,
+  "date": "2026-09-04",
+  "pieces_a_prevoir": [
+    {
+      "designation": "piece 2",
+      "quantite": 1
+    }
+  ],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-9Securite-040926.pdf",
+  "pieces_montees": [
+    "piece 1"
+  ]
+}
