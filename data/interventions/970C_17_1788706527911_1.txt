@@ -1,0 +1,25 @@
+{
+  "centre": "SBC SARL",
+  "centre_numero": "970C.17",
+  "client_adresse": "Quartier de Lorient, 97133 SAINT-BARTHELEMY",
+  "contact": "GREAUX Jean-Philippe",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "40778"
+  },
+  "etat": 2,
+  "date": "2026-09-06",
+  "pieces_a_prevoir": [
+    {
+      "designation": "Piece fictive de test",
+      "quantite": 2
+    }
+  ],
+  "commentaire_technicien": "zone de texte - Suite réparation intermédiare TESTE 2",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "test intermédiare de réparation",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-SBCSARL-060926.pdf",
+  "pieces_montees": []
+}
