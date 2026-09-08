@@ -1,0 +1,22 @@
+{
+  "centre": "VIVAUTO PL AUTOVISION",
+  "centre_numero": "971C.13",
+  "client_adresse": "RUE NICOLAS APPERT JARRY, 97122 BAIE MAHAULT",
+  "contact": "BOURRIER",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "4670"
+  },
+  "etat": 1,
+  "date": "2026-09-08",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement batterie",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "Chargeur inadapter",
+  "commentaire_bureau": "",
+  "technicien": "Zenond R / Chathuant P",
+  "nom_rapport": "Fiche_interv-VIVAUTOPLAUTOVISION-080926.pdf",
+  "pieces_montees": [
+    "Batterie lithium pour cap2XXX"
+  ]
+}
