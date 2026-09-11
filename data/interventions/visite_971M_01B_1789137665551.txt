@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "CTPL (l1)",
+  "date_validation": "2026-09-11"
+}
