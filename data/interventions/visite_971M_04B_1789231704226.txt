@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "PRESTIGE AUTO NET (vh)",
+  "date_validation": "2026-09-12"
+}
