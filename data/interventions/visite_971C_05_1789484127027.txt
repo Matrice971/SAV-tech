@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "SARL Auto Contrôle Lamentin",
+  "date_validation": "2026-09-15"
+}
