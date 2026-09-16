@@ -1,5 +1,0 @@
-{
-  "type": "visite_complete",
-  "centre_nom": "AGAPE Frères Auto Contrôle",
-  "date_validation": "2026-09-14"
-}
