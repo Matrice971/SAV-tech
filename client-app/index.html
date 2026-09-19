@@ -35,20 +35,34 @@
     padding: 1.25rem 1rem;
     text-align: center;
     border-bottom: 1px solid var(--color-border);
-    background: var(--color-surface);
+    background: linear-gradient(135deg, #1a3a5c, #2b5f8e);
   }
 
   header h1 {
     margin: 0;
     font-size: 1.25rem;
+    color: #fff;
+  }
+
+  .header-top-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .header-brand {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
   }
 
   .app-version {
-    display: block;
-    margin-top: 0.2rem;
     font-size: 0.75rem;
     font-weight: 400;
-    color: var(--color-text-muted);
+    color: rgba(255, 255, 255, 0.75);
   }
 
   main {
@@ -194,6 +208,14 @@
     outline: none;
   }
 
+  .device-item-tone-0 {
+    background: var(--color-surface);
+  }
+
+  .device-item-tone-1 {
+    background: #eef0f2;
+  }
+
   .device-item-title {
     font-weight: 600;
   }
@@ -202,6 +224,13 @@
     color: var(--color-text-muted);
     font-size: 0.85rem;
     margin-top: 0.25rem;
+  }
+
+  .device-item-hint {
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    font-style: italic;
+    margin-top: 0.5rem;
   }
 
   .empty-message {
@@ -228,12 +257,116 @@
     word-break: break-word;
   }
 
-  .detail-note {
-    margin: 0.9rem 0 0;
-    padding: 0.6rem 0.75rem;
-    background: var(--color-bg);
+  .detail-caveat {
+    margin: 0.3rem 0 0;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .detail-title-bar {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 0.85rem 1rem;
     border-radius: var(--radius);
+    margin: 0 0 0.4rem;
+  }
+
+  .detail-subline {
+    margin: 0 0 1.1rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .detail-highlight {
+    background: #eaf1fd;
+    border: 1px solid #c9dcf9;
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    margin: 0 0 1rem;
+  }
+
+  .detail-highlight-title {
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .detail-highlight-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(37, 99, 235, 0.15);
+  }
+
+  .detail-highlight-row:last-of-type {
+    border-bottom: none;
+  }
+
+  .detail-highlight-row-label {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+
+  .detail-highlight-row-value {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .detail-highlight-note {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  .status-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1rem;
+  }
+
+  .status-table td {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .status-table-label {
+    width: 40%;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+
+  .status-table-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .detail-section {
+    margin: 1rem 0 0;
+    padding: 0.75rem 0.9rem;
+    background: var(--color-bg);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius);
+  }
+
+  .detail-section-title {
+    margin: 0 0 0.3rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    font-weight: 700;
+  }
+
+  .detail-section-value {
+    margin: 0;
     font-size: 0.9rem;
+    word-break: break-word;
   }
 
   .back-link {
@@ -254,14 +387,45 @@
     font-size: 0.85rem;
   }
 
+  .list-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .list-tab-btn {
+    flex: 1 1 auto;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .list-tab-btn.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+  }
+
   .close-message {
     margin: 0;
     font-size: 0.8rem;
     color: var(--color-text-muted);
   }
 
-  .drive-header {
+  .quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-top: 0.75rem;
+  }
+
+  .quick-actions .link-button {
+    flex: 1 1 auto;
   }
 
   .link-button {
@@ -303,8 +467,11 @@
 </head>
 <body>
   <header>
-    <h1>SAV-tech — Suivi de réparation</h1>
-    <span class="app-version">V1.03</span>
+    <div class="header-top-row">
+      <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
+      <span class="app-version">V2.07</span>
+    </div>
+    <h1>SAV-tech</h1>
   </header>
 
   <main>
@@ -340,18 +507,32 @@
         <button type="button" id="close-btn" class="button-secondary button-small">Fermer</button>
         <p id="close-message" class="close-message hidden">Vous pouvez fermer cet onglet ou cette fenêtre manuellement.</p>
       </div>
-      <div id="drive-header" class="drive-header hidden">
-        <a id="drive-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button">Accéder à mon Drive</a>
+      <div id="quick-actions" class="quick-actions">
+        <a id="drive-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button hidden">Accéder à mon Drive</a>
+        <a id="contact-link" href="#" class="link-button hidden">Nous contacter</a>
       </div>
       <h2 id="list-title" class="screen-title"></h2>
-      <ul id="device-list" class="device-list"></ul>
-      <p id="empty-message" class="empty-message hidden">Aucun matériel actuellement en réparation.</p>
+      <div class="list-tabs">
+        <button type="button" id="tab-materiel-btn" class="list-tab-btn active">Mon matériel</button>
+        <button type="button" id="tab-centres-btn" class="list-tab-btn">Mes centres</button>
+      </div>
+
+      <div id="tab-panel-materiel">
+        <ul id="device-list" class="device-list"></ul>
+        <p id="empty-message" class="empty-message hidden">Aucun matériel actuellement en réparation.</p>
+      </div>
+
+      <div id="tab-panel-centres" class="hidden">
+        <div id="centres-list"></div>
+        <p id="centres-empty-message" class="empty-message hidden">Aucune visite programmée pour le moment</p>
+      </div>
     </div>
 
     <div id="screen-detail" class="hidden">
       <button type="button" id="back-btn" class="button-secondary back-link">← Retour à la liste</button>
       <div class="card">
-        <h2 id="detail-title" class="screen-title"></h2>
+        <h2 id="detail-title" class="screen-title detail-title-bar"></h2>
+        <p id="detail-subline" class="detail-subline"></p>
         <div id="detail-body"></div>
       </div>
     </div>
@@ -378,12 +559,30 @@
       1: "Réparation finalisée",
       2: "En attente de pièce",
       3: "Livrée et testée",
+      4: "Pièce en commande",
     };
 
     const LIEU_LABELS = {
       atelier: "Atelier",
       site: "Site",
     };
+
+    const LIBELLES_MATERIEL_CLIENT = {
+      "Gaz": "Analyseur de Gaz (Lambda)",
+      "Opacimètre": "Opacimètre (boîte à fumée)",
+      "OBD": "Lecteur E-OBD",
+      "Freinage": "Banc de Freinage",
+      "Suspension": "Banc de Suspension",
+      "Ripage": "Banc de Ripage",
+      "Pupitre": "Contrôleur de liaison au sol",
+      "Régloscope": "Règle-Phare (Régloscope)",
+      "Calibreur": "Calibreur de Sonomètre",
+      "Pont": "Pont élévateur",
+    };
+
+    function libelleMaterielClient(type) {
+      return LIBELLES_MATERIEL_CLIENT[type] || type;
+    }
 
     const screenPasswordEl = document.getElementById("screen-password");
     const screenListEl = document.getElementById("screen-list");
@@ -398,20 +597,37 @@
     const errorMessageEl = document.getElementById("error-message");
 
     const listTitleEl = document.getElementById("list-title");
+    const tabMaterielBtnEl = document.getElementById("tab-materiel-btn");
+    const tabCentresBtnEl = document.getElementById("tab-centres-btn");
+    const tabPanelMaterielEl = document.getElementById("tab-panel-materiel");
+    const tabPanelCentresEl = document.getElementById("tab-panel-centres");
+    const centresListEl = document.getElementById("centres-list");
+    const centresEmptyMessageEl = document.getElementById("centres-empty-message");
     const deviceListEl = document.getElementById("device-list");
     const emptyMessageEl = document.getElementById("empty-message");
     const logoutBtnEl = document.getElementById("logout-btn");
     const closeBtnEl = document.getElementById("close-btn");
     const closeMessageEl = document.getElementById("close-message");
-    const driveHeaderEl = document.getElementById("drive-header");
     const driveLinkEl = document.getElementById("drive-link");
+    const contactLinkEl = document.getElementById("contact-link");
 
     const detailTitleEl = document.getElementById("detail-title");
+    const detailSublineEl = document.getElementById("detail-subline");
     const detailBodyEl = document.getElementById("detail-body");
     const backBtnEl = document.getElementById("back-btn");
 
     let visibleAppareils = [];
     let emailContact = null;
+
+    function switchListTab(tab) {
+      tabMaterielBtnEl.classList.toggle("active", tab === "materiel");
+      tabCentresBtnEl.classList.toggle("active", tab === "centres");
+      tabPanelMaterielEl.classList.toggle("hidden", tab !== "materiel");
+      tabPanelCentresEl.classList.toggle("hidden", tab !== "centres");
+    }
+
+    tabMaterielBtnEl.addEventListener("click", () => switchListTab("materiel"));
+    tabCentresBtnEl.addEventListener("click", () => switchListTab("centres"));
 
     function showScreen(screen) {
       screenPasswordEl.classList.toggle("hidden", screen !== "password");
@@ -526,12 +742,46 @@
       const driveLink = (data.appareils || []).find((a) => a.lien_drive)?.lien_drive;
       if (driveLink) {
         driveLinkEl.href = driveLink;
-        driveHeaderEl.classList.remove("hidden");
+        driveLinkEl.classList.remove("hidden");
       } else {
-        driveHeaderEl.classList.add("hidden");
+        driveLinkEl.classList.add("hidden");
+      }
+
+      if (emailContact) {
+        const subject = `Question - ${data.contact}`;
+        const body = "Bonjour, j'ai une question concernant le suivi de mon matériel :";
+        contactLinkEl.href = `mailto:contact.technizen@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        contactLinkEl.classList.remove("hidden");
+      } else {
+        contactLinkEl.classList.add("hidden");
       }
 
       listTitleEl.textContent = `Bonjour ${data.contact}`;
+      switchListTab("materiel");
+
+      const centresVisites = data.centres_visites && typeof data.centres_visites === "object" ? data.centres_visites : {};
+      const centreVisiteNoms = Object.keys(centresVisites);
+      if (centreVisiteNoms.length > 0) {
+        centresListEl.innerHTML = centreVisiteNoms
+          .map((nom) => {
+            const visite = centresVisites[nom];
+            return `
+              <div class="card">
+                <h3 class="screen-title" style="margin-top: 0">${escapeHtml(nom)}</h3>
+                <p class="detail-value">Dernière visite : ${escapeHtml(formatDateFr(visite.derniere_visite))}</p>
+                <p class="detail-value">Prochaine visite : à partir du ${escapeHtml(formatDateFr(visite.prochaine_visite_debut))}, dernier délai légal le ${escapeHtml(formatDateFr(visite.prochaine_visite_fin))}</p>
+              </div>
+            `;
+          })
+          .join("");
+        centresListEl.classList.remove("hidden");
+        centresEmptyMessageEl.classList.add("hidden");
+      } else {
+        centresListEl.innerHTML = "";
+        centresListEl.classList.add("hidden");
+        centresEmptyMessageEl.classList.remove("hidden");
+      }
+
       visibleAppareils = (data.appareils || []).filter(isAppareilVisible);
 
       deviceListEl.innerHTML = "";
@@ -543,10 +793,11 @@
         const li = document.createElement("li");
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "device-item";
+        button.className = `device-item device-item-tone-${index % 2}`;
         button.innerHTML = `
-          <div class="device-item-title">${escapeHtml(appareil.type)} — ${escapeHtml(appareil.num_serie)}</div>
-          <div class="device-item-center">${escapeHtml(appareil.centre_origine)}</div>
+          <div class="device-item-title">${escapeHtml(libelleMaterielClient(appareil.type))} — ${escapeHtml(appareil.num_serie)}</div>
+          <div class="device-item-center">${escapeHtml(appareil.centre_origine)} — ${escapeHtml(formatDateFr(appareil.date_prise_charge))}</div>
+          <div class="device-item-hint">cliquer pour afficher les détails</div>
         `;
         button.addEventListener("click", () => {
           renderDetail(appareil);
@@ -558,37 +809,57 @@
     }
 
     function renderDetail(appareil) {
-      detailTitleEl.textContent = `${appareil.type} — ${appareil.num_serie}`;
+      detailTitleEl.textContent = `${libelleMaterielClient(appareil.type)} — ${appareil.num_serie}`;
+
+      detailSublineEl.textContent = appareil.centre_commune
+        ? `${appareil.centre_origine} — ${appareil.centre_commune}`
+        : appareil.centre_origine;
 
       const etatLabel = ETAT_LABELS[appareil.etat] || "Statut inconnu";
       const lieuLabel = LIEU_LABELS[appareil.lieu_prise_charge] || appareil.lieu_prise_charge;
 
       let html = `
-        <p class="detail-label">Centre d'origine</p>
-        <p class="detail-value">${escapeHtml(appareil.centre_origine)}</p>
+        <div class="detail-highlight">
+          <p class="detail-highlight-title">Prise en charge</p>
+          <div class="detail-highlight-row">
+            <span class="detail-highlight-row-label">Date</span>
+            <span class="detail-highlight-row-value">${escapeHtml(formatDateFr(appareil.date_prise_charge))}</span>
+          </div>
+          <div class="detail-highlight-row">
+            <span class="detail-highlight-row-label">Lieu</span>
+            <span class="detail-highlight-row-value">${escapeHtml(lieuLabel)}</span>
+          </div>
+          ${appareil.materiel_prete_num_serie ? `<p class="detail-highlight-note">Matériel de prêt : ${escapeHtml(appareil.materiel_prete_num_serie)}</p>` : ""}
+        </div>
 
-        <p class="detail-label">Adresse</p>
-        <p class="detail-value">${escapeHtml(appareil.adresse)}</p>
-
-        <p class="detail-label">Statut actuel</p>
-        <p class="detail-value">${escapeHtml(etatLabel)}</p>
-
-        <p class="detail-label">Prise en charge</p>
-        <p class="detail-value">${escapeHtml(formatDateFr(appareil.date_prise_charge))} — ${escapeHtml(lieuLabel)}</p>
+        <table class="status-table">
+          <tbody>
+            <tr>
+              <td class="status-table-label">Statut actuel</td>
+              <td class="status-table-value">${escapeHtml(etatLabel)}</td>
+            </tr>
+          </tbody>
+        </table>
       `;
 
-      if (appareil.piece_en_commande) {
-        html += `<p class="detail-note">Pièce en commande</p>`;
-      }
-
-      if (appareil.materiel_prete_num_serie) {
-        html += `<p class="detail-note">Matériel de prêt : ${escapeHtml(appareil.materiel_prete_num_serie)}</p>`;
-      }
-
-      if (appareil.commentaire_technicien) {
+      // commentaire_bureau est un commentaire interne (voir son libellé dans technizen-app :
+      // "Commentaire interne (bureau uniquement, non transmis au client)") : il ne doit jamais
+      // s'afficher ici, seul le commentaire technicien publié est destiné au client.
+      const observation = appareil.commentaire_technicien;
+      if (observation) {
         html += `
-          <p class="detail-label">Commentaire technicien</p>
-          <p class="detail-value">${escapeHtml(appareil.commentaire_technicien)}</p>
+          <div class="detail-section">
+            <p class="detail-section-title">Observation</p>
+            <p class="detail-section-value">${escapeHtml(observation)}</p>
+          </div>
+        `;
+      }
+
+      if (appareil.date_livraison_prevue && !appareil.date_remise_service) {
+        html += `
+          <p class="detail-label">Date de Livraison</p>
+          <p class="detail-value">Livraison prévue le ${escapeHtml(formatDateFr(appareil.date_livraison_prevue))}</p>
+          <p class="detail-caveat">Donné à titre informatif.<br>Peut différer selon les disponibilités de l'équipe technique.</p>
         `;
       }
 
@@ -608,9 +879,10 @@
       }
 
       if (emailContact) {
-        const subject = `Question - ${appareil.centre_origine} - ${appareil.type} - ${appareil.num_serie}`;
+        const libelleMateriel = libelleMaterielClient(appareil.type);
+        const subject = `Question - ${appareil.centre_origine} - ${libelleMateriel} - ${appareil.num_serie}`;
         const body =
-          `Bonjour, j'ai une question concernant la réparation de mon matériel ${appareil.type} ` +
+          `Bonjour, j'ai une question concernant la réparation de mon matériel ${libelleMateriel} ` +
           `(n° série ${appareil.num_serie}) situé à ${appareil.centre_origine} :`;
         const mailtoUrl = `mailto:contact.technizen@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         links.push(`<a href="${escapeHtml(mailtoUrl)}" class="link-button">Un commentaire ou une question sur cette réparation ?</a>`);
@@ -632,8 +904,10 @@
       emailContact = null;
       listTitleEl.textContent = "";
       deviceListEl.innerHTML = "";
+      detailSublineEl.textContent = "";
       detailBodyEl.innerHTML = "";
-      driveHeaderEl.classList.add("hidden");
+      driveLinkEl.classList.add("hidden");
+      contactLinkEl.classList.add("hidden");
       clientIdEl.value = "";
       passwordEl.value = "";
       hideError();

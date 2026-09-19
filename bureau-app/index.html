@@ -28,6 +28,9 @@
     --tint-success: #f3faf5;
     --tint-pending: #fffaf0;
     --tint-neutral: #f4f9ff;
+    --color-critical-bg: #f5c6cb;
+    --color-critical-border: #e9a0a8;
+    --color-critical-text: #491217;
     --radius: 10px;
   }
 
@@ -601,6 +604,163 @@
     flex-shrink: 0;
   }
 
+  .semestrielles-recap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.1rem;
+  }
+
+  .semestrielle-stat {
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+  }
+
+  .semestrielle-stat-non_controle {
+    background: var(--color-critical-bg);
+    border-color: var(--color-critical-border);
+    color: var(--color-critical-text);
+  }
+
+  .semestrielle-stat-depasse {
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    color: var(--color-error-text);
+  }
+
+  .semestrielle-stat-a_prevoir {
+    background: var(--color-pending-bg);
+    border-color: var(--color-pending-border);
+    color: var(--color-pending-text);
+  }
+
+  .semestrielle-stat-conforme {
+    background: var(--color-success-bg);
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+
+  .semestrielles-filters-row {
+    flex-wrap: wrap;
+  }
+
+  .semestrielles-status-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .status-filter-btn {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.5rem 0.7rem;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .status-filter-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .status-filter-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+
+  .status-filter-btn.active:hover {
+    background: var(--color-primary-hover);
+    color: #fff;
+  }
+
+  .semestrielle-badge {
+    display: inline-block;
+    margin-top: 0.3rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    width: fit-content;
+  }
+
+  .semestrielle-badge-non_controle {
+    background: var(--color-critical-bg);
+    color: var(--color-critical-text);
+  }
+
+  .semestrielle-badge-depasse {
+    background: var(--color-error-bg);
+    color: var(--color-error-text);
+  }
+
+  .semestrielle-badge-a_prevoir {
+    background: var(--color-pending-bg);
+    color: var(--color-pending-text);
+  }
+
+  .semestrielle-badge-conforme {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+  }
+
+  .semestrielle-badge-sans_equipement {
+    background: var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .semestrielle-zone-tag {
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .semestrielle-stat-aucune_vp,
+  .semestrielle-badge-aucune_vp {
+    background: var(--color-critical-bg);
+    border-color: var(--color-critical-border);
+    color: var(--color-critical-text);
+  }
+
+  .semestrielle-stat-vp_depassee,
+  .semestrielle-badge-vp_depassee {
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border);
+    color: var(--color-error-text);
+  }
+
+  .semestrielle-stat-vp_a_prevoir,
+  .semestrielle-badge-vp_a_prevoir {
+    background: var(--color-pending-bg);
+    border-color: var(--color-pending-border);
+    color: var(--color-pending-text);
+  }
+
+  .semestrielle-stat-vp_a_jour,
+  .semestrielle-badge-vp_a_jour {
+    background: var(--color-success-bg);
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+
+  .vp-reminder-list {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
   .corbeille-row {
     padding: 1.1rem 0;
     border-bottom: 1px solid var(--color-border);
@@ -692,6 +852,229 @@
     font-size: 1.1rem;
   }
 
+  .merge-compare {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .merge-compare-col {
+    flex: 1 1 260px;
+    min-width: 0;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+
+  .merge-compare-col p {
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .merge-compare-col p:last-child {
+    margin-bottom: 0;
+  }
+
+  .dossier-fiche-count-badge {
+    display: inline-block;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .dossier-alert {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .dossier-history {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .dossier-history-item {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .dossier-history-item:first-child {
+    margin-top: 0.5rem;
+  }
+
+  .dossier-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .dossier-history-etat {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+  }
+
+  .dossier-history-etat.status-group-1 {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+  }
+
+  .dossier-history-etat.status-group-2 {
+    background: var(--color-pending-bg);
+    color: var(--color-pending-text);
+  }
+
+  .dossier-history-etat.status-group-3 {
+    background: var(--color-neutral-bg);
+    color: var(--color-neutral-text);
+  }
+
+  .dossier-history-details {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .dossier-history-details p {
+    margin: 0 0 0.4rem;
+  }
+
+  .dossier-history-details p:last-child {
+    margin-bottom: 0;
+  }
+
+  .historique-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .historique-filters input[type="text"],
+  .historique-filters input[type="date"] {
+    font-size: 0.95rem;
+    font-family: inherit;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .historique-filters input[type="text"] {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+
+  .historique-filter-dates {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .historique-year-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .historique-year-row:last-child {
+    border-bottom: none;
+  }
+
+  .historique-year-label {
+    font-weight: 600;
+  }
+
+  .historique-year-count {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+
+  .historique-result-row {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    margin-top: 0.75rem;
+    cursor: pointer;
+  }
+
+  .historique-result-row:hover {
+    border-color: var(--color-primary);
+  }
+
+  .historique-result-client {
+    font-weight: 700;
+  }
+
+  .historique-result-materiel {
+    color: var(--color-text);
+    margin-top: 0.15rem;
+  }
+
+  .historique-result-meta {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .historique-result-rapports {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+    font-style: italic;
+  }
+
+  #print-area {
+    display: none;
+  }
+
+  @media print {
+    body > *:not(#print-area) {
+      display: none !important;
+    }
+
+    #print-area {
+      display: block !important;
+      color: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #print-area h1 {
+      font-size: 1.3rem;
+    }
+
+    #print-area h2 {
+      font-size: 1.05rem;
+      margin-top: 1.5rem;
+    }
+
+    #print-area .print-record + .print-record {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #000;
+    }
+
+    #print-area .print-history-item {
+      margin: 0.75rem 0;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+
   .form-field {
     display: flex;
     flex-direction: column;
@@ -765,7 +1148,7 @@
     <header>
       <div class="header-title-group">
         <h1>Gestion suivi réparation</h1>
-        <span class="app-version">V2.15</span>
+        <span class="app-version">V5.06</span>
         <span class="header-brand">TechniZen</span>
       </div>
     </header>
@@ -791,7 +1174,7 @@
     <header>
       <div class="header-title-group">
         <h1>Gestion suivi réparation</h1>
-        <span class="app-version">V2.15</span>
+        <span class="app-version">V5.06</span>
         <span class="header-brand">TechniZen</span>
       </div>
       <div class="header-actions">
@@ -804,6 +1187,9 @@
       <button type="button" class="tab-btn active" data-tab="reparation">Suivi réparation <span id="reparation-tab-badge" class="tab-badge hidden">0</span></button>
       <button type="button" class="tab-btn" data-tab="clients">Gestion clients</button>
       <button type="button" class="tab-btn" data-tab="pret">Suivi prêt</button>
+      <button type="button" class="tab-btn" data-tab="semestrielles">Semestrielles</button>
+      <button type="button" class="tab-btn" data-tab="vp">VP</button>
+      <button type="button" class="tab-btn" data-tab="historique">Historique</button>
       <button type="button" class="tab-btn" data-tab="config">Configuration</button>
     </nav>
 
@@ -831,6 +1217,7 @@
           <div class="clients-header">
             <input type="text" id="clients-search-input" class="clients-search-input" placeholder="Rechercher un responsable, un centre ou une commune…">
             <button type="button" id="add-client-btn">+ Ajouter un client</button>
+            <button type="button" id="process-visites-btn" class="button-secondary">🔄 Traiter les visites programmées</button>
           </div>
           <div id="clients-list"></div>
           <p id="clients-empty" class="placeholder hidden">Aucun client configuré pour le moment</p>
@@ -842,6 +1229,55 @@
         <div class="card">
           <div id="materiel-pret-list"></div>
           <p id="materiel-pret-empty" class="placeholder hidden">Aucun matériel de prêt (importez un export TECHNIZEN contenant le client "TECHNIZEN")</p>
+        </div>
+      </section>
+
+      <section id="tab-panel-semestrielles" class="tab-panel hidden">
+        <h2 class="screen-title">Contrôles semestriels</h2>
+        <div class="card">
+          <p class="field-note">Commencez par importer la dernière base de données visite : technizen_visites_78_JJMMAA.json (ou 58 pour l'autre technicien).</p>
+          <div class="clients-header">
+            <button type="button" id="import-semestrielles-btn" class="button-secondary">📥 Importer un export visite</button>
+            <input type="file" id="semestrielles-file-input" accept=".json" class="hidden">
+          </div>
+          <p id="semestrielles-import-status" class="field-note hidden"></p>
+          <div id="semestrielles-recap" class="semestrielles-recap"></div>
+        </div>
+
+        <div class="card">
+          <div class="clients-header semestrielles-filters-row">
+            <input type="text" id="semestrielles-search-input" class="clients-search-input" placeholder="Rechercher un client (nom, numéro, contact, téléphone, ville…)">
+            <div class="semestrielles-status-filters" id="semestrielles-status-filters">
+              <button type="button" class="status-filter-btn active" data-status="non_controle">❌ Non contrôlé</button>
+              <button type="button" class="status-filter-btn active" data-status="depasse">🔴 Dépassé</button>
+              <button type="button" class="status-filter-btn active" data-status="a_prevoir">🟡 À prévoir</button>
+              <button type="button" class="status-filter-btn active" data-status="conforme">✅ Conforme</button>
+            </div>
+          </div>
+          <div id="semestrielles-list"></div>
+          <p id="semestrielles-empty" class="placeholder hidden">Aucun client importé pour le moment</p>
+        </div>
+      </section>
+
+      <section id="tab-panel-vp" class="tab-panel hidden">
+        <h2 class="screen-title">Vérifications Périodiques</h2>
+        <div class="card">
+          <p class="field-note">Alimenté par le même import que l'onglet Semestrielles (bouton d'import disponible dans cet onglet) — seuls les équipements Opacimètre et Analyseur de gaz sont suivis ici, à partir de leur champ « prochaine VP ».</p>
+          <div id="vp-recap" class="semestrielles-recap"></div>
+        </div>
+
+        <div class="card">
+          <div class="clients-header semestrielles-filters-row">
+            <input type="text" id="vp-search-input" class="clients-search-input" placeholder="Rechercher un client (nom, numéro, contact, téléphone, ville…)">
+            <div class="semestrielles-status-filters" id="vp-status-filters">
+              <button type="button" class="status-filter-btn active" data-status="aucune_vp">❌ Aucune VP</button>
+              <button type="button" class="status-filter-btn active" data-status="vp_depassee">🔴 Dépassée</button>
+              <button type="button" class="status-filter-btn active" data-status="vp_a_prevoir">🟡 À prévoir</button>
+              <button type="button" class="status-filter-btn active" data-status="vp_a_jour">✅ À jour</button>
+            </div>
+          </div>
+          <div id="vp-list"></div>
+          <p id="vp-empty" class="placeholder hidden">Aucun équipement VP importé pour le moment</p>
         </div>
       </section>
 
@@ -882,6 +1318,51 @@
           <p class="field-note">Interventions supprimées, conservées 90 jours à titre de vérification manuelle (aucune restauration automatique).</p>
           <div id="corbeille-list"></div>
           <p id="corbeille-empty" class="placeholder hidden">Corbeille vide</p>
+        </div>
+      </section>
+
+      <section id="tab-panel-historique" class="tab-panel hidden">
+        <h2 class="screen-title">Historique des réparations</h2>
+
+        <div id="historique-external-banner" class="info-message hidden">
+          📄 Consultation d'une archive externe (lecture seule, non intégrée) : <strong id="historique-external-filename"></strong>
+          <button type="button" id="historique-external-close-btn" class="button-secondary button-small">Fermer</button>
+          <p id="historique-external-recap" class="field-note hidden"></p>
+        </div>
+
+        <div id="historique-years-card" class="card">
+          <h3 class="intervention-column-title">Archive par année (locale)</h3>
+          <div id="historique-years-list"></div>
+          <p id="historique-years-empty" class="placeholder hidden">Aucun dossier archivé pour le moment</p>
+        </div>
+
+        <div class="card">
+          <div class="clients-header">
+            <button type="button" id="historique-import-btn" class="button-secondary">📥 Importer / Fusionner</button>
+            <button type="button" id="historique-external-btn" class="button-secondary">🔍 Consulter une archive externe</button>
+            <input type="file" id="historique-import-file-input" accept=".json" class="hidden">
+            <input type="file" id="historique-external-file-input" accept=".json" class="hidden">
+          </div>
+          <p id="historique-import-status" class="field-note hidden"></p>
+
+          <div class="historique-filters">
+            <input type="text" id="historique-filter-client" placeholder="Client">
+            <input type="text" id="historique-filter-materiel" placeholder="Matériel / n° série">
+            <div class="historique-filter-dates">
+              <label for="historique-filter-date-from">Du</label>
+              <input type="date" id="historique-filter-date-from">
+              <label for="historique-filter-date-to">au</label>
+              <input type="date" id="historique-filter-date-to">
+            </div>
+            <input type="text" id="historique-filter-texte" placeholder="Recherche libre (observations, rapport)">
+          </div>
+
+          <div class="interventions-header">
+            <button type="button" id="historique-export-pdf-btn" class="button-secondary button-small">🖨️ Export PDF de la liste</button>
+          </div>
+
+          <div id="historique-results-list"></div>
+          <p id="historique-results-empty" class="placeholder hidden">Aucun dossier archivé ne correspond à la recherche</p>
         </div>
       </section>
     </main>
@@ -927,6 +1408,50 @@
     </div>
   </div>
 
+  <div id="merge-proposal-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card modal-card-wide">
+      <h3 id="merge-proposal-title">Fusionner cette fiche avec un dossier existant ?</h3>
+      <p id="merge-proposal-reason" class="field-note"></p>
+      <div id="merge-proposal-alert" class="warning hidden">⚠️ Ce n° de série n'apparaît pas dans la base client TECHNIZEN.</div>
+      <div class="merge-compare">
+        <div class="merge-compare-col">
+          <h4 class="intervention-column-title">Dossier existant</h4>
+          <div id="merge-proposal-existing"></div>
+        </div>
+        <div class="merge-compare-col">
+          <h4 class="intervention-column-title">Nouvelle fiche entrante</h4>
+          <div id="merge-proposal-incoming"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="merge-proposal-new-btn" class="button-secondary">Créer une nouvelle entrée</button>
+        <button type="button" id="merge-proposal-merge-btn">Fusionner dans le dossier existant</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="historique-detail-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card modal-card-wide">
+      <h3 id="historique-detail-title"></h3>
+      <div id="historique-detail-body"></div>
+      <div class="modal-actions">
+        <button type="button" id="historique-detail-pdf-btn" class="button-secondary">🖨️ Export PDF</button>
+        <button type="button" id="historique-detail-close-btn">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="vp-reminder-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card modal-card-wide">
+      <h3>⏰ Rappel : Vérifications Périodiques à traiter</h3>
+      <p class="field-note">Les équipements suivants (Opacimètre / Analyseur de gaz) ont une VP dépassée ou à prévoir prochainement :</p>
+      <div id="vp-reminder-list" class="vp-reminder-list"></div>
+      <div class="modal-actions">
+        <button type="button" id="vp-reminder-goto-btn">Voir l'onglet VP</button>
+      </div>
+    </div>
+  </div>
+
   <div id="client-modal-overlay" class="modal-overlay hidden">
     <div class="modal-card">
       <h3 id="client-modal-title">Ajouter un client</h3>
@@ -934,7 +1459,7 @@
         <div class="form-field">
           <label for="client-contact">Contact</label>
           <input type="text" id="client-contact" required>
-          <p id="client-contact-note" class="field-note hidden">Le contact ne peut pas être changé après création, car il détermine le nom du fichier client sur GitHub — supprimez et recréez le client si besoin.</p>
+          <p id="client-contact-note" class="field-note hidden">Le contact ne peut pas être changé après création, car il détermine le nom du fichier client sur le serveur — supprimez et recréez le client si besoin.</p>
         </div>
         <div class="form-field">
           <label for="client-password">Mot de passe</label>
@@ -972,12 +1497,40 @@
       1: "Réparation terminée",
       2: "Réparation en cours",
       3: "Livrée et testée",
+      4: "Pièce en commande",
     };
-    const ETAT_ORDER = [2, 1, 3];
+    const ETAT_ORDER = [2, 4, 1, 3];
     const MOIS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    const JOURS_FR = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
     const INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS = 90;
+    const DOSSIER_FUSION_WINDOW_DAYS = 163;
     const PBKDF2_ITERATIONS = 100000;
     const CONFIG_CACHE_KEY = "bureau_config_cache";
+
+    // Onglet "Semestrielles" — suivi des contrôles semestriels terrain à
+    // partir des exports "visite" TECHNIZEN (technizen_visites_{prefixe}_{JJMMAA}.json).
+    // Stockage local uniquement (pas de synchro GitHub), indépendant de configState.
+    const SEMESTRIELLES_STORAGE_KEY = "bureau_semestrielles_data";
+    const SEMESTRIELLE_DELAI_ALERTE_MOIS = 6;
+    const SEMESTRIELLE_DELAI_DEPASSEMENT_MOIS = 8;
+    const ZONE_ORDER = { "971": 0, "972": 1, "970": 2 };
+    const ZONE_LABELS = { "971": "Guadeloupe", "972": "Martinique", "970": "Îles du Nord" };
+    const MOIS_FR_ABREGE = ["Janv", "Févr", "Mars", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"];
+    const SEMESTRIELLE_STATUS_SEVERITY = { non_controle: 0, depasse: 1, a_prevoir: 2, conforme: 3 };
+    const SEMESTRIELLE_STATUS_ORDER = ["non_controle", "depasse", "a_prevoir", "conforme"];
+
+    let semestriellesState = { clients: {} };
+    let semestriellesActiveStatusFilters = new Set(SEMESTRIELLE_STATUS_ORDER);
+
+    // Onglet "VP" — Vérifications Périodiques (Opacimètre / Analyseur de gaz
+    // uniquement), alimenté par le même import que "Semestrielles" (champ
+    // `prochaineVP` au format "AAAA-MM" sur les équipements concernés).
+    const VP_STATUS_SEVERITY = { aucune_vp: 0, vp_depassee: 1, vp_a_prevoir: 2, vp_a_jour: 3 };
+    const VP_STATUS_ORDER = ["aucune_vp", "vp_depassee", "vp_a_prevoir", "vp_a_jour"];
+    const VP_POPUP_LAST_SHOWN_KEY = "bureau_vp_popup_last_shown_date";
+    const VP_REMINDER_CHECK_INTERVAL_MS = 60 * 60 * 1000;
+
+    let vpActiveStatusFilters = new Set(VP_STATUS_ORDER);
 
     let configState = null;
     let configFileName = "config-bureau.json";
@@ -1013,6 +1566,9 @@
       reparation: document.getElementById("tab-panel-reparation"),
       clients: document.getElementById("tab-panel-clients"),
       pret: document.getElementById("tab-panel-pret"),
+      semestrielles: document.getElementById("tab-panel-semestrielles"),
+      vp: document.getElementById("tab-panel-vp"),
+      historique: document.getElementById("tab-panel-historique"),
       config: document.getElementById("tab-panel-config"),
     };
     const reparationTabBadgeEl = document.getElementById("reparation-tab-badge");
@@ -1027,12 +1583,64 @@
     const corbeilleEmptyEl = document.getElementById("corbeille-empty");
 
     const addClientBtnEl = document.getElementById("add-client-btn");
+    const processVisitesBtnEl = document.getElementById("process-visites-btn");
     const clientsListEl = document.getElementById("clients-list");
     const clientsEmptyEl = document.getElementById("clients-empty");
     const clientsSearchInputEl = document.getElementById("clients-search-input");
 
     const materielPretListEl = document.getElementById("materiel-pret-list");
     const materielPretEmptyEl = document.getElementById("materiel-pret-empty");
+
+    const importSemestriellesBtnEl = document.getElementById("import-semestrielles-btn");
+    const semestriellesFileInputEl = document.getElementById("semestrielles-file-input");
+    const semestriellesImportStatusEl = document.getElementById("semestrielles-import-status");
+    const semestriellesRecapEl = document.getElementById("semestrielles-recap");
+    const semestriellesSearchInputEl = document.getElementById("semestrielles-search-input");
+    const semestriellesStatusFiltersEl = document.getElementById("semestrielles-status-filters");
+    const semestriellesListEl = document.getElementById("semestrielles-list");
+    const semestriellesEmptyEl = document.getElementById("semestrielles-empty");
+
+    const vpRecapEl = document.getElementById("vp-recap");
+    const vpSearchInputEl = document.getElementById("vp-search-input");
+    const vpStatusFiltersEl = document.getElementById("vp-status-filters");
+    const vpListEl = document.getElementById("vp-list");
+    const vpEmptyEl = document.getElementById("vp-empty");
+
+    const vpReminderModalOverlayEl = document.getElementById("vp-reminder-modal-overlay");
+    const vpReminderListEl = document.getElementById("vp-reminder-list");
+    const vpReminderGotoBtnEl = document.getElementById("vp-reminder-goto-btn");
+
+    const historiqueExternalBannerEl = document.getElementById("historique-external-banner");
+    const historiqueExternalFilenameEl = document.getElementById("historique-external-filename");
+    const historiqueExternalCloseBtnEl = document.getElementById("historique-external-close-btn");
+    const historiqueExternalRecapEl = document.getElementById("historique-external-recap");
+    const historiqueYearsCardEl = document.getElementById("historique-years-card");
+    const historiqueYearsListEl = document.getElementById("historique-years-list");
+    const historiqueYearsEmptyEl = document.getElementById("historique-years-empty");
+    const historiqueImportBtnEl = document.getElementById("historique-import-btn");
+    const historiqueExternalBtnEl = document.getElementById("historique-external-btn");
+    const historiqueImportFileInputEl = document.getElementById("historique-import-file-input");
+    const historiqueExternalFileInputEl = document.getElementById("historique-external-file-input");
+    const historiqueImportStatusEl = document.getElementById("historique-import-status");
+    const historiqueFilterClientEl = document.getElementById("historique-filter-client");
+    const historiqueFilterMaterielEl = document.getElementById("historique-filter-materiel");
+    const historiqueFilterDateFromEl = document.getElementById("historique-filter-date-from");
+    const historiqueFilterDateToEl = document.getElementById("historique-filter-date-to");
+    const historiqueFilterTexteEl = document.getElementById("historique-filter-texte");
+    const historiqueExportPdfBtnEl = document.getElementById("historique-export-pdf-btn");
+    const historiqueResultsListEl = document.getElementById("historique-results-list");
+    const historiqueResultsEmptyEl = document.getElementById("historique-results-empty");
+    const historiqueDetailModalOverlayEl = document.getElementById("historique-detail-modal-overlay");
+    const historiqueDetailTitleEl = document.getElementById("historique-detail-title");
+    const historiqueDetailBodyEl = document.getElementById("historique-detail-body");
+    const historiqueDetailPdfBtnEl = document.getElementById("historique-detail-pdf-btn");
+    const historiqueDetailCloseBtnEl = document.getElementById("historique-detail-close-btn");
+    const printAreaEl = document.getElementById("print-area");
+
+    let localArchiveCache = [];
+    let externalArchiveRecords = null;
+    let externalArchiveFilename = "";
+    let historiqueDetailRecord = null;
 
     const relaisUrlInputEl = document.getElementById("relais-url-input");
     const relaisPasswordInputEl = document.getElementById("relais-password-input");
@@ -1051,6 +1659,16 @@
     const importSummaryCloseBtnEl = document.getElementById("import-summary-close-btn");
 
     let pendingImport = null;
+
+    const mergeProposalModalOverlayEl = document.getElementById("merge-proposal-modal-overlay");
+    const mergeProposalTitleEl = document.getElementById("merge-proposal-title");
+    const mergeProposalReasonEl = document.getElementById("merge-proposal-reason");
+    const mergeProposalAlertEl = document.getElementById("merge-proposal-alert");
+    const mergeProposalExistingEl = document.getElementById("merge-proposal-existing");
+    const mergeProposalIncomingEl = document.getElementById("merge-proposal-incoming");
+    const mergeProposalNewBtnEl = document.getElementById("merge-proposal-new-btn");
+    const mergeProposalMergeBtnEl = document.getElementById("merge-proposal-merge-btn");
+    let mergeProposalResolver = null;
 
     const clientModalOverlayEl = document.getElementById("client-modal-overlay");
     const clientModalTitleEl = document.getElementById("client-modal-title");
@@ -1102,6 +1720,9 @@
       if (tabId === "config") {
         renderRelaisForm();
       }
+      if (tabId === "historique") {
+        openHistoriqueTab();
+      }
     }
 
     function renderRelaisForm() {
@@ -1124,12 +1745,15 @@
       saveMessageEl.classList.add("hidden");
       screenAccueilEl.classList.add("hidden");
       screenPrincipalEl.classList.remove("hidden");
-      switchTab("reparation");
+      switchTab("config");
       purgeOldDeletedInterventions();
       renderClients();
       renderMaterielPret();
       renderCorbeille();
       fetchInterventions();
+      loadSemestriellesState();
+      renderSemestrielles();
+      renderVp();
     }
 
     function escapeHtml(value) {
@@ -1221,6 +1845,691 @@
 
     clientsSearchInputEl.addEventListener("input", renderClients);
 
+    // ---------------------------------------------------------------------
+    // Onglet "Semestrielles" — suivi des contrôles semestriels terrain.
+    //
+    // Hypothèse de structure du fichier importé (aucun exemple réel
+    // disponible au moment de l'écriture — à vérifier/ajuster face à un
+    // vrai fichier "technizen_visites_{prefixe}_{JJMMAA}.json") :
+    //   { clients: [ { numero, nom, contact, telephone, ville,
+    //       equipements: [ { type, serie, actif, derniere_visite } ] } ] }
+    // ou directement un tableau de clients à la racine. Les noms de champs
+    // alternatifs les plus probables sont acceptés via pickField() pour
+    // limiter la casse si la structure réelle diffère légèrement.
+    // ---------------------------------------------------------------------
+
+    function loadSemestriellesState() {
+      try {
+        const raw = localStorage.getItem(SEMESTRIELLES_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        semestriellesState = (parsed && typeof parsed === "object" && parsed.clients && typeof parsed.clients === "object")
+          ? parsed
+          : { clients: {} };
+      } catch {
+        semestriellesState = { clients: {} };
+      }
+    }
+
+    function saveSemestriellesState() {
+      try {
+        localStorage.setItem(SEMESTRIELLES_STORAGE_KEY, JSON.stringify(semestriellesState));
+      } catch {
+        // Stockage local indisponible (navigation privée, quota...) : tant
+        // pis, les données restent en mémoire pour la session en cours.
+      }
+    }
+
+    function pickField(obj, names) {
+      for (const name of names) {
+        if (obj && obj[name] !== undefined && obj[name] !== null && obj[name] !== "") {
+          return typeof obj[name] === "string" ? obj[name].trim() : obj[name];
+        }
+      }
+      return "";
+    }
+
+    function normalizeDateToIso(value) {
+      if (!value || typeof value !== "string") {
+        return null;
+      }
+      const isoMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (isoMatch) {
+        return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+      }
+      const frMatch = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if (frMatch) {
+        return `${frMatch[3]}-${frMatch[2]}-${frMatch[1]}`;
+      }
+      return null;
+    }
+
+    function formatDateSemestrielle(isoDate) {
+      if (!isoDate) {
+        return "";
+      }
+      const d = parseIsoDate(isoDate);
+      if (Number.isNaN(d.getTime())) {
+        return "";
+      }
+      return `${d.getDate()} ${MOIS_FR_ABREGE[d.getMonth()]} ${String(d.getFullYear()).slice(-2)}`;
+    }
+
+    function zoneCodeFromNumero(numero) {
+      return numero ? String(numero).slice(0, 3) : "";
+    }
+
+    // Comparaison lexicographique valide car toutes les dates sont
+    // normalisées au format ISO "AAAA-MM-JJ" (normalizeDateToIso).
+    function computeEquipementStatus(derniereVisite) {
+      if (!derniereVisite) {
+        return { status: "non_controle", derniereVisite: null, echeanceIso: null };
+      }
+      const echeanceIso = addMonthsIsoDate(derniereVisite, SEMESTRIELLE_DELAI_DEPASSEMENT_MOIS);
+      const seuilAlerteIso = addMonthsIsoDate(derniereVisite, SEMESTRIELLE_DELAI_ALERTE_MOIS);
+      const today = todayISODate();
+      if (today > echeanceIso) {
+        return { status: "depasse", derniereVisite, echeanceIso };
+      }
+      if (today >= seuilAlerteIso) {
+        return { status: "a_prevoir", derniereVisite, echeanceIso };
+      }
+      return { status: "conforme", derniereVisite, echeanceIso };
+    }
+
+    function semestrielleStatusLabel(status, type, info) {
+      const typeLabel = escapeHtml(type || "Équipement");
+      switch (status) {
+        case "non_controle":
+          return `❌ ${typeLabel} — Non Contrôlé`;
+        case "depasse":
+          return `🔴 ${typeLabel} — Visite dépassé depuis le ${formatDateSemestrielle(info.derniereVisite)}`;
+        case "a_prevoir":
+          return `🟡 ${typeLabel} — Visite à prévoir (échéance ${formatDateSemestrielle(info.echeanceIso)})`;
+        case "conforme":
+          return `✅ ${typeLabel} — Visite effectué le ${formatDateSemestrielle(info.derniereVisite)}`;
+        default:
+          return "";
+      }
+    }
+
+    function getClientEquipementsActifs(client) {
+      const equipements = client.equipements && typeof client.equipements === "object" ? client.equipements : {};
+      return Object.values(equipements).filter((eq) => eq.actif !== false);
+    }
+
+    // Retourne le badge global du client (pire statut parmi ses équipements
+    // actifs) ou null si le client n'a aucun équipement actif à contrôler.
+    function computeClientBadge(client) {
+      const equipementsActifs = getClientEquipementsActifs(client);
+      if (equipementsActifs.length === 0) {
+        return null;
+      }
+
+      let worst = null;
+      equipementsActifs.forEach((eq) => {
+        const info = computeEquipementStatus(eq.derniereVisite);
+        if (!worst || SEMESTRIELLE_STATUS_SEVERITY[info.status] < SEMESTRIELLE_STATUS_SEVERITY[worst.status]) {
+          worst = { ...info, type: eq.type };
+        }
+      });
+
+      const autresCount = equipementsActifs.filter(
+        (eq) => computeEquipementStatus(eq.derniereVisite).status === worst.status
+      ).length - 1;
+
+      return { ...worst, autresCount };
+    }
+
+    function clientMatchesSearchSemestrielle(client, normalizedQuery) {
+      if (!normalizedQuery) {
+        return true;
+      }
+      const haystacks = [client.numero, client.nom, client.contact, client.telephone, client.ville];
+      return haystacks.some((text) => normalizeSearchText(text).includes(normalizedQuery));
+    }
+
+    // ---------------------------------------------------------------------
+    // Aides partagées entre les onglets "Semestrielles" et "VP" : les deux
+    // affichent une liste triée par sévérité (❌/🔴 en premier, puis 🟡 par
+    // échéance la plus proche, puis ✅) et un récapitulatif chiffré par statut.
+    // ---------------------------------------------------------------------
+
+    // statusOf(entry) peut renvoyer null (cas "aucun équipement actif" côté
+    // Semestrielles) : ces entrées sont alors reléguées en toute fin de liste.
+    function groupAndSortBySeverity(entries, severityMap, statusOf, echeanceOf, compareCritical, compareOk) {
+      const critical = [];
+      const warning = [];
+      const ok = [];
+      const none = [];
+
+      entries.forEach((entry) => {
+        const status = statusOf(entry);
+        if (status == null) {
+          none.push(entry);
+          return;
+        }
+        const severity = severityMap[status];
+        if (severity <= 1) {
+          critical.push(entry);
+        } else if (severity === 2) {
+          warning.push(entry);
+        } else {
+          ok.push(entry);
+        }
+      });
+
+      critical.sort(compareCritical);
+      warning.sort((a, b) => (echeanceOf(a) || "").localeCompare(echeanceOf(b) || ""));
+      ok.sort(compareOk);
+      none.sort(compareOk);
+
+      return [...critical, ...warning, ...ok, ...none];
+    }
+
+    function renderStatusRecap(containerEl, counts, statusOrder, labelFor, extraHtml) {
+      containerEl.innerHTML = statusOrder
+        .map((status) => `<span class="semestrielle-stat semestrielle-stat-${status}">${labelFor(status, counts[status] || 0)}</span>`)
+        .join("") + (extraHtml || "");
+    }
+
+    function compareClientNom(a, b) {
+      return (a.client.nom || "").localeCompare(b.client.nom || "", "fr", { sensitivity: "base" });
+    }
+
+    function compareClientZoneThenNom(a, b) {
+      const zoneA = ZONE_ORDER[zoneCodeFromNumero(a.client.numero)] ?? 99;
+      const zoneB = ZONE_ORDER[zoneCodeFromNumero(b.client.numero)] ?? 99;
+      if (zoneA !== zoneB) {
+        return zoneA - zoneB;
+      }
+      return compareClientNom(a, b);
+    }
+
+    function renderSemestriellesRecap(clients) {
+      const counts = { non_controle: 0, depasse: 0, a_prevoir: 0, conforme: 0 };
+      let sansEquipement = 0;
+      clients.forEach((client) => {
+        const badge = computeClientBadge(client);
+        if (!badge) {
+          sansEquipement++;
+        } else {
+          counts[badge.status]++;
+        }
+      });
+
+      const extraHtml = sansEquipement > 0
+        ? `<span class="semestrielle-stat">— ${sansEquipement} sans équipement actif</span>`
+        : "";
+
+      renderStatusRecap(semestriellesRecapEl, counts, SEMESTRIELLE_STATUS_ORDER, (status, n) => {
+        switch (status) {
+          case "non_controle": return `❌ ${n} non contrôlé${n > 1 ? "s" : ""}`;
+          case "depasse": return `🔴 ${n} hors délai`;
+          case "a_prevoir": return `🟡 ${n} à prévoir`;
+          case "conforme": return `✅ ${n} conforme${n > 1 ? "s" : ""}`;
+          default: return "";
+        }
+      }, extraHtml);
+    }
+
+    function renderSemestrielles() {
+      const normalizedQuery = normalizeSearchText(semestriellesSearchInputEl.value.trim());
+      const allClients = Object.values(semestriellesState.clients);
+
+      const filtered = allClients.filter((client) => {
+        if (!clientMatchesSearchSemestrielle(client, normalizedQuery)) {
+          return false;
+        }
+        const badge = computeClientBadge(client);
+        return !badge || semestriellesActiveStatusFilters.has(badge.status);
+      });
+
+      renderSemestriellesRecap(filtered);
+
+      const ordered = groupAndSortBySeverity(
+        filtered.map((client) => ({ client, badge: computeClientBadge(client) })),
+        SEMESTRIELLE_STATUS_SEVERITY,
+        (entry) => (entry.badge ? entry.badge.status : null),
+        (entry) => entry.badge.echeanceIso,
+        compareClientZoneThenNom,
+        compareClientNom
+      );
+
+      semestriellesListEl.innerHTML = "";
+      semestriellesEmptyEl.classList.toggle("hidden", ordered.length > 0);
+      semestriellesEmptyEl.textContent = allClients.length === 0
+        ? "Aucun client importé pour le moment"
+        : "Aucun client ne correspond à la recherche/au filtre";
+
+      ordered.forEach(({ client, badge }) => {
+        const zoneCode = zoneCodeFromNumero(client.numero);
+        const zoneLabel = ZONE_LABELS[zoneCode] || "";
+        const badgeHtml = badge
+          ? (() => {
+              const label = semestrielleStatusLabel(badge.status, badge.type, badge);
+              const suffix = badge.autresCount > 0
+                ? ` (+${badge.autresCount} autre${badge.autresCount > 1 ? "s" : ""})`
+                : "";
+              return `<span class="semestrielle-badge semestrielle-badge-${badge.status}">${label}${suffix}</span>`;
+            })()
+          : `<span class="semestrielle-badge semestrielle-badge-sans_equipement">— Aucun équipement actif</span>`;
+
+        const row = document.createElement("div");
+        row.className = "client-row";
+        row.innerHTML = `
+          <div>
+            <div class="client-contact">${escapeHtml(client.nom || client.contact || "(nom inconnu)")}</div>
+            <div class="client-details">N° ${escapeHtml(client.numero)}${zoneLabel ? ` — <span class="semestrielle-zone-tag">${escapeHtml(zoneLabel)}</span>` : ""}</div>
+            <div class="client-details">${escapeHtml(client.contact || "")}${client.telephone ? ` — ${escapeHtml(client.telephone)}` : ""}</div>
+            ${badgeHtml}
+          </div>
+        `;
+        semestriellesListEl.appendChild(row);
+      });
+    }
+
+    semestriellesSearchInputEl.addEventListener("input", renderSemestrielles);
+
+    semestriellesStatusFiltersEl.querySelectorAll(".status-filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const status = btn.dataset.status;
+        if (semestriellesActiveStatusFilters.has(status)) {
+          semestriellesActiveStatusFilters.delete(status);
+          btn.classList.remove("active");
+        } else {
+          semestriellesActiveStatusFilters.add(status);
+          btn.classList.add("active");
+        }
+        renderSemestrielles();
+      });
+    });
+
+    // ---------------------------------------------------------------------
+    // Onglet "VP" — Vérifications Périodiques (Opacimètre / Analyseur de gaz).
+    // Lit les mêmes équipements que "Semestrielles" (semestriellesState),
+    // via leur champ `prochaineVP` ("AAAA-MM") fusionné par
+    // mergeEquipementIntoClient — aucun import ni stockage séparé.
+    // ---------------------------------------------------------------------
+
+    function normalizeYearMonth(value) {
+      if (!value || typeof value !== "string") {
+        return null;
+      }
+      const match = value.match(/^(\d{4})-(\d{2})/);
+      if (!match) {
+        return null;
+      }
+      const month = Number(match[2]);
+      if (month < 1 || month > 12) {
+        return null;
+      }
+      return `${match[1]}-${match[2]}`;
+    }
+
+    function currentYearMonth() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    // Comparaison lexicographique valide sur le format "AAAA-MM".
+    function addMonthsToYearMonth(yearMonth, months) {
+      const [year, month] = yearMonth.split("-").map(Number);
+      const d = new Date(year, month - 1 + months, 1);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function formatYearMonthLabel(yearMonth) {
+      if (!yearMonth) {
+        return "";
+      }
+      const [year, month] = yearMonth.split("-").map(Number);
+      return `${MOIS_FR[month - 1]} ${year}`;
+    }
+
+    function isVpEquipementType(type) {
+      const normalized = normalizeSearchText(type);
+      return normalized.includes("opacimetre") || (normalized.includes("analyseur") && normalized.includes("gaz"));
+    }
+
+    function computeVpStatus(prochaineVP) {
+      if (!prochaineVP) {
+        return { status: "aucune_vp", prochaineVP: null };
+      }
+      const currentYM = currentYearMonth();
+      const nextYM = addMonthsToYearMonth(currentYM, 1);
+      if (prochaineVP < currentYM) {
+        return { status: "vp_depassee", prochaineVP };
+      }
+      if (prochaineVP === currentYM || prochaineVP === nextYM) {
+        return { status: "vp_a_prevoir", prochaineVP };
+      }
+      return { status: "vp_a_jour", prochaineVP };
+    }
+
+    function vpStatusLabel(status, info) {
+      switch (status) {
+        case "aucune_vp":
+          return "❌ Aucune VP renseignée";
+        case "vp_depassee":
+          return `🔴 VP dépassée depuis ${formatYearMonthLabel(info.prochaineVP)}`;
+        case "vp_a_prevoir":
+          return `🟡 VP à prévoir en ${formatYearMonthLabel(info.prochaineVP)}`;
+        case "vp_a_jour":
+          return `✅ VP à jour, échéance ${formatYearMonthLabel(info.prochaineVP)}`;
+        default:
+          return "";
+      }
+    }
+
+    // Une entrée par équipement concerné (Opacimètre/Analyseur de gaz actif),
+    // contrairement à "Semestrielles" qui agrège au niveau du client.
+    function getVpEquipementEntries() {
+      const entries = [];
+      Object.values(semestriellesState.clients).forEach((client) => {
+        getClientEquipementsActifs(client).forEach((eq) => {
+          if (!isVpEquipementType(eq.type)) {
+            return;
+          }
+          const info = computeVpStatus(eq.prochaineVP || null);
+          entries.push({ client, type: eq.type, serie: eq.serie || "", status: info.status, prochaineVP: info.prochaineVP });
+        });
+      });
+      return entries;
+    }
+
+    function renderVpRecap(entries) {
+      const counts = { aucune_vp: 0, vp_depassee: 0, vp_a_prevoir: 0, vp_a_jour: 0 };
+      entries.forEach((entry) => {
+        counts[entry.status]++;
+      });
+
+      renderStatusRecap(vpRecapEl, counts, VP_STATUS_ORDER, (status, n) => {
+        switch (status) {
+          case "aucune_vp": return `❌ ${n} sans VP renseignée`;
+          case "vp_depassee": return `🔴 ${n} dépassée${n > 1 ? "s" : ""}`;
+          case "vp_a_prevoir": return `🟡 ${n} à prévoir`;
+          case "vp_a_jour": return `✅ ${n} à jour`;
+          default: return "";
+        }
+      });
+    }
+
+    function compareVpEntry(a, b) {
+      return compareClientNom(a, b) || (a.type || "").localeCompare(b.type || "", "fr", { sensitivity: "base" });
+    }
+
+    function renderVp() {
+      const normalizedQuery = normalizeSearchText(vpSearchInputEl.value.trim());
+      const allEntries = getVpEquipementEntries();
+
+      const filtered = allEntries.filter((entry) => (
+        clientMatchesSearchSemestrielle(entry.client, normalizedQuery) && vpActiveStatusFilters.has(entry.status)
+      ));
+
+      renderVpRecap(filtered);
+
+      const ordered = groupAndSortBySeverity(
+        filtered,
+        VP_STATUS_SEVERITY,
+        (entry) => entry.status,
+        (entry) => entry.prochaineVP,
+        compareVpEntry,
+        compareVpEntry
+      );
+
+      vpListEl.innerHTML = "";
+      vpEmptyEl.classList.toggle("hidden", ordered.length > 0);
+      vpEmptyEl.textContent = allEntries.length === 0
+        ? "Aucun équipement VP importé pour le moment"
+        : "Aucun équipement ne correspond à la recherche/au filtre";
+
+      ordered.forEach((entry) => {
+        const zoneCode = zoneCodeFromNumero(entry.client.numero);
+        const zoneLabel = ZONE_LABELS[zoneCode] || "";
+        const label = vpStatusLabel(entry.status, entry);
+
+        const row = document.createElement("div");
+        row.className = "client-row";
+        row.innerHTML = `
+          <div>
+            <div class="client-contact">${escapeHtml(entry.client.nom || entry.client.contact || "(nom inconnu)")} — ${escapeHtml(entry.type)}</div>
+            <div class="client-details">N° série : ${escapeHtml(entry.serie || "non renseigné")} — N° ${escapeHtml(entry.client.numero)}${zoneLabel ? ` — <span class="semestrielle-zone-tag">${escapeHtml(zoneLabel)}</span>` : ""}</div>
+            <div class="client-details">${escapeHtml(entry.client.contact || "")}${entry.client.telephone ? ` — ${escapeHtml(entry.client.telephone)}` : ""}</div>
+            <span class="semestrielle-badge semestrielle-badge-${entry.status}">${label}</span>
+          </div>
+        `;
+        vpListEl.appendChild(row);
+      });
+
+      checkVpReminderPopup();
+    }
+
+    vpSearchInputEl.addEventListener("input", renderVp);
+
+    vpStatusFiltersEl.querySelectorAll(".status-filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const status = btn.dataset.status;
+        if (vpActiveStatusFilters.has(status)) {
+          vpActiveStatusFilters.delete(status);
+          btn.classList.remove("active");
+        } else {
+          vpActiveStatusFilters.add(status);
+          btn.classList.add("active");
+        }
+        renderVp();
+      });
+    });
+
+    // --- Rappel pop-up quotidien (tant qu'au moins un équipement VP est en
+    // 🔴 ou 🟡), une seule fois par jour calendaire, sans dépendre d'un
+    // rechargement de page. ---
+
+    function showVpReminderModal(concerning) {
+      vpReminderListEl.innerHTML = concerning.map((entry) => {
+        const label = vpStatusLabel(entry.status, entry);
+        return `<div class="client-details">${escapeHtml(entry.client.nom || entry.client.contact || "(nom inconnu)")} — ${escapeHtml(entry.type)} : ${label}</div>`;
+      }).join("");
+      vpReminderModalOverlayEl.classList.remove("hidden");
+    }
+
+    function closeVpReminderModal() {
+      vpReminderModalOverlayEl.classList.add("hidden");
+    }
+
+    vpReminderGotoBtnEl.addEventListener("click", () => {
+      closeVpReminderModal();
+      switchTab("vp");
+    });
+
+    vpReminderModalOverlayEl.addEventListener("click", (event) => {
+      if (event.target === vpReminderModalOverlayEl) {
+        closeVpReminderModal();
+      }
+    });
+
+    function checkVpReminderPopup() {
+      const concerning = getVpEquipementEntries().filter(
+        (entry) => entry.status === "vp_depassee" || entry.status === "vp_a_prevoir"
+      );
+      if (concerning.length === 0) {
+        return;
+      }
+
+      const todayIso = todayISODate();
+      let lastShown = null;
+      try {
+        lastShown = localStorage.getItem(VP_POPUP_LAST_SHOWN_KEY);
+      } catch {
+        // stockage indisponible : tant pis, la popup pourra se réafficher plus souvent.
+      }
+      if (lastShown === todayIso) {
+        return;
+      }
+
+      showVpReminderModal(concerning);
+      try {
+        localStorage.setItem(VP_POPUP_LAST_SHOWN_KEY, todayIso);
+      } catch {
+        // stockage indisponible, ignoré silencieusement
+      }
+    }
+
+    // Enregistré une seule fois au chargement du script (et non dans
+    // enterMainScreen, qui peut être appelée plusieurs fois par session via
+    // "Changer de configuration") pour éviter d'empiler plusieurs minuteurs.
+    setInterval(checkVpReminderPopup, VP_REMINDER_CHECK_INTERVAL_MS);
+
+    function mergeEquipementIntoClient(clientEntry, rawEq) {
+      const type = pickField(rawEq, ["type", "designation"]) || "Équipement";
+      const serie = pickField(rawEq, ["serie", "numero_serie", "num_serie", "numSerie"]);
+      const serieKey = serie || `type:${type}`;
+
+      let actif = true;
+      if (typeof rawEq.actif === "boolean") {
+        actif = rawEq.actif;
+      } else if (typeof rawEq.statut === "string") {
+        actif = normalizeSearchText(rawEq.statut) !== "inactif";
+      }
+
+      const derniereVisite = normalizeDateToIso(
+        pickField(rawEq, ["derniere_visite", "derniereVisite", "date_visite", "derniere_date_visite"])
+      );
+      // "prochaineVP" (VP = Vérification Périodique, Opacimètre/Analyseur de
+      // gaz uniquement) au format "AAAA-MM" — voir onglet "VP".
+      const prochaineVP = normalizeYearMonth(
+        pickField(rawEq, ["prochaineVP", "prochaine_vp", "prochaineVp"])
+      );
+
+      const existing = clientEntry.equipements[serieKey];
+      if (!existing) {
+        clientEntry.equipements[serieKey] = {
+          type,
+          serie,
+          actif,
+          derniereVisite: derniereVisite || null,
+          prochaineVP: prochaineVP || null,
+        };
+        return { added: true };
+      }
+
+      existing.type = type || existing.type;
+      existing.serie = serie || existing.serie;
+      existing.actif = actif;
+      if (derniereVisite && (!existing.derniereVisite || derniereVisite > existing.derniereVisite)) {
+        existing.derniereVisite = derniereVisite;
+      }
+      // On conserve l'échéance VP la plus tardive connue : une échéance plus
+      // reculée dans le temps signale qu'une VP plus récente a été effectuée
+      // depuis (même logique de "donnée la plus pertinente" que derniereVisite).
+      if (prochaineVP && (!existing.prochaineVP || prochaineVP > existing.prochaineVP)) {
+        existing.prochaineVP = prochaineVP;
+      }
+      return { added: false };
+    }
+
+    function mergeClientIntoState(rawClient, stats) {
+      const numero = pickField(rawClient, ["numero", "numero_compte", "numeroCompte", "compte"]);
+      if (!numero) {
+        stats.skipped++;
+        return;
+      }
+
+      let clientEntry = semestriellesState.clients[numero];
+      if (!clientEntry) {
+        clientEntry = {
+          numero,
+          nom: pickField(rawClient, ["nom", "raison_sociale", "nomClient"]),
+          contact: pickField(rawClient, ["contact"]),
+          telephone: pickField(rawClient, ["telephone", "tel", "telephone_contact"]),
+          ville: pickField(rawClient, ["ville", "commune", "ville_centre"]),
+          equipements: {},
+        };
+        semestriellesState.clients[numero] = clientEntry;
+        stats.clientsAjoutes++;
+      } else {
+        const nom = pickField(rawClient, ["nom", "raison_sociale", "nomClient"]);
+        const contact = pickField(rawClient, ["contact"]);
+        const telephone = pickField(rawClient, ["telephone", "tel", "telephone_contact"]);
+        const ville = pickField(rawClient, ["ville", "commune", "ville_centre"]);
+        if (nom) clientEntry.nom = nom;
+        if (contact) clientEntry.contact = contact;
+        if (telephone) clientEntry.telephone = telephone;
+        if (ville) clientEntry.ville = ville;
+      }
+
+      const rawEquipements = Array.isArray(rawClient.equipements) ? rawClient.equipements : [];
+      rawEquipements.forEach((rawEq) => {
+        const result = mergeEquipementIntoClient(clientEntry, rawEq);
+        if (result.added) {
+          stats.equipementsAjoutes++;
+        } else {
+          stats.equipementsMisAJour++;
+        }
+      });
+    }
+
+    function showSemestriellesImportStatus(message) {
+      semestriellesImportStatusEl.textContent = message;
+      semestriellesImportStatusEl.classList.remove("hidden");
+    }
+
+    async function handleSemestriellesImport(file) {
+      let text;
+      try {
+        text = await file.text();
+      } catch {
+        window.alert("Impossible de lire le fichier sélectionné.");
+        return;
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        window.alert("Le fichier n'est pas un JSON valide.");
+        return;
+      }
+
+      const rawClients = Array.isArray(data)
+        ? data
+        : (data && Array.isArray(data.clients) ? data.clients : null);
+
+      if (!rawClients) {
+        window.alert("Structure d'export visite invalide (tableau \"clients\" attendu).");
+        return;
+      }
+
+      const stats = { clientsAjoutes: 0, equipementsAjoutes: 0, equipementsMisAJour: 0, skipped: 0 };
+      rawClients.forEach((rawClient) => mergeClientIntoState(rawClient, stats));
+
+      saveSemestriellesState();
+      renderSemestrielles();
+      renderVp();
+
+      const parts = [
+        `${stats.clientsAjoutes} nouveau${stats.clientsAjoutes > 1 ? "x" : ""} client${stats.clientsAjoutes > 1 ? "s" : ""}`,
+        `${stats.equipementsAjoutes} équipement${stats.equipementsAjoutes > 1 ? "s" : ""} ajouté${stats.equipementsAjoutes > 1 ? "s" : ""}`,
+        `${stats.equipementsMisAJour} mis à jour`,
+      ];
+      if (stats.skipped > 0) {
+        parts.push(`${stats.skipped} client${stats.skipped > 1 ? "s" : ""} ignoré${stats.skipped > 1 ? "s" : ""} (numéro de compte manquant)`);
+      }
+      showSemestriellesImportStatus(`Import terminé : ${parts.join(", ")}.`);
+    }
+
+    importSemestriellesBtnEl.addEventListener("click", () => {
+      semestriellesFileInputEl.click();
+    });
+
+    semestriellesFileInputEl.addEventListener("change", async () => {
+      const file = semestriellesFileInputEl.files[0];
+      semestriellesFileInputEl.value = "";
+      if (!file) {
+        return;
+      }
+      await handleSemestriellesImport(file);
+    });
+
     let recuperationsEnAttente = [];
 
     function todayISODate() {
@@ -1232,6 +2541,15 @@
     function parseIsoDate(isoDate) {
       const [year, month, day] = isoDate.split("-").map(Number);
       return new Date(year, month - 1, day);
+    }
+
+    function addMonthsIsoDate(isoDate, months) {
+      const date = parseIsoDate(isoDate);
+      date.setMonth(date.getMonth() + months);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     }
 
     function daysSince(isoDate) {
@@ -1255,6 +2573,84 @@
       if (!Array.isArray(configState.interventionsSupprimees)) {
         configState.interventionsSupprimees = [];
       }
+    }
+
+    // Un "dossier" regroupe l'historique des fiches (data/interventions/*.txt) reçues
+    // pour une même réparation. configState.dossiers ne stocke que le regroupement
+    // (id -> liste ordonnée de noms de fichiers) ; le contenu de chaque fiche reste lu
+    // en direct depuis GitHub à chaque rafraîchissement (source de vérité inchangée).
+    function ensureDossiersDefaults() {
+      if (!configState.dossiers || typeof configState.dossiers !== "object" || Array.isArray(configState.dossiers)) {
+        configState.dossiers = {};
+      }
+    }
+
+    function generateDossierId() {
+      return `dossier-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    // Clé de tri chronologique stable (date technicien, puis nom de fichier en
+    // départage en cas de dates identiques ou manquantes).
+    function ficheDateKey(entry) {
+      const tech = (entry.data && entry.data.technicien) || {};
+      return `${tech.date || ""}_${entry.filename}`;
+    }
+
+    function dossierLatestFiche(dossier) {
+      return dossier.fiches[dossier.fiches.length - 1];
+    }
+
+    function dossierMateriel(dossier) {
+      const tech = dossierLatestFiche(dossier).data.technicien || {};
+      return tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
+    }
+
+    function dossierEtatActuel(dossier) {
+      const pub = dossierLatestFiche(dossier).data.publication || {};
+      return ETAT_ORDER.includes(pub.etat) ? pub.etat : 1;
+    }
+
+    function dossierIsClos(dossier) {
+      return dossierEtatActuel(dossier) === 3;
+    }
+
+    // Date de référence pour la fenêtre de regroupement de 163 jours : la date de
+    // passage à "Livrée et testée" si elle a été enregistrée côté bureau, sinon la
+    // date de la dernière fiche reçue (ex. réparation livrée dès le premier passage).
+    function dossierDateCloture(dossier) {
+      if (!dossierIsClos(dossier)) {
+        return null;
+      }
+      const latest = dossierLatestFiche(dossier);
+      const pub = latest.data.publication || {};
+      const tech = latest.data.technicien || {};
+      return pub.date_passage_livree || tech.date || pub.date_prise_charge || null;
+    }
+
+    function dossierClientSlug(dossier) {
+      const tech = dossierLatestFiche(dossier).data.technicien || {};
+      return slugify(tech.contact || "");
+    }
+
+    // Reconstruit les dossiers "résolus" (avec le contenu à jour de chaque fiche) à
+    // partir du regroupement persisté (configState.dossiers) et des fiches encore
+    // présentes sur GitHub. Les fiches référencées mais disparues (purge, suppression
+    // manuelle) sont écartées ; un dossier qui n'a plus aucune fiche est nettoyé.
+    function resolveDossiers(fichesByFilename) {
+      const dossiers = [];
+      Object.keys(configState.dossiers).forEach((id) => {
+        const record = configState.dossiers[id];
+        const filenames = Array.isArray(record.fichesFilenames) ? record.fichesFilenames : [];
+        const fiches = filenames.map((fn) => fichesByFilename.get(fn)).filter(Boolean);
+        if (fiches.length === 0) {
+          delete configState.dossiers[id];
+          markDirty();
+          return;
+        }
+        fiches.sort((a, b) => ficheDateKey(a).localeCompare(ficheDateKey(b)));
+        dossiers.push({ id, fiches });
+      });
+      return dossiers;
     }
 
     function purgeOldDeletedInterventions() {
@@ -1442,7 +2838,20 @@
       return `${d.getDate()} ${MOIS_FR[d.getMonth()]} ${String(d.getFullYear()).slice(-2)}`;
     }
 
-    function interventionMatchesSearch(entry, normalizedQuery) {
+    // Format long français complet, ex. "Mardi 15 Septembre 2026" (jour de semaine,
+    // jour du mois, mois en toutes lettres, année sur 4 chiffres).
+    function formatDateLongue(isoDate) {
+      if (!isoDate) {
+        return "";
+      }
+      const d = parseIsoDate(isoDate);
+      if (Number.isNaN(d.getTime())) {
+        return "";
+      }
+      return `${JOURS_FR[d.getDay()]} ${d.getDate()} ${MOIS_FR[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    function ficheMatchesSearch(entry, normalizedQuery) {
       if (!normalizedQuery) {
         return true;
       }
@@ -1470,6 +2879,15 @@
         textFieldValue(tech.nom_rapport),
       ];
       return haystacks.some((text) => normalizeSearchText(text).includes(normalizedQuery));
+    }
+
+    // Un dossier correspond à la recherche si au moins une fiche de son historique
+    // correspond (pas seulement la plus récente).
+    function dossierMatchesSearch(dossier, normalizedQuery) {
+      if (!normalizedQuery) {
+        return true;
+      }
+      return dossier.fiches.some((entry) => ficheMatchesSearch(entry, normalizedQuery));
     }
 
     function showInterventionsStatus(message) {
@@ -1542,6 +2960,7 @@
         commentaire_technicien: refs.commentaireTechnicienInput.value,
         pieces_complementaires: refs.piecesInput.value,
         commentaire_bureau: refs.bureauInput.value,
+        date_livraison_prevue: refs.livraisonPrevueInput.value,
         date_passage_livree: newEtat === 3
           ? (Number(previousEtat) === 3 ? entry.data.publication.date_passage_livree : todayISODate())
           : undefined,
@@ -1590,28 +3009,29 @@
         entry.data.publication = updatedPublication;
         markDirty();
         lastSaveMessages.set(entry.filename, "Modifications enregistrées");
-        expandedInterventionFilenames.add(entry.filename);
-        renderInterventions(currentInterventions);
+        expandedDossierIds.add(entry.dossierId);
+        renderDossiers(currentDossiers);
+        await archiveClosedDossiers(currentDossiers);
       } finally {
         refs.saveBtn.disabled = false;
         refs.saveBtn.textContent = "💾 Enregistrer les modifications";
       }
     }
 
-    let currentInterventions = [];
-    const selectedInterventionFilenames = new Set();
-    const publishedFilenames = new Map();
-    const expandedInterventionFilenames = new Set();
+    let currentDossiers = [];
+    const selectedDossierIds = new Set();
+    const publishedDossierIds = new Map();
+    const expandedDossierIds = new Set();
     const lastSaveMessages = new Map();
 
     function updateReparationBadge() {
-      const count = currentInterventions.length;
+      const count = currentDossiers.length;
       reparationTabBadgeEl.textContent = String(count);
       reparationTabBadgeEl.classList.toggle("hidden", count === 0);
     }
 
     function updatePublishButtonState() {
-      publishSelectionBtnEl.disabled = selectedInterventionFilenames.size === 0;
+      publishSelectionBtnEl.disabled = selectedDossierIds.size === 0;
     }
 
     async function deleteInterventionFile(entry) {
@@ -1656,11 +3076,8 @@
       if (!client || !client.password) {
         return;
       }
-      const hasActiveIntervention = currentInterventions.some((e) => {
-        const contact = e.data && e.data.technicien && e.data.technicien.contact;
-        return slugify(contact || "") === slug;
-      });
-      if (hasActiveIntervention) {
+      const hasActiveDossier = currentDossiers.some((d) => dossierClientSlug(d) === slug);
+      if (hasActiveDossier) {
         return;
       }
 
@@ -1687,30 +3104,37 @@
       }
     }
 
-    // Finalise une suppression d'intervention déjà confirmée côté relais : corbeille,
-    // retrait de la liste affichée, et régénération du fichier client si nécessaire.
-    async function finalizeInterventionDeletion(entry) {
-      configState.interventionsSupprimees.push({
-        intervention: entry.data,
-        filename: entry.filename,
-        dateSuppression: todayISODate(),
+    // Finalise une suppression de dossier déjà confirmée côté relais (toutes ses
+    // fiches) : corbeille, retrait de la liste affichée, régénération du fichier
+    // client si nécessaire. La purge s'applique au dossier entier, pas fiche par fiche.
+    async function finalizeDossierDeletion(dossier) {
+      dossier.fiches.forEach((entry) => {
+        configState.interventionsSupprimees.push({
+          intervention: entry.data,
+          filename: entry.filename,
+          dateSuppression: todayISODate(),
+        });
       });
-      currentInterventions = currentInterventions.filter((e) => e.filename !== entry.filename);
-      selectedInterventionFilenames.delete(entry.filename);
-      expandedInterventionFilenames.delete(entry.filename);
+      delete configState.dossiers[dossier.id];
+      currentDossiers = currentDossiers.filter((d) => d.id !== dossier.id);
+      selectedDossierIds.delete(dossier.id);
+      expandedDossierIds.delete(dossier.id);
       markDirty();
       renderCorbeille();
 
-      const slug = slugify((entry.data.technicien && entry.data.technicien.contact) || "");
+      const slug = dossierClientSlug(dossier);
       await ensureClientFileReflectsInterventions(slug);
     }
 
-    async function deleteIntervention(entry, deleteBtnEl, deleteStatusEl) {
-      const item = entry.data;
-      const tech = item.technicien;
-      const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
+    async function deleteDossier(dossier, deleteBtnEl, deleteStatusEl) {
+      const latest = dossierLatestFiche(dossier);
+      const tech = latest.data.technicien;
+      const materiel = dossierMateriel(dossier);
+      const ficheCount = dossier.fiches.length;
       const confirmed = window.confirm(
-        `Supprimer définitivement l'intervention de ${tech.contact || "(contact inconnu)"} — ${materiel.type || ""} n° série ${materiel.num_serie || ""} ?\n\nCette action supprime le fichier sur GitHub et ne peut pas être annulée (l'intervention reste consultable 90 jours dans la corbeille, onglet Configuration).`
+        ficheCount > 1
+          ? `Supprimer définitivement ce dossier (${ficheCount} fiches) de ${tech.contact || "(contact inconnu)"} — ${materiel.type || ""} n° série ${materiel.num_serie || ""} ?\n\nCette action supprime tous les fichiers correspondants sur le serveur et ne peut pas être annulée (les fiches restent consultables 90 jours dans la corbeille, onglet Configuration).`
+          : `Supprimer définitivement l'intervention de ${tech.contact || "(contact inconnu)"} — ${materiel.type || ""} n° série ${materiel.num_serie || ""} ?\n\nCette action supprime le fichier sur le serveur et ne peut pas être annulée (l'intervention reste consultable 90 jours dans la corbeille, onglet Configuration).`
       );
       if (!confirmed) {
         return;
@@ -1721,31 +3145,59 @@
       deleteStatusEl.className = "intervention-save-status";
 
       try {
-        const result = await deleteInterventionFile(entry);
-        if (!result.success) {
-          deleteStatusEl.textContent = result.networkError
-            ? "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez. Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration."
-            : `Échec de la suppression : ${result.error} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`;
-          deleteStatusEl.classList.add("intervention-save-error");
-          return;
+        for (const entry of dossier.fiches) {
+          const result = await deleteInterventionFile(entry);
+          if (!result.success) {
+            deleteStatusEl.textContent = result.networkError
+              ? "Erreur réseau, la suppression n'a pas été envoyée. Vérifiez votre connexion et réessayez. Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration."
+              : `Échec de la suppression : ${result.error} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`;
+            deleteStatusEl.classList.add("intervention-save-error");
+            return;
+          }
         }
 
-        await finalizeInterventionDeletion(entry);
-        renderInterventions(currentInterventions);
+        await finalizeDossierDeletion(dossier);
+        renderDossiers(currentDossiers);
       } finally {
         deleteBtnEl.disabled = false;
       }
     }
 
-    function buildInterventionRow(entry) {
+    function formatDossierHistory(dossier) {
+      return dossier.fiches
+        .map((entry) => {
+          const t = entry.data.technicien || {};
+          const p = entry.data.publication || {};
+          return `
+            <div class="dossier-history-item">
+              <div class="dossier-history-header">
+                <strong>${escapeHtml(formatDateCondensed(t.date || p.date_prise_charge))}</strong>
+                <span class="dossier-history-etat status-group-${ETAT_ORDER.includes(p.etat) ? p.etat : 1}">${escapeHtml(etatLabel(p.etat))}</span>
+              </div>
+              <div class="dossier-history-details">
+                ${hasContent(t.commentaire_technicien) ? `<p>${formatListOrText(t.commentaire_technicien)}</p>` : ""}
+                ${hasContent(t.pieces_montees) ? `<p><strong>Pièces montées</strong> : ${formatListOrText(t.pieces_montees)}</p>` : ""}
+                ${Array.isArray(t.pieces_a_prevoir) && t.pieces_a_prevoir.length > 0 ? `<div><strong>Pièces à prévoir</strong> ${formatPiecesAPrevoir(t.pieces_a_prevoir)}</div>` : ""}
+                ${hasContent(t.nom_rapport) ? `<p><strong>Rapport</strong> : ${formatListOrText(t.nom_rapport)}</p>` : ""}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function buildDossierRow(dossier) {
+      const entry = dossierLatestFiche(dossier);
+      entry.dossierId = dossier.id;
       const tech = entry.data.technicien;
       const pub = entry.data.publication;
-      const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
+      const materiel = dossierMateriel(dossier);
       const statusClass = `status-group-${ETAT_ORDER.includes(pub.etat) ? pub.etat : 1}`;
-      const publishedAt = publishedFilenames.get(entry.filename);
+      const publishedAt = publishedDossierIds.get(dossier.id);
       const isPublished = !!publishedAt;
       const isHorsContrat = tech.hors_contrat === true;
-      const isExpanded = expandedInterventionFilenames.has(entry.filename);
+      const isExpanded = expandedDossierIds.has(dossier.id);
+      const ficheCount = dossier.fiches.length;
       const etatOptionsHtml = ETAT_ORDER.map((e) => `<option value="${e}">${escapeHtml(etatLabel(e))}</option>`).join("");
       const row = document.createElement("div");
       row.className = `intervention-card ${statusClass}${isExpanded ? " is-expanded" : ""}`;
@@ -1757,8 +3209,10 @@
               <div class="intervention-condensed-type">${escapeHtml(materiel.type)}</div>
               <div class="intervention-condensed-centre">${escapeHtml(pub.centre_nom)}</div>
               <div class="intervention-condensed-date">${escapeHtml(formatDateCondensed(pub.date_prise_charge))}</div>
+              ${ficheCount > 1 ? `<span class="dossier-fiche-count-badge">📋 ${ficheCount} fiches</span>` : ""}
               ${isPublished ? `<span class="intervention-published-badge">✅ Publié le ${escapeHtml(publishedAt)}</span>` : ""}
               ${isHorsContrat ? `<span class="intervention-hors-contrat-badge">🚫 Hors contrat — suivi interne</span>` : ""}
+              ${dossier.alerteNonRepertorie ? `<div class="warning dossier-alert">⚠️ Matériel non répertorié — penser à mettre à jour la base client TECHNIZEN</div>` : ""}
             </div>
           </div>
         </div>
@@ -1770,12 +3224,12 @@
         <div class="intervention-detail ${isExpanded ? "" : "hidden"}">
             <div class="intervention-columns">
               <div class="intervention-column intervention-column-technicien">
-                <h4 class="intervention-column-title">Déclaré par le technicien</h4>
+                <h4 class="intervention-column-title">Déclaré par le technicien (dernière fiche)</h4>
                 <p><strong>Contact</strong><br>${escapeHtml(tech.contact)}</p>
                 <p><strong>Centre</strong><br>${escapeHtml(tech.centre)}</p>
                 <p><strong>Matériel</strong><br>${escapeHtml(materiel.type)} · n° série ${escapeHtml(materiel.num_serie)}</p>
                 <p><strong>État déclaré</strong><br>${etatLabel(tech.etat)}</p>
-                <p><strong>Date</strong><br>${escapeHtml(tech.date)}</p>
+                <p><strong>Date</strong><br>${escapeHtml(formatDateLongue(tech.date))}</p>
                 <p><strong>Technicien</strong><br>${escapeHtml(tech.technicien)}</p>
                 <p><strong>Commentaire technicien</strong><br>${hasContent(tech.commentaire_technicien) ? formatListOrText(tech.commentaire_technicien) : "(aucun)"}</p>
                 <div class="pieces-montees-box"><strong>Pièces déjà montées</strong><br>${hasContent(tech.pieces_montees) ? formatListOrText(tech.pieces_montees) : "(aucune)"}</div>
@@ -1822,11 +3276,21 @@
                   <textarea class="intervention-bureau-input" rows="2"></textarea>
                 </div>
 
+                <div class="form-field">
+                  <label>Date de livraison prévisionnelle</label>
+                  <input type="date" class="intervention-livraison-prevue-input">
+                </div>
+
                 <div class="intervention-save-row">
                   <button type="button" class="button-save button-small intervention-save-btn">💾 Enregistrer les modifications</button>
                   <span class="intervention-save-status"></span>
                 </div>
               </div>
+            </div>
+
+            <div class="dossier-history">
+              <h4 class="intervention-column-title">Historique du dossier (${ficheCount} fiche${ficheCount > 1 ? "s" : ""})</h4>
+              ${formatDossierHistory(dossier)}
             </div>
           </div>
       `;
@@ -1837,26 +3301,26 @@
         toggleBtn.textContent = isHidden ? "🔍 Détail" : "🔍 Masquer détail";
         row.classList.toggle("is-expanded", !isHidden);
         if (isHidden) {
-          expandedInterventionFilenames.delete(entry.filename);
+          expandedDossierIds.delete(dossier.id);
         } else {
-          expandedInterventionFilenames.add(entry.filename);
+          expandedDossierIds.add(dossier.id);
         }
       });
 
       const checkboxEl = row.querySelector(".intervention-checkbox");
-      checkboxEl.checked = selectedInterventionFilenames.has(entry.filename);
+      checkboxEl.checked = selectedDossierIds.has(dossier.id);
       checkboxEl.addEventListener("change", () => {
         if (checkboxEl.checked) {
-          selectedInterventionFilenames.add(entry.filename);
+          selectedDossierIds.add(dossier.id);
         } else {
-          selectedInterventionFilenames.delete(entry.filename);
+          selectedDossierIds.delete(dossier.id);
         }
         updatePublishButtonState();
       });
 
       const deleteBtn = row.querySelector('[data-action="delete"]');
       const deleteStatusEl = row.querySelector(".intervention-delete-status");
-      deleteBtn.addEventListener("click", () => deleteIntervention(entry, deleteBtn, deleteStatusEl));
+      deleteBtn.addEventListener("click", () => deleteDossier(dossier, deleteBtn, deleteStatusEl));
 
       const dateInput = row.querySelector(".intervention-date-input");
       const lieuSelect = row.querySelector(".intervention-lieu-select");
@@ -1864,6 +3328,7 @@
       const commentaireTechnicienInput = row.querySelector(".intervention-commentaire-technicien-input");
       const piecesInput = row.querySelector(".intervention-pieces-input");
       const bureauInput = row.querySelector(".intervention-bureau-input");
+      const livraisonPrevueInput = row.querySelector(".intervention-livraison-prevue-input");
       const saveBtn = row.querySelector(".intervention-save-btn");
       const statusEl = row.querySelector(".intervention-detail .intervention-save-status");
 
@@ -1873,6 +3338,7 @@
       commentaireTechnicienInput.value = textFieldValue(pub.commentaire_technicien);
       piecesInput.value = textFieldValue(pub.pieces_complementaires);
       bureauInput.value = textFieldValue(pub.commentaire_bureau);
+      livraisonPrevueInput.value = pub.date_livraison_prevue || "";
 
       const savedMessage = lastSaveMessages.get(entry.filename);
       if (savedMessage) {
@@ -1881,24 +3347,24 @@
         lastSaveMessages.delete(entry.filename);
       }
 
-      const refs = { dateInput, lieuSelect, etatSelect, commentaireTechnicienInput, piecesInput, bureauInput, saveBtn, statusEl };
+      const refs = { dateInput, lieuSelect, etatSelect, commentaireTechnicienInput, piecesInput, bureauInput, livraisonPrevueInput, saveBtn, statusEl };
       saveBtn.addEventListener("click", () => saveInterventionChanges(entry, refs));
 
       return row;
     }
 
-    function renderInterventions(interventions) {
-      currentInterventions = interventions;
+    function renderDossiers(dossiers) {
+      currentDossiers = dossiers;
       updateReparationBadge();
 
-      if (interventions.length === 0) {
+      if (dossiers.length === 0) {
         showInterventionsStatus("Aucune intervention à traiter pour le moment");
         updatePublishButtonState();
         return;
       }
 
       const normalizedQuery = normalizeSearchText(interventionsSearchInputEl.value.trim());
-      const filtered = interventions.filter((entry) => interventionMatchesSearch(entry, normalizedQuery));
+      const filtered = dossiers.filter((dossier) => dossierMatchesSearch(dossier, normalizedQuery));
 
       if (filtered.length === 0) {
         showInterventionsStatus("Aucune intervention ne correspond à la recherche");
@@ -1910,10 +3376,8 @@
 
       const groups = new Map();
       ETAT_ORDER.forEach((etat) => groups.set(etat, []));
-      filtered.forEach((entry) => {
-        const pub = entry.data && entry.data.publication;
-        const etat = ETAT_ORDER.includes(pub && pub.etat) ? pub.etat : 1;
-        groups.get(etat).push(entry);
+      filtered.forEach((dossier) => {
+        groups.get(dossierEtatActuel(dossier)).push(dossier);
       });
 
       ETAT_ORDER.forEach((etat) => {
@@ -1922,8 +3386,8 @@
           return;
         }
         entries.sort((a, b) =>
-          String((a.data.publication && a.data.publication.date_prise_charge) || "").localeCompare(
-            String((b.data.publication && b.data.publication.date_prise_charge) || "")
+          String(dossierLatestFiche(a).data.publication.date_prise_charge || "").localeCompare(
+            String(dossierLatestFiche(b).data.publication.date_prise_charge || "")
           )
         );
         const groupEl = document.createElement("div");
@@ -1933,8 +3397,8 @@
           <div class="status-group-cards"></div>
         `;
         const cardsEl = groupEl.querySelector(".status-group-cards");
-        entries.forEach((entry) => {
-          cardsEl.appendChild(buildInterventionRow(entry));
+        entries.forEach((dossier) => {
+          cardsEl.appendChild(buildDossierRow(dossier));
         });
         interventionsListEl.appendChild(groupEl);
       });
@@ -1942,52 +3406,263 @@
       updatePublishButtonState();
     }
 
-    interventionsSearchInputEl.addEventListener("input", () => renderInterventions(currentInterventions));
+    interventionsSearchInputEl.addEventListener("input", () => renderDossiers(currentDossiers));
 
-    // Efface silencieusement les interventions "Livrée et testée" depuis plus de
-    // INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS jours (même procédure qu'une suppression
-    // manuelle : relais /delete, corbeille, régénération du fichier client si besoin).
-    async function purgeExpiredLivreesInterventions(interventions) {
+    // Efface silencieusement les dossiers "Livrée et testée" (dernière fiche) depuis
+    // plus de INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS jours. S'applique au dossier
+    // entier : toutes ses fiches sont supprimées ensemble (relais /delete, corbeille,
+    // régénération du fichier client si besoin), jamais fiche par fiche. Si une fiche
+    // du dossier échoue à se supprimer, le dossier entier est laissé inchangé pour
+    // nouvelle tentative au prochain rafraîchissement.
+    async function purgeExpiredLivreesDossiers(dossiers) {
       const remaining = [];
       const affectedSlugs = new Set();
 
-      for (const entry of interventions) {
-        const pub = entry.data && entry.data.publication;
-        const isExpiredLivree =
-          pub &&
-          pub.etat === 3 &&
-          pub.date_passage_livree &&
-          daysSince(pub.date_passage_livree) > INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS;
+      for (const dossier of dossiers) {
+        const closureDate = dossierDateCloture(dossier);
+        const isExpired = closureDate && daysSince(closureDate) > INTERVENTIONS_SUPPRIMEES_RETENTION_DAYS;
 
-        if (isExpiredLivree) {
+        if (!isExpired) {
+          remaining.push(dossier);
+          continue;
+        }
+
+        const deletedEntries = [];
+        let allDeleted = true;
+        for (const entry of dossier.fiches) {
           const result = await deleteInterventionFile(entry);
           if (result.success) {
-            configState.interventionsSupprimees.push({
-              intervention: entry.data,
-              filename: entry.filename,
-              dateSuppression: todayISODate(),
-            });
-            markDirty();
-            const slug = slugify((entry.data.technicien && entry.data.technicien.contact) || "");
-            if (slug) {
-              affectedSlugs.add(slug);
-            }
-            continue;
+            deletedEntries.push(entry);
+          } else {
+            allDeleted = false;
+            console.warn(`Échec de l'effacement automatique (dossier ${dossier.id}, fiche ${entry.filename}) : Livrée et testée > 90 jours`, result.error || "erreur réseau");
+            break;
           }
-          console.warn(`Échec de l'effacement automatique (Livrée et testée > 90 jours) : ${entry.filename}`, result.error || "erreur réseau");
         }
-        remaining.push(entry);
+
+        if (!allDeleted) {
+          remaining.push(dossier);
+          continue;
+        }
+
+        deletedEntries.forEach((entry) => {
+          configState.interventionsSupprimees.push({
+            intervention: entry.data,
+            filename: entry.filename,
+            dateSuppression: todayISODate(),
+          });
+        });
+        delete configState.dossiers[dossier.id];
+        markDirty();
+        const slug = dossierClientSlug(dossier);
+        if (slug) {
+          affectedSlugs.add(slug);
+        }
       }
 
       if (affectedSlugs.size > 0) {
         renderCorbeille();
-        currentInterventions = remaining;
+        currentDossiers = remaining;
         for (const slug of affectedSlugs) {
           await ensureClientFileReflectsInterventions(slug);
         }
       }
 
       return remaining;
+    }
+
+    // Ensemble des n° de série réellement déclarés pour ce client dans la base
+    // clients TECHNIZEN (importée via "Importer depuis TECHNIZEN", equipementsTechnizen).
+    // Utilisé pour la détection de remplacement de matériel et l'alerte "matériel non
+    // répertorié". Retourne null si ce client n'a jamais été importé depuis TECHNIZEN
+    // (impossible de vérifier), auquel cas les vérifications qui en dépendent sont ignorées.
+    function getClientEquipementsTechnizenSet(slug) {
+      const client = configState.clients[slug];
+      if (!client || !Array.isArray(client.equipementsTechnizen)) {
+        return null;
+      }
+      return new Set(client.equipementsTechnizen.map((eq) => eq.serie));
+    }
+
+    function ficheCompareHtml(entry) {
+      const tech = (entry.data && entry.data.technicien) || {};
+      const pub = (entry.data && entry.data.publication) || {};
+      const materiel = tech.materiel && typeof tech.materiel === "object" ? tech.materiel : {};
+      return `
+        <p><strong>Client</strong><br>${escapeHtml(tech.contact)}</p>
+        <p><strong>Centre</strong><br>${escapeHtml(pub.centre_nom || tech.centre)}</p>
+        <p><strong>Matériel</strong><br>${escapeHtml(materiel.type)} — n° série ${escapeHtml(materiel.num_serie)}</p>
+        <p><strong>Date</strong><br>${escapeHtml(formatDateCondensed(tech.date || pub.date_prise_charge))}</p>
+        <p><strong>État</strong><br>${etatLabel(pub.etat)}</p>
+        <p><strong>Observations</strong><br>${hasContent(tech.commentaire_technicien) ? formatListOrText(tech.commentaire_technicien) : "(aucune)"}</p>
+      `;
+    }
+
+    // Affiche la comparaison ancien dossier / nouvelle fiche et attend le choix de
+    // l'utilisateur ("merge" ou "new"). Pas de fermeture par clic extérieur : un choix
+    // explicite est requis pour ne pas laisser fetchInterventions() bloqué en attente.
+    function showMergeProposalModal(item, index, total) {
+      return new Promise((resolve) => {
+        mergeProposalResolver = resolve;
+        const suffix = total > 1 ? ` (${index}/${total})` : "";
+        mergeProposalTitleEl.textContent = `Fusionner cette fiche avec un dossier existant ?${suffix}`;
+        mergeProposalReasonEl.textContent = item.reason === "remplacement"
+          ? "Ce n° de série n'apparaît pas dans la base client TECHNIZEN, mais un dossier existe pour ce client sur le même type de matériel. S'agit-il d'un remplacement de matériel plutôt que d'une nouvelle réparation ?"
+          : "Un dossier existe déjà pour ce client et ce n° de série, clos depuis moins de 163 jours (garantie 6 mois). S'agit-il du suivi de la même réparation ?";
+        mergeProposalAlertEl.classList.toggle("hidden", !item.alerteNonRepertorie);
+        const closureHtml = dossierIsClos(item.existingDossier)
+          ? `<p><strong>Clos le</strong><br>${escapeHtml(formatDateCondensed(dossierDateCloture(item.existingDossier)))}</p>`
+          : "";
+        mergeProposalExistingEl.innerHTML = ficheCompareHtml(dossierLatestFiche(item.existingDossier)) + closureHtml;
+        mergeProposalIncomingEl.innerHTML = ficheCompareHtml(item.entry);
+        mergeProposalModalOverlayEl.classList.remove("hidden");
+      });
+    }
+
+    mergeProposalMergeBtnEl.addEventListener("click", () => {
+      mergeProposalModalOverlayEl.classList.add("hidden");
+      const resolve = mergeProposalResolver;
+      mergeProposalResolver = null;
+      if (resolve) {
+        resolve("merge");
+      }
+    });
+
+    mergeProposalNewBtnEl.addEventListener("click", () => {
+      mergeProposalModalOverlayEl.classList.add("hidden");
+      const resolve = mergeProposalResolver;
+      mergeProposalResolver = null;
+      if (resolve) {
+        resolve("new");
+      }
+    });
+
+    // Détermine où placer chaque fiche nouvellement reçue (jamais encore assignée à un
+    // dossier), dans l'ordre de priorité imposé :
+    //  a. dossier ACTIF même client + même n° série -> fusion automatique
+    //  b. dossier CLOS < 163 jours même client + même n° série -> décision utilisateur
+    //  c. n° série absent de la base client + dossier (actif ou clos < 163j) même
+    //     client + même TYPE de matériel -> décision utilisateur (remplacement)
+    //  d. sinon -> nouveau dossier indépendant
+    // Retourne la liste des décisions en attente (cas b/c) ; les cas a/d sont déjà
+    // appliqués à configState.dossiers et à `existingDossiers` en sortie.
+    async function assignNewFiches(newEntries, existingDossiers) {
+      const clientAppareilsCache = new Map();
+      function getClientAppareilsSet(slug) {
+        if (!clientAppareilsCache.has(slug)) {
+          clientAppareilsCache.set(slug, getClientEquipementsTechnizenSet(slug));
+        }
+        return clientAppareilsCache.get(slug);
+      }
+
+      const pending = [];
+
+      for (const entry of newEntries) {
+        const tech = entry.data.technicien || {};
+        const slug = slugify(tech.contact || "");
+        const materiel = tech.materiel && typeof tech.materiel === "object" ? tech.materiel : {};
+        const numSerie = materiel.num_serie || "";
+        const type = materiel.type || "";
+        const isHorsContrat = tech.hors_contrat === true;
+
+        if (slug && numSerie) {
+          const activeMatch = existingDossiers.find(
+            (d) => dossierClientSlug(d) === slug && dossierMateriel(d).num_serie === numSerie && !dossierIsClos(d)
+          );
+          if (activeMatch) {
+            activeMatch.fiches.push(entry);
+            configState.dossiers[activeMatch.id].fichesFilenames.push(entry.filename);
+            markDirty();
+            continue;
+          }
+
+          const closedSameSerieMatch = existingDossiers.find((d) => {
+            if (dossierClientSlug(d) !== slug || dossierMateriel(d).num_serie !== numSerie || !dossierIsClos(d)) {
+              return false;
+            }
+            const closureDate = dossierDateCloture(d);
+            return closureDate && daysSince(closureDate) < DOSSIER_FUSION_WINDOW_DAYS;
+          });
+          if (closedSameSerieMatch) {
+            pending.push({ entry, existingDossier: closedSameSerieMatch, reason: "meme-serie" });
+            continue;
+          }
+        }
+
+        let alerteNonRepertorie = false;
+        if (slug && numSerie) {
+          const appareilsSet = getClientAppareilsSet(slug);
+          if (appareilsSet && !appareilsSet.has(numSerie)) {
+            alerteNonRepertorie = !isHorsContrat;
+            const sameTypeMatch = existingDossiers.find((d) => {
+              if (dossierClientSlug(d) !== slug || dossierMateriel(d).type !== type) {
+                return false;
+              }
+              if (!dossierIsClos(d)) {
+                return true;
+              }
+              const closureDate = dossierDateCloture(d);
+              return closureDate && daysSince(closureDate) < DOSSIER_FUSION_WINDOW_DAYS;
+            });
+            if (sameTypeMatch) {
+              pending.push({ entry, existingDossier: sameTypeMatch, reason: "remplacement", alerteNonRepertorie });
+              continue;
+            }
+          }
+        }
+
+        const newId = generateDossierId();
+        configState.dossiers[newId] = { id: newId, fichesFilenames: [entry.filename] };
+        existingDossiers.push({ id: newId, fiches: [entry] });
+        markDirty();
+      }
+
+      return pending;
+    }
+
+    // Applique, dans l'ordre, les décisions de fusion en attente en interrogeant
+    // l'utilisateur via la modale de comparaison. `existingDossiers` est mutée pour
+    // que les dossiers nouvellement créés ("nouvelle entrée") soient pris en compte
+    // par les décisions suivantes du même lot.
+    async function resolvePendingMergeDecisions(pending, existingDossiers) {
+      for (let i = 0; i < pending.length; i++) {
+        const item = pending[i];
+        const choice = await showMergeProposalModal(item, i + 1, pending.length);
+        if (choice === "merge") {
+          item.existingDossier.fiches.push(item.entry);
+          configState.dossiers[item.existingDossier.id].fichesFilenames.push(item.entry.filename);
+        } else {
+          const newId = generateDossierId();
+          configState.dossiers[newId] = { id: newId, fichesFilenames: [item.entry.filename] };
+          existingDossiers.push({ id: newId, fiches: [item.entry] });
+        }
+        markDirty();
+      }
+    }
+
+    // Calcule, pour chaque dossier affiché, l'alerte "matériel non répertorié" (n° de
+    // série de la dernière fiche absent de la base client, fiche standard uniquement).
+    async function computeAlerteNonRepertorie(dossiers) {
+      const cache = new Map();
+      for (const dossier of dossiers) {
+        const latest = dossierLatestFiche(dossier);
+        const tech = latest.data.technicien || {};
+        if (tech.hors_contrat === true) {
+          dossier.alerteNonRepertorie = false;
+          continue;
+        }
+        const slug = dossierClientSlug(dossier);
+        const numSerie = dossierMateriel(dossier).num_serie || "";
+        if (!slug || !numSerie) {
+          dossier.alerteNonRepertorie = false;
+          continue;
+        }
+        if (!cache.has(slug)) {
+          cache.set(slug, getClientEquipementsTechnizenSet(slug));
+        }
+        const appareilsSet = cache.get(slug);
+        dossier.alerteNonRepertorie = !!appareilsSet && !appareilsSet.has(numSerie);
+      }
     }
 
     async function fetchInterventions() {
@@ -2017,7 +3692,7 @@
             // corps d'erreur non JSON, on garde le message générique ci-dessous
           }
           if (message.toLowerCase().includes("rate limit")) {
-            showInterventionsStatus("Limite de requêtes GitHub atteinte, réessayez dans quelques minutes.");
+            showInterventionsStatus("Limite de requêtes au serveur atteinte, réessayez dans quelques minutes.");
           } else {
             showInterventionsStatus("Erreur lors du chargement des interventions.");
           }
@@ -2039,7 +3714,7 @@
           (entry) => entry && entry.type === "file" && typeof entry.name === "string" && entry.name.endsWith(".txt") && entry.download_url
         );
 
-        const interventions = [];
+        const rawFiches = [];
         for (const file of files) {
           try {
             const fileRes = await fetch(file.download_url);
@@ -2058,24 +3733,643 @@
             if (data && data.traitee === true) {
               continue;
             }
-            interventions.push({ filename: file.name, data: normalizeIntervention(data) });
+            if (data && data.type === "visite_complete") {
+              continue;
+            }
+            rawFiches.push({ filename: file.name, data: normalizeIntervention(data) });
           } catch (err) {
             console.warn(`Intervention ignorée (erreur réseau) : ${file.name}`, err);
           }
         }
 
-        interventions.sort((a, b) => String((b.data && b.data.technicien && b.data.technicien.date) || "").localeCompare(String((a.data && a.data.technicien && a.data.technicien.date) || "")));
+        // Ordre chronologique ascendant : condition nécessaire à la stabilité de
+        // l'algorithme de regroupement (une fiche ne peut fusionner qu'avec un
+        // dossier déjà constitué par une fiche antérieure).
+        rawFiches.sort((a, b) => ficheDateKey(a).localeCompare(ficheDateKey(b)));
 
-        const remaining = await purgeExpiredLivreesInterventions(interventions);
+        const fichesByFilename = new Map(rawFiches.map((e) => [e.filename, e]));
 
-        updateLoanStatusesFromInterventions(remaining);
-        renderInterventions(remaining);
+        ensureDossiersDefaults();
+        const resolved = resolveDossiers(fichesByFilename);
+
+        const assignedFilenames = new Set();
+        resolved.forEach((d) => d.fiches.forEach((f) => assignedFilenames.add(f.filename)));
+        const newEntries = rawFiches.filter((e) => !assignedFilenames.has(e.filename));
+
+        const pending = await assignNewFiches(newEntries, resolved);
+        if (pending.length > 0) {
+          await resolvePendingMergeDecisions(pending, resolved);
+        }
+
+        await computeAlerteNonRepertorie(resolved);
+
+        // Archivage local (IndexedDB) des dossiers clos, AVANT la purge à 90 jours de
+        // "Suivi réparation" : un dossier peut exister brièvement dans les deux à la
+        // fois entre sa clôture et sa purge, mais doit être archivé dès sa clôture,
+        // même s'il est déjà éligible à la purge au moment de ce rafraîchissement.
+        await archiveClosedDossiers(resolved);
+
+        const remaining = await purgeExpiredLivreesDossiers(resolved);
+
+        updateLoanStatusesFromInterventions(remaining.flatMap((d) => d.fiches));
+        renderDossiers(remaining);
       } finally {
         refreshInterventionsBtnEl.disabled = false;
       }
     }
 
     refreshInterventionsBtnEl.addEventListener("click", fetchInterventions);
+
+    // ------------------------------------------------------------------
+    // Archive locale (IndexedDB) des dossiers de réparation clos — jamais
+    // synchronisée sur GitHub. Conservation 4 ans, export/import JSON par
+    // année pour permettre la consolidation entre plusieurs postes.
+    // ------------------------------------------------------------------
+
+    const ARCHIVE_DB_NAME = "SAVtechArchive";
+    const ARCHIVE_DB_VERSION = 1;
+    const ARCHIVE_STORE = "dossiers_archives";
+    const ARCHIVE_RETENTION_YEARS = 4;
+
+    let archiveDbPromise = null;
+
+    function openArchiveDb() {
+      if (!archiveDbPromise) {
+        archiveDbPromise = new Promise((resolve, reject) => {
+          if (!window.indexedDB) {
+            reject(new Error("IndexedDB indisponible dans ce navigateur"));
+            return;
+          }
+          const req = indexedDB.open(ARCHIVE_DB_NAME, ARCHIVE_DB_VERSION);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(ARCHIVE_STORE)) {
+              const store = db.createObjectStore(ARCHIVE_STORE, { keyPath: "id" });
+              store.createIndex("by_closureYear", "closureYear");
+              store.createIndex("by_dossierId", "dossierId");
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      }
+      return archiveDbPromise;
+    }
+
+    function archiveStore(db, mode) {
+      return db.transaction(ARCHIVE_STORE, mode).objectStore(ARCHIVE_STORE);
+    }
+
+    function archivePut(db, record) {
+      return new Promise((resolve, reject) => {
+        const req = archiveStore(db, "readwrite").put(record);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function archiveGet(db, id) {
+      return new Promise((resolve, reject) => {
+        const req = archiveStore(db, "readonly").get(id);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function archiveGetAll(db) {
+      return new Promise((resolve, reject) => {
+        const req = archiveStore(db, "readonly").getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function archiveGetByDossierId(db, dossierId) {
+      return new Promise((resolve, reject) => {
+        const req = archiveStore(db, "readonly").index("by_dossierId").getAll(dossierId);
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function archiveGetByYear(db, year) {
+      return new Promise((resolve, reject) => {
+        const req = archiveStore(db, "readonly").index("by_closureYear").getAll(year);
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function archiveDeleteById(db, id) {
+      return new Promise((resolve, reject) => {
+        const req = archiveStore(db, "readwrite").delete(id);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dateMinusYears(isoDate, years) {
+      const d = parseIsoDate(isoDate);
+      d.setFullYear(d.getFullYear() - years);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    function downloadTextFile(filename, text, mime) {
+      const blob = new Blob([text], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ---- Enveloppe et validation des fichiers d'archive exportés ----
+    // Toute évolution du format doit ajouter une valeur à ARCHIVE_EXPORT_FORMAT_VERSIONS
+    // (et gérer la conversion si besoin) plutôt que de casser les fichiers déjà exportés.
+    const ARCHIVE_EXPORT_TYPE = "savtech-archive-bureau";
+    const ARCHIVE_EXPORT_FORMAT_VERSIONS = [1];
+
+    function isValidArchiveDossierRecord(record) {
+      return !!(
+        record &&
+        typeof record === "object" &&
+        typeof record.id === "string" &&
+        record.id &&
+        typeof record.client === "string" &&
+        record.client &&
+        record.materiel &&
+        typeof record.materiel === "object" &&
+        Array.isArray(record.historique) &&
+        record.historique.length > 0
+      );
+    }
+
+    // Valide un fichier d'archive exporté (import ET consultation externe) avant
+    // toute écriture IndexedDB ou tout chargement en mémoire. Un dossier
+    // individuellement invalide est exclu et compté, sans faire échouer les
+    // autres dossiers valides du même fichier. Lève une erreur (avec un message
+    // destiné à l'utilisateur) uniquement pour un fichier globalement inexploitable.
+    function validateArchivePayload(text) {
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        throw new Error("Fichier illisible ou corrompu.");
+      }
+      if (!parsed || typeof parsed !== "object" || parsed.type !== ARCHIVE_EXPORT_TYPE) {
+        throw new Error("Ce fichier n'est pas une archive SAV-tech.");
+      }
+      if (!ARCHIVE_EXPORT_FORMAT_VERSIONS.includes(parsed.formatVersion)) {
+        throw new Error("Format d'archive non reconnu, mise à jour de bureau-app nécessaire.");
+      }
+      if (!Array.isArray(parsed.dossiers)) {
+        throw new Error("Fichier invalide : contenu manquant.");
+      }
+
+      const records = [];
+      let excludedCount = 0;
+      let suspectCount = 0;
+
+      parsed.dossiers.forEach((record) => {
+        if (!isValidArchiveDossierRecord(record)) {
+          excludedCount++;
+          return;
+        }
+        if (parsed.annee != null && record.closureDate) {
+          const closureYear = Number(String(record.closureDate).slice(0, 4));
+          if (Number.isFinite(closureYear) && closureYear !== Number(parsed.annee)) {
+            suspectCount++;
+            console.warn(`Archive : dossier ${record.id} clos en ${closureYear} mais présent dans le fichier de l'année ${parsed.annee} (importé quand même, décalage possible en fin/début d'année).`);
+          }
+        }
+        records.push(record);
+      });
+
+      return { records, excludedCount, suspectCount };
+    }
+
+    function formatArchiveRecapMessage(prefix, { total, excludedCount, suspectCount }) {
+      const parts = [`${total} dossier(s) ${prefix}`];
+      if (excludedCount > 0) {
+        parts.push(`${excludedCount} dossier(s) invalide(s) exclu(s)`);
+      }
+      if (suspectCount > 0) {
+        parts.push(`${suspectCount} dossier(s) avec une date de clôture ne correspondant pas à l'année du fichier (à vérifier)`);
+      }
+      return `${parts.join(", ")}.`;
+    }
+
+    // Instantané figé du dossier au moment de sa clôture. `fichesSignature`
+    // (liste triée des noms de fichiers) sert à détecter une fusion tardive
+    // (V3.00) : si le dossier rouvre puis reclôture avec des fiches
+    // différentes, un NOUVEL enregistrement d'archive est créé plutôt que de
+    // modifier celui-ci — l'archive existante n'est jamais mise à jour.
+    function buildArchiveRecord(dossier, signature) {
+      const latest = dossierLatestFiche(dossier);
+      const materiel = dossierMateriel(dossier);
+      const closureDate = dossierDateCloture(dossier) || todayISODate();
+      const tech0 = latest.data.technicien || {};
+      return {
+        id: `arch-${dossier.id}-${closureDate}-${Math.random().toString(36).slice(2, 8)}`,
+        dossierId: dossier.id,
+        fichesSignature: signature,
+        closureDate,
+        closureYear: Number(closureDate.slice(0, 4)),
+        client: tech0.contact || "",
+        clientSlug: dossierClientSlug(dossier),
+        materiel: { type: materiel.type || "", num_serie: materiel.num_serie || "" },
+        horsContrat: tech0.hors_contrat === true,
+        historique: dossier.fiches.map((entry) => {
+          const t = entry.data.technicien || {};
+          const p = entry.data.publication || {};
+          return {
+            date: t.date || p.date_prise_charge || "",
+            etat: p.etat,
+            centre: p.centre_nom || t.centre || "",
+            commentaire_technicien: textFieldValue(t.commentaire_technicien),
+            pieces_montees: textFieldValue(t.pieces_montees),
+            pieces_a_prevoir: Array.isArray(t.pieces_a_prevoir) ? t.pieces_a_prevoir : [],
+            nom_rapport: textFieldValue(t.nom_rapport),
+          };
+        }),
+      };
+    }
+
+    function ficheSignatureFor(dossier) {
+      return dossier.fiches.map((f) => f.filename).slice().sort().join("|");
+    }
+
+    async function archiveClosedDossiers(dossiers) {
+      const closed = dossiers.filter((d) => dossierIsClos(d));
+      if (closed.length === 0) {
+        return;
+      }
+      let db;
+      try {
+        db = await openArchiveDb();
+      } catch (err) {
+        console.warn("Archive locale indisponible, archivage ignoré", err);
+        return;
+      }
+      for (const dossier of closed) {
+        try {
+          const signature = ficheSignatureFor(dossier);
+          const existing = await archiveGetByDossierId(db, dossier.id);
+          if (existing.some((r) => r.fichesSignature === signature)) {
+            continue;
+          }
+          await archivePut(db, buildArchiveRecord(dossier, signature));
+        } catch (err) {
+          console.warn(`Échec de l'archivage local du dossier ${dossier.id}`, err);
+        }
+      }
+    }
+
+    async function purgeExpiredArchive() {
+      let db;
+      try {
+        db = await openArchiveDb();
+      } catch {
+        return;
+      }
+      const all = await archiveGetAll(db);
+      const cutoff = dateMinusYears(todayISODate(), ARCHIVE_RETENTION_YEARS);
+      const expired = all.filter((r) => r.closureDate && r.closureDate < cutoff);
+      for (const record of expired) {
+        await archiveDeleteById(db, record.id);
+      }
+    }
+
+    async function refreshLocalArchiveCache() {
+      try {
+        const db = await openArchiveDb();
+        localArchiveCache = await archiveGetAll(db);
+      } catch (err) {
+        console.warn("Impossible de lire l'archive locale", err);
+        localArchiveCache = [];
+      }
+    }
+
+    function getActiveArchiveRecords() {
+      return externalArchiveRecords !== null ? externalArchiveRecords : localArchiveCache;
+    }
+
+    function isViewingExternalArchive() {
+      return externalArchiveRecords !== null;
+    }
+
+    async function openHistoriqueTab() {
+      await refreshLocalArchiveCache();
+      if (!isViewingExternalArchive()) {
+        await purgeExpiredArchive();
+        await refreshLocalArchiveCache();
+      }
+      renderHistoriqueTab();
+    }
+
+    function getHistoriqueFilters() {
+      return {
+        client: historiqueFilterClientEl.value.trim(),
+        materiel: historiqueFilterMaterielEl.value.trim(),
+        dateFrom: historiqueFilterDateFromEl.value,
+        dateTo: historiqueFilterDateToEl.value,
+        texte: historiqueFilterTexteEl.value.trim(),
+      };
+    }
+
+    function historiqueMatchesFilters(record, filters) {
+      if (filters.client && !normalizeSearchText(record.client).includes(normalizeSearchText(filters.client))) {
+        return false;
+      }
+      if (filters.dateFrom && (!record.closureDate || record.closureDate < filters.dateFrom)) {
+        return false;
+      }
+      if (filters.dateTo && (!record.closureDate || record.closureDate > filters.dateTo)) {
+        return false;
+      }
+      if (filters.materiel) {
+        const q = normalizeSearchText(filters.materiel);
+        const materiel = record.materiel || {};
+        const haystack = normalizeSearchText(`${materiel.type || ""} ${materiel.num_serie || ""}`);
+        if (!haystack.includes(q)) {
+          return false;
+        }
+      }
+      if (filters.texte) {
+        const q = normalizeSearchText(filters.texte);
+        const historique = Array.isArray(record.historique) ? record.historique : [];
+        const haystack = normalizeSearchText(
+          historique.map((h) => `${h.commentaire_technicien || ""} ${h.nom_rapport || ""}`).join(" ")
+        );
+        if (!haystack.includes(q)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function getFilteredHistoriqueRecords() {
+      const filters = getHistoriqueFilters();
+      return getActiveArchiveRecords()
+        .filter((r) => historiqueMatchesFilters(r, filters))
+        .sort((a, b) => String(b.closureDate || "").localeCompare(String(a.closureDate || "")));
+    }
+
+    function renderHistoriqueYearsList() {
+      historiqueYearsCardEl.classList.toggle("hidden", isViewingExternalArchive());
+      if (isViewingExternalArchive()) {
+        return;
+      }
+      const byYear = new Map();
+      localArchiveCache.forEach((r) => {
+        const year = r.closureYear || (r.closureDate ? Number(r.closureDate.slice(0, 4)) : null);
+        if (!year) {
+          return;
+        }
+        byYear.set(year, (byYear.get(year) || 0) + 1);
+      });
+      const years = [...byYear.keys()].sort((a, b) => b - a);
+
+      historiqueYearsListEl.innerHTML = "";
+      historiqueYearsEmptyEl.classList.toggle("hidden", years.length > 0);
+
+      years.forEach((year) => {
+        const row = document.createElement("div");
+        row.className = "historique-year-row";
+        row.innerHTML = `
+          <div>
+            <span class="historique-year-label">${year}</span>
+            <span class="historique-year-count">${byYear.get(year)} dossier${byYear.get(year) > 1 ? "s" : ""} archivé${byYear.get(year) > 1 ? "s" : ""}</span>
+          </div>
+          <button type="button" class="button-secondary button-small" data-action="export-year">📤 Exporter</button>
+        `;
+        row.querySelector('[data-action="export-year"]').addEventListener("click", () => exportArchiveYear(year));
+        historiqueYearsListEl.appendChild(row);
+      });
+    }
+
+    async function exportArchiveYear(year) {
+      const db = await openArchiveDb();
+      const records = await archiveGetByYear(db, year);
+      const payload = {
+        type: ARCHIVE_EXPORT_TYPE,
+        formatVersion: ARCHIVE_EXPORT_FORMAT_VERSIONS[ARCHIVE_EXPORT_FORMAT_VERSIONS.length - 1],
+        annee: year,
+        genereLe: new Date().toISOString(),
+        dossiers: records,
+      };
+      const json = JSON.stringify(payload, null, 2);
+      downloadTextFile(`Archive-bureau-${year}.json`, json, "application/json");
+    }
+
+    function renderHistoriqueResults() {
+      const records = getFilteredHistoriqueRecords();
+      historiqueResultsListEl.innerHTML = "";
+      historiqueResultsEmptyEl.classList.toggle("hidden", records.length > 0);
+
+      records.forEach((record) => {
+        const materiel = record.materiel || {};
+        const rapports = [...new Set((record.historique || []).map((h) => h.nom_rapport).filter(hasContent))];
+        const row = document.createElement("div");
+        row.className = "historique-result-row";
+        row.innerHTML = `
+          <div class="historique-result-client">${escapeHtml(record.client)}</div>
+          <div class="historique-result-materiel">${escapeHtml(materiel.type)} — n° série ${escapeHtml(materiel.num_serie)}</div>
+          <div class="historique-result-meta">Clos le ${escapeHtml(formatDateCondensed(record.closureDate))} · ${(record.historique || []).length} fiche${(record.historique || []).length > 1 ? "s" : ""}${record.horsContrat ? " · 🚫 Hors contrat" : ""}</div>
+          ${rapports.length > 0 ? `<div class="historique-result-rapports">Rapports : ${rapports.map((r) => escapeHtml(r)).join(", ")}</div>` : ""}
+        `;
+        row.addEventListener("click", () => openHistoriqueDetail(record));
+        historiqueResultsListEl.appendChild(row);
+      });
+    }
+
+    function renderHistoriqueTab() {
+      historiqueExternalBannerEl.classList.toggle("hidden", !isViewingExternalArchive());
+      historiqueExternalFilenameEl.textContent = externalArchiveFilename;
+      renderHistoriqueYearsList();
+      renderHistoriqueResults();
+    }
+
+    [historiqueFilterClientEl, historiqueFilterMaterielEl, historiqueFilterDateFromEl, historiqueFilterDateToEl, historiqueFilterTexteEl].forEach((el) => {
+      el.addEventListener("input", renderHistoriqueResults);
+    });
+
+    function formatArchiveHistory(record) {
+      return (record.historique || [])
+        .map((h) => `
+          <div class="dossier-history-item">
+            <div class="dossier-history-header">
+              <strong>${escapeHtml(formatDateCondensed(h.date))}</strong>
+              <span class="dossier-history-etat status-group-${ETAT_ORDER.includes(h.etat) ? h.etat : 1}">${escapeHtml(etatLabel(h.etat))}</span>
+            </div>
+            <div class="dossier-history-details">
+              ${hasContent(h.centre) ? `<p><strong>Centre</strong> : ${escapeHtml(h.centre)}</p>` : ""}
+              ${hasContent(h.commentaire_technicien) ? `<p>${escapeHtml(h.commentaire_technicien)}</p>` : ""}
+              ${hasContent(h.pieces_montees) ? `<p><strong>Pièces montées</strong> : ${escapeHtml(h.pieces_montees)}</p>` : ""}
+              ${Array.isArray(h.pieces_a_prevoir) && h.pieces_a_prevoir.length > 0 ? `<div><strong>Pièces à prévoir</strong> ${formatPiecesAPrevoir(h.pieces_a_prevoir)}</div>` : ""}
+              ${hasContent(h.nom_rapport) ? `<p><strong>Rapport</strong> : ${escapeHtml(h.nom_rapport)}</p>` : ""}
+            </div>
+          </div>
+        `)
+        .join("");
+    }
+
+    function openHistoriqueDetail(record) {
+      historiqueDetailRecord = record;
+      const materiel = record.materiel || {};
+      historiqueDetailTitleEl.textContent = `${record.client} — ${materiel.type || ""} n° série ${materiel.num_serie || ""}`;
+      historiqueDetailBodyEl.innerHTML = `
+        <p><strong>Clos le</strong> ${escapeHtml(formatDateCondensed(record.closureDate))}${record.horsContrat ? " · 🚫 Hors contrat" : ""}</p>
+        <div class="dossier-history">${formatArchiveHistory(record)}</div>
+      `;
+      historiqueDetailModalOverlayEl.classList.remove("hidden");
+    }
+
+    function closeHistoriqueDetail() {
+      historiqueDetailRecord = null;
+      historiqueDetailModalOverlayEl.classList.add("hidden");
+    }
+
+    historiqueDetailCloseBtnEl.addEventListener("click", closeHistoriqueDetail);
+    historiqueDetailModalOverlayEl.addEventListener("click", (event) => {
+      if (event.target === historiqueDetailModalOverlayEl) {
+        closeHistoriqueDetail();
+      }
+    });
+
+    function buildPrintRecordHtml(record) {
+      const materiel = record.materiel || {};
+      const rapports = [...new Set((record.historique || []).map((h) => h.nom_rapport).filter(hasContent))];
+      const historiqueHtml = (record.historique || [])
+        .map(
+          (h) => `
+            <div class="print-history-item">
+              <p><strong>${escapeHtml(formatDateCondensed(h.date))} — ${escapeHtml(etatLabel(h.etat))}</strong>${hasContent(h.centre) ? ` — ${escapeHtml(h.centre)}` : ""}</p>
+              ${hasContent(h.commentaire_technicien) ? `<p>${escapeHtml(h.commentaire_technicien)}</p>` : ""}
+              ${hasContent(h.pieces_montees) ? `<p>Pièces montées : ${escapeHtml(h.pieces_montees)}</p>` : ""}
+              ${Array.isArray(h.pieces_a_prevoir) && h.pieces_a_prevoir.length > 0 ? `<div>Pièces à prévoir ${formatPiecesAPrevoir(h.pieces_a_prevoir)}</div>` : ""}
+            </div>
+          `
+        )
+        .join("");
+      return `
+        <div class="print-record">
+          <h1>${escapeHtml(record.client)}</h1>
+          <p><strong>Matériel</strong> : ${escapeHtml(materiel.type)} — n° série ${escapeHtml(materiel.num_serie)}</p>
+          <p><strong>Date de clôture</strong> : ${escapeHtml(formatDateCondensed(record.closureDate))}</p>
+          ${record.horsContrat ? `<p><strong>Hors contrat</strong></p>` : ""}
+          ${rapports.length > 0 ? `<p><strong>Rapports</strong> : ${rapports.map((r) => escapeHtml(r)).join(", ")}</p>` : ""}
+          <h2>Historique</h2>
+          ${historiqueHtml}
+        </div>
+      `;
+    }
+
+    function exportRecordToPdf(record) {
+      printAreaEl.innerHTML = buildPrintRecordHtml(record);
+      window.print();
+    }
+
+    function exportListToPdf(records) {
+      if (records.length === 0) {
+        return;
+      }
+      printAreaEl.innerHTML = records.map((r) => buildPrintRecordHtml(r)).join("");
+      window.print();
+    }
+
+    historiqueDetailPdfBtnEl.addEventListener("click", () => {
+      if (historiqueDetailRecord) {
+        exportRecordToPdf(historiqueDetailRecord);
+      }
+    });
+
+    historiqueExportPdfBtnEl.addEventListener("click", () => {
+      exportListToPdf(getFilteredHistoriqueRecords());
+    });
+
+    // ---- Import / fusion (consolidation entre postes) ----
+    async function importArchiveFile(file) {
+      const text = await file.text();
+      const { records, excludedCount, suspectCount } = validateArchivePayload(text);
+      const db = await openArchiveDb();
+      let added = 0;
+      let skipped = 0;
+      for (const record of records) {
+        const existing = await archiveGet(db, record.id);
+        if (existing) {
+          skipped++;
+          continue;
+        }
+        await archivePut(db, record);
+        added++;
+      }
+      return { added, skipped, excludedCount, suspectCount };
+    }
+
+    historiqueImportBtnEl.addEventListener("click", () => {
+      historiqueImportFileInputEl.click();
+    });
+
+    historiqueImportFileInputEl.addEventListener("change", async () => {
+      const file = historiqueImportFileInputEl.files[0];
+      historiqueImportFileInputEl.value = "";
+      if (!file) {
+        return;
+      }
+      historiqueImportStatusEl.classList.remove("hidden");
+      historiqueImportStatusEl.textContent = "Import en cours…";
+      try {
+        const { added, skipped, excludedCount, suspectCount } = await importArchiveFile(file);
+        const parts = [`${added} dossier(s) ajouté(s)`, `${skipped} déjà présent(s) (ignoré(s))`];
+        if (excludedCount > 0) {
+          parts.push(`${excludedCount} dossier(s) invalide(s) exclu(s)`);
+        }
+        if (suspectCount > 0) {
+          parts.push(`${suspectCount} dossier(s) avec une date de clôture ne correspondant pas à l'année du fichier (importé(s) quand même, à vérifier)`);
+        }
+        historiqueImportStatusEl.textContent = `Import terminé : ${parts.join(", ")}.`;
+        await refreshLocalArchiveCache();
+        renderHistoriqueTab();
+      } catch (err) {
+        historiqueImportStatusEl.textContent = `Échec de l'import : ${err && err.message ? err.message : "erreur inconnue"}`;
+      }
+    });
+
+    // ---- Consultation d'une archive externe (lecture seule, jamais écrite en IndexedDB) ----
+    historiqueExternalBtnEl.addEventListener("click", () => {
+      historiqueExternalFileInputEl.click();
+    });
+
+    historiqueExternalFileInputEl.addEventListener("change", async () => {
+      const file = historiqueExternalFileInputEl.files[0];
+      historiqueExternalFileInputEl.value = "";
+      if (!file) {
+        return;
+      }
+      try {
+        const text = await file.text();
+        const { records, excludedCount, suspectCount } = validateArchivePayload(text);
+        externalArchiveRecords = records;
+        externalArchiveFilename = file.name;
+        renderHistoriqueTab();
+        historiqueExternalRecapEl.textContent = formatArchiveRecapMessage("chargé(s)", { total: records.length, excludedCount, suspectCount });
+        historiqueExternalRecapEl.classList.remove("hidden");
+      } catch (err) {
+        window.alert(`Impossible de charger cette archive : ${err && err.message ? err.message : "erreur inconnue"}`);
+      }
+    });
+
+    historiqueExternalCloseBtnEl.addEventListener("click", () => {
+      externalArchiveRecords = null;
+      externalArchiveFilename = "";
+      historiqueExternalRecapEl.classList.add("hidden");
+      historiqueExternalRecapEl.textContent = "";
+      renderHistoriqueTab();
+    });
 
     function bytesToBase64(bytes) {
       let binary = "";
@@ -2150,13 +4444,15 @@
         type: materiel.type || "",
         num_serie: materiel.num_serie || "",
         centre_origine: pub.centre_nom || "",
+        centre_commune: pub.centre_commune || "",
         adresse,
         etat: pub.etat,
         date_prise_charge: pub.date_prise_charge || "",
         lieu_prise_charge: pub.lieu_prise_charge || "",
-        piece_en_commande: hasContent(tech.pieces_a_prevoir),
+        date_livraison_prevue: pub.date_livraison_prevue || "",
         materiel_prete_num_serie: tech.materiel_prete_num_serie || "",
         commentaire_technicien: pub.commentaire_technicien || "",
+        commentaire_bureau: pub.commentaire_bureau || "",
         lien_drive: (existingAppareil && existingAppareil.lien_drive) || clientLienDrive || "",
       };
       if (pub.etat === 3) {
@@ -2171,33 +4467,35 @@
       window.alert(message);
     }
 
+    // Le comportement de publication reste basé sur le statut ACTUEL du dossier
+    // (dernière fiche reçue), quel que soit le nombre de fiches dans son historique.
     async function publishSelection() {
-      const selectedEntries = currentInterventions.filter(
-        (entry) => selectedInterventionFilenames.has(entry.filename) && entry.data.technicien.hors_contrat !== true
+      const selectedDossiers = currentDossiers.filter(
+        (dossier) => selectedDossierIds.has(dossier.id) && dossierLatestFiche(dossier).data.technicien.hors_contrat !== true
       );
-      if (selectedEntries.length === 0) {
+      if (selectedDossiers.length === 0) {
         return;
       }
 
-      const entriesBySlug = new Map();
-      selectedEntries.forEach((entry) => {
-        const slug = slugify(entry.data && entry.data.technicien && entry.data.technicien.contact ? entry.data.technicien.contact : "");
-        if (!entriesBySlug.has(slug)) {
-          entriesBySlug.set(slug, []);
+      const dossiersBySlug = new Map();
+      selectedDossiers.forEach((dossier) => {
+        const slug = dossierClientSlug(dossier);
+        if (!dossiersBySlug.has(slug)) {
+          dossiersBySlug.set(slug, []);
         }
-        entriesBySlug.get(slug).push(entry);
+        dossiersBySlug.get(slug).push(dossier);
       });
 
       const invalidContacts = [];
       const invalidSlugs = [];
-      entriesBySlug.forEach((entries, slug) => {
+      dossiersBySlug.forEach((dossiers, slug) => {
         const client = configState.clients[slug];
         if (!slug || !client || !client.password) {
-          entries.forEach((entry) => invalidContacts.push(entry.data.technicien.contact || "(contact inconnu)"));
+          dossiers.forEach((dossier) => invalidContacts.push(dossierLatestFiche(dossier).data.technicien.contact || "(contact inconnu)"));
           invalidSlugs.push(slug);
         }
       });
-      invalidSlugs.forEach((slug) => entriesBySlug.delete(slug));
+      invalidSlugs.forEach((slug) => dossiersBySlug.delete(slug));
 
       const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
 
@@ -2207,7 +4505,7 @@
       const failures = [];
 
       try {
-        for (const [slug, entries] of entriesBySlug) {
+        for (const [slug, dossiers] of dossiersBySlug) {
           const client = configState.clients[slug];
           const filename = `${slug}.txt`;
 
@@ -2228,7 +4526,8 @@
               throw new Error(`Erreur HTTP ${getRes.status} lors de la lecture du fichier existant`);
             }
 
-            entries.forEach((entry) => {
+            dossiers.forEach((dossier) => {
+              const entry = dossierLatestFiche(dossier);
               const tech = entry.data.technicien;
               const pub = entry.data.publication;
               const materiel = tech && typeof tech.materiel === "object" && tech.materiel ? tech.materiel : {};
@@ -2268,9 +4567,9 @@
             }
 
             const publishedDate = todayISODate();
-            entries.forEach((entry) => {
-              publishedFilenames.set(entry.filename, publishedDate);
-              selectedInterventionFilenames.delete(entry.filename);
+            dossiers.forEach((dossier) => {
+              publishedDossierIds.set(dossier.id, publishedDate);
+              selectedDossierIds.delete(dossier.id);
             });
           } catch (err) {
             failures.push(`${client.contact} : ${err && err.message ? err.message : "erreur inconnue"} Vérifiez l'adresse et le mot de passe du relais dans l'onglet Configuration.`);
@@ -2278,7 +4577,7 @@
         }
       } finally {
         publishSelectionBtnEl.textContent = "📤 Publier la sélection";
-        renderInterventions(currentInterventions);
+        renderDossiers(currentDossiers);
       }
 
       const messageParts = [];
@@ -2294,6 +4593,179 @@
     }
 
     publishSelectionBtnEl.addEventListener("click", publishSelection);
+
+    // Traite les fichiers de notification "visite_complete" déposés dans
+    // data/interventions : calcule la fenêtre légale de prochaine visite (6 à 8
+    // mois après la validation) et l'enregistre dans le fichier client
+    // correspondant, sans jamais transiter par "Suivi réparation".
+    async function processScheduledVisites() {
+      const originalText = processVisitesBtnEl.textContent;
+      processVisitesBtnEl.disabled = true;
+      processVisitesBtnEl.textContent = "Traitement…";
+
+      let processedCount = 0;
+      const failures = [];
+
+      try {
+        let listRes;
+        try {
+          listRes = await fetch(GITHUB_API_CONTENTS);
+        } catch {
+          window.alert("Erreur réseau lors du chargement des visites programmées.");
+          return;
+        }
+
+        if (listRes.status === 404) {
+          window.alert("Aucune visite programmée à traiter pour le moment.");
+          return;
+        }
+
+        if (!listRes.ok) {
+          window.alert("Erreur lors du chargement des visites programmées.");
+          return;
+        }
+
+        const entries = await listRes.json();
+        if (!Array.isArray(entries)) {
+          window.alert("Erreur lors du chargement des visites programmées.");
+          return;
+        }
+
+        const files = entries.filter(
+          (entry) => entry && entry.type === "file" && typeof entry.name === "string" && entry.name.endsWith(".txt") && entry.download_url
+        );
+
+        const relaisUrl = (configState.relais.url || "").replace(/\/+$/, "");
+
+        for (const file of files) {
+          let data;
+          try {
+            const fileRes = await fetch(file.download_url);
+            if (!fileRes.ok) {
+              continue;
+            }
+            const text = await fileRes.text();
+            data = JSON.parse(text);
+          } catch {
+            continue;
+          }
+
+          if (!data || data.type !== "visite_complete") {
+            continue;
+          }
+
+          const centreNom = data.centre_nom || "";
+          const slug = Object.keys(configState.clients).find((s) => {
+            const c = configState.clients[s];
+            return Array.isArray(c.centres) && c.centres.some((centre) => centre.nom === centreNom);
+          });
+
+          if (!slug) {
+            failures.push(`${file.name} : client/centre introuvable (${centreNom || "centre inconnu"})`);
+            continue;
+          }
+
+          const client = configState.clients[slug];
+          if (!client.password) {
+            failures.push(`${client.contact} : client sans mot de passe`);
+            continue;
+          }
+
+          const dateValidation = data.date_validation || "";
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValidation)) {
+            failures.push(`${client.contact} : date de validation manquante ou invalide (${file.name})`);
+            continue;
+          }
+
+          const debut = addMonthsIsoDate(dateValidation, 6);
+          const fin = addMonthsIsoDate(dateValidation, 8);
+
+          try {
+            const filename = `${slug}.txt`;
+            let merged = { contact: client.contact, email_contact: client.emailContact || "", appareils: [], centres_visites: {} };
+
+            const getRes = await fetch(`${GITHUB_RAW_CLIENTS}/${filename}`, { cache: "no-store" });
+            if (getRes.status === 200) {
+              const fileContent = await getRes.text();
+              const decrypted = await decryptClientFile(fileContent, client.password);
+              const parsed = JSON.parse(decrypted);
+              merged = {
+                contact: parsed.contact || client.contact,
+                email_contact: parsed.email_contact || client.emailContact || "",
+                appareils: Array.isArray(parsed.appareils) ? parsed.appareils : [],
+                centres_visites: parsed.centres_visites && typeof parsed.centres_visites === "object" ? parsed.centres_visites : {},
+              };
+            } else if (getRes.status !== 404) {
+              throw new Error(`Erreur HTTP ${getRes.status} lors de la lecture du fichier existant`);
+            }
+
+            merged.centres_visites[centreNom] = {
+              prochaine_visite_debut: debut,
+              prochaine_visite_fin: fin,
+              derniere_visite: dateValidation,
+            };
+
+            const encrypted = await encryptClientFile(JSON.stringify(merged), client.password);
+
+            const writeRes = await fetch(`${relaisUrl}/write`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                password: configState.relais.writePassword,
+                filename,
+                content: encrypted,
+                dossier: "clients",
+              }),
+            });
+            let writeResult = null;
+            try {
+              writeResult = await writeRes.json();
+            } catch {
+              // corps de réponse non JSON, traité comme un échec ci-dessous
+            }
+            if (!writeRes.ok || !writeResult || writeResult.success !== true) {
+              const errorMessage = writeResult && typeof writeResult.error === "string" ? writeResult.error : `Erreur HTTP ${writeRes.status}`;
+              throw new Error(errorMessage);
+            }
+
+            const deleteRes = await fetch(`${relaisUrl}/delete`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                password: configState.relais.writePassword,
+                filename: file.name,
+                dossier: "interventions",
+              }),
+            });
+            let deleteResult = null;
+            try {
+              deleteResult = await deleteRes.json();
+            } catch {
+              // corps de réponse non JSON, traité comme un échec ci-dessous
+            }
+            if (!deleteRes.ok || !deleteResult || deleteResult.success !== true) {
+              const errorMessage = deleteResult && typeof deleteResult.error === "string" ? deleteResult.error : `Erreur HTTP ${deleteRes.status}`;
+              throw new Error(`fichier client mis à jour mais suppression de la notification échouée : ${errorMessage}`);
+            }
+
+            processedCount += 1;
+          } catch (err) {
+            failures.push(`${client.contact} (${centreNom}) : ${err && err.message ? err.message : "erreur inconnue"}`);
+          }
+        }
+      } finally {
+        processVisitesBtnEl.disabled = false;
+        processVisitesBtnEl.textContent = originalText;
+      }
+
+      const messageParts = [`Visites traitées : ${processedCount}`];
+      if (failures.length > 0) {
+        messageParts.push(`Échec(s) (${failures.length}) :\n${failures.join("\n")}`);
+      }
+      showPublishError(messageParts.join("\n\n"));
+    }
+
+    processVisitesBtnEl.addEventListener("click", processScheduledVisites);
 
     function openAddClientForm() {
       editingSlug = null;
@@ -2332,7 +4804,7 @@
     function deleteClient(slug) {
       const client = configState.clients[slug];
       const confirmed = window.confirm(
-        `Supprimer ${client.contact} de la configuration ? Le fichier existant sur GitHub ne sera pas supprimé, seule la gestion locale de ce client sera retirée.`
+        `Supprimer ${client.contact} de la configuration ? Le fichier existant sur le serveur ne sera pas supprimé, seule la gestion locale de ce client sera retirée.`
       );
       if (!confirmed) {
         return;
@@ -2426,7 +4898,7 @@
           return;
         }
         if (!contactsMap.has(contact)) {
-          contactsMap.set(contact, { lienDrive: "", email: "", centres: [] });
+          contactsMap.set(contact, { lienDrive: "", email: "", centres: [], equipements: [] });
         }
         const infos = contactsMap.get(contact);
         if (!infos.lienDrive) {
@@ -2445,6 +4917,19 @@
           nom: centre && typeof centre.nom === "string" ? centre.nom.trim() : "",
           adresse: centre && typeof centre.adresse === "string" ? centre.adresse.trim() : "",
           ville: centre && typeof centre.ville === "string" ? centre.ville.trim() : "",
+        });
+        // Parc matériel réel du client (source de vérité pour l'alerte "matériel non
+        // répertorié" et la détection de remplacement, voir getClientEquipementsTechnizenSet).
+        const equipements = Array.isArray(centre && centre.equipements) ? centre.equipements : [];
+        equipements.forEach((eq) => {
+          const serie = eq && typeof eq.serie === "string" ? eq.serie.trim() : "";
+          if (!serie) {
+            return;
+          }
+          infos.equipements.push({
+            type: eq && typeof eq.type === "string" ? eq.type.trim() : "",
+            serie,
+          });
         });
       });
 
@@ -2490,7 +4975,7 @@
       const importedSlugs = new Set();
       let updatedFieldsCount = 0;
 
-      contactsMap.forEach(({ lienDrive, email, centres }, contact) => {
+      contactsMap.forEach(({ lienDrive, email, centres, equipements }, contact) => {
         const slug = slugify(contact);
         if (!slug) {
           return;
@@ -2504,6 +4989,7 @@
             }
           });
           configState.clients[slug].centres = centres;
+          configState.clients[slug].equipementsTechnizen = equipements;
           unchanged.push(configState.clients[slug].contact);
         } else {
           configState.clients[slug] = {
@@ -2512,6 +4998,7 @@
             emailContact: email,
             lienDrive,
             centres,
+            equipementsTechnizen: equipements,
           };
           added.push(contact);
           addedSlugs.push(slug);
@@ -2546,6 +5033,9 @@
     }
 
     async function importFromTechnizen(actifs) {
+      // Import bureau uniquement : lecture / publication de la donnée validée depuis
+      // TECHNIZEN. La base client métier reste modifiable uniquement depuis l’app.
+      // technicien. Le bureau ne peut pas réécrire la source de vérité client.
       importMaterielPretFromTechnizen(actifs);
 
       const contactsMap = buildTechnizenContactsMap(actifs);
@@ -2722,20 +5212,24 @@
 
       configState = data;
       ensureMaterielPretDefaults();
+      ensureDossiersDefaults();
       configFileName = file.name || configFileName;
       enterMainScreen();
     });
 
-    newConfigBtnEl.addEventListener("click", () => {
+    function startWithEmptyConfig() {
       hideError();
       configState = {
         relais: { url: "", writePassword: "" },
         clients: {},
       };
       ensureMaterielPretDefaults();
+      ensureDossiersDefaults();
       configFileName = "config-bureau.json";
       enterMainScreen();
-    });
+    }
+
+    newConfigBtnEl.addEventListener("click", startWithEmptyConfig);
 
     checkClientMailsBtnEl.addEventListener("click", () => {
       window.open("https://mail.google.com/mail/u/0/?authuser=contact.technizen@gmail.com#inbox", "_blank");
@@ -2785,6 +5279,10 @@
       screenAccueilEl.classList.remove("hidden");
     });
 
+    // Au démarrage, ne jamais laisser l'écran d'accueil (charger/créer une
+    // configuration) bloquer l'accès à l'app : la configuration en cache est
+    // reprise si elle existe, sinon on démarre directement avec une configuration
+    // vide — dans les deux cas on entre directement dans l'onglet Configuration.
     (function initFromCache() {
       let cached;
       try {
@@ -2793,12 +5291,16 @@
         cached = null;
       }
       if (!isValidConfig(cached)) {
+        startWithEmptyConfig();
         return;
       }
       configState = cached;
       ensureMaterielPretDefaults();
+      ensureDossiersDefaults();
       enterMainScreen();
     })();
   </script>
+
+  <div id="print-area"></div>
 </body>
 </html>
