@@ -1,5 +1,0 @@
-{
-  "type": "visite_complete",
-  "centre_nom": "CTP Poumaroux",
-  "date_validation": "2026-09-18"
-}
