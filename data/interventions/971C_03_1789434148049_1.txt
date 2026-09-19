@@ -1,0 +1,22 @@
+{
+  "centre": "JACK Controle Technique",
+  "centre_numero": "971C.03",
+  "client_adresse": "Poucet, 97190 LE GOSIER",
+  "contact": "HERNANDEZ Jacques",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "34059"
+  },
+  "etat": 3,
+  "date": "2026-09-15",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement cordon alilentation",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JACKControleTechnique-150926.pdf",
+  "pieces_montees": [
+    "Cordon alim’pour cap3030"
+  ]
+}

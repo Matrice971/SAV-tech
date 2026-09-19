@@ -1,0 +1,22 @@
+{
+  "centre": "VCTA",
+  "centre_numero": "M971.08",
+  "client_adresse": "Rue Joseph Nelson GRANDE SAVANE, 97113 GOURBEYRE",
+  "contact": "ERDAN",
+  "materiel": {
+    "type": "Freinage",
+    "num_serie": "1013"
+  },
+  "etat": 3,
+  "date": "2026-09-10",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement interrupteur de présence droit",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-VCTA-100926.pdf",
+  "pieces_montees": [
+    "AM100480/CMUX"
+  ]
+}

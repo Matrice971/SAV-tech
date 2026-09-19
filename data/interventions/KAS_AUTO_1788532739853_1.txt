@@ -1,0 +1,23 @@
+{
+  "centre": "KAS AUTO",
+  "centre_numero": null,
+  "client_adresse": "RUE THOMAS EDISON, 97122 BAIE MAHAULT",
+  "contact": null,
+  "materiel": {
+    "type": "ANALYSEUR DE GAZ  BEA060",
+    "num_serie": "010804132"
+  },
+  "etat": 1,
+  "date": "2026-08-18",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT SONDE O2\nETALONNAGE\nREALISATION VERIFICATION PERIODIQUE",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv_HC-KASAUTO-180826.pdf",
+  "pieces_montees": [
+    "CAPTEUR O2"
+  ],
+  "hors_contrat": true
+}

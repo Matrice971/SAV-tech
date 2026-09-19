@@ -1,0 +1,22 @@
+{
+  "centre": "PRESTIGE AUTO NET (vh)",
+  "centre_numero": "971M.04B",
+  "client_adresse": "Navaraine Marigot, 97119 VIEUX-HABITANTS",
+  "contact": "SAINT-MARC Jonny",
+  "materiel": {
+    "type": "Pupitre",
+    "num_serie": "372"
+  },
+  "etat": 3,
+  "date": "2026-09-12",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacment moniteur du banc\n\nVérifier provenence et status de l’écran",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-PRESTIGEAUTONET(vh)-120926.pdf",
+  "pieces_montees": [
+    "Moniteur 27 pouces HP"
+  ]
+}
