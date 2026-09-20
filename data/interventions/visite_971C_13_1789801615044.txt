@@ -1,5 +1,0 @@
-{
-  "type": "visite_complete",
-  "centre_nom": "VIVAUTO PL AUTOVISION",
-  "date_validation": "2026-09-19"
-}
