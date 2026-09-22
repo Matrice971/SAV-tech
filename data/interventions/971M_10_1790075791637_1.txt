@@ -1,0 +1,25 @@
+{
+  "centre": "Centre Auto Contrôle 2000",
+  "centre_numero": "971M.10",
+  "client_adresse": "Rue Henri Becquerel, 97122 BAIE-MAHAULT",
+  "contact": "SIARRAS",
+  "materiel": {
+    "type": "Suspension",
+    "num_serie": "126"
+  },
+  "etat": 2,
+  "date": "2026-09-21",
+  "pieces_a_prevoir": [
+    {
+      "designation": "Lame se suspension muller",
+      "quantite": 1
+    }
+  ],
+  "commentaire_technicien": "Lame de suspension cassé",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CentreAutoControle2000-210926.pdf",
+  "pieces_montees": []
+}
