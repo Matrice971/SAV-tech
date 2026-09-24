@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "ZARRU Controle",
+  "date_validation": "2026-09-24"
+}
