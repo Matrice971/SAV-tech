@@ -1,0 +1,20 @@
+{
+  "centre": "TECHNIZEN",
+  "centre_numero": null,
+  "client_adresse": "Route de la Riviéra , Chez Jack Auto Control, 97190 Gosier",
+  "contact": "ZENON Raymond",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "123456"
+  },
+  "etat": 1,
+  "date": "2026-09-24",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-TECHNIZEN-240926.pdf",
+  "pieces_montees": []
+}
