@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "ACT Bas du Fort",
+  "date_validation": "2026-10-05"
+}
