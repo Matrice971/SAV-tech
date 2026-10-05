@@ -1,0 +1,22 @@
+{
+  "centre": "BUREAU CE SARL",
+  "centre_numero": "971C.01G",
+  "client_adresse": "Route des Abymes, 97139 ABYMES",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24427"
+  },
+  "etat": 3,
+  "date": "2026-10-05",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement moniteur",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-BUREAUCESARL-051026.pdf",
+  "pieces_montees": [
+    "Ecran 24\" tactile"
+  ]
+}
