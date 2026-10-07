@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "SOCATRANS jarry",
+  "date_validation": "2026-10-07"
+}
