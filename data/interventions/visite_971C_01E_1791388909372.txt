@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "SOCATRANS m.à l'eau",
+  "date_validation": "2026-10-07"
+}
