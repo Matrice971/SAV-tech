@@ -1,0 +1,20 @@
+{
+  "centre": "ACT la JAILLE",
+  "centre_numero": "971C.01C",
+  "client_adresse": "LA JAILLE, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Pont",
+    "num_serie": "2575"
+  },
+  "etat": 1,
+  "date": "2026-10-07",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Constat visuel securité ok\n\nRevenir pour reparation",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ACTlaJAILLE-071026.pdf",
+  "pieces_montees": []
+}
