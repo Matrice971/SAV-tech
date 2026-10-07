@@ -1,0 +1,25 @@
+{
+  "centre": "SOCATRANS jarry",
+  "centre_numero": "971C.01F",
+  "client_adresse": "ZI JARRY, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24423"
+  },
+  "etat": 2,
+  "date": "2026-10-07",
+  "pieces_a_prevoir": [
+    {
+      "designation": "Bol decanteur cap3030",
+      "quantite": 1
+    }
+  ],
+  "commentaire_technicien": "Base du bol decantatiin casseŕ",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-SOCATRANSjarry-071026.pdf",
+  "pieces_montees": []
+}
