@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "ACT la JAILLE",
+  "date_validation": "2026-10-07"
+}
