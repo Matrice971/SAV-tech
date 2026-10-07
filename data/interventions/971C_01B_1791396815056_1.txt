@@ -1,0 +1,20 @@
+{
+  "centre": "ACT CHAUVEL",
+  "centre_numero": "971C.01B",
+  "client_adresse": "ROUTE DE CHAUVEL, 97139 ABYMES",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Pont",
+    "num_serie": "166702"
+  },
+  "etat": 2,
+  "date": "2026-10-07",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Verrin droit perd de l’huile disymérie augmente au fure et a mesure\nSecurité disfonctionnel il faut appuyer sur le secours pour forcer la monter et la descente",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ACTCHAUVEL-071026.pdf",
+  "pieces_montees": []
+}
