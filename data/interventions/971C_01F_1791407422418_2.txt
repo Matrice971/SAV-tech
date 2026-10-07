@@ -1,0 +1,20 @@
+{
+  "centre": "SOCATRANS jarry",
+  "centre_numero": "971C.01F",
+  "client_adresse": "ZI JARRY, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Pont",
+    "num_serie": "10463183"
+  },
+  "etat": 2,
+  "date": "2026-10-07",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Pont 2 colonne : \nVibration eleve bras droit ( voir roulement de tete )\nSupport de bras droit et guache bouge axialement\nPont ciseaux exterieur , disymétrie auxiliaire .\n\nClient dispose d’une partie des pièces.",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-SOCATRANSjarry-0047-071026.pdf",
+  "pieces_montees": []
+}
