@@ -1,5 +1,0 @@
-{
-  "type": "visite_complete",
-  "centre_nom": "PHICOTEC",
-  "date_validation": "2026-10-06"
-}
