@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "TONY Contrôle",
+  "date_validation": "2026-10-08"
+}
