@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAV-tech — Appli client</title>
+<!-- V2.16 : appli installable sur l'écran d'accueil (icône et nom TECHNIZEN) -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1a3a5c">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TECHNIZEN">
 <style>
   :root {
     --color-bg: #f5f6f8;
@@ -593,16 +601,71 @@
     font-size: 0.75rem;
     padding: 1.5rem 1rem;
   }
+
+  /* V2.16 : bandeau d'aide à l'installation sur l'écran d'accueil */
+  .install-banner {
+    max-width: 40rem;
+    margin: 1rem auto 0;
+    padding: 0.9rem 1rem;
+    background: #e8f1fd;
+    border: 1px solid #b9d3f7;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .install-banner.hidden {
+    display: none;
+  }
+
+  .install-text {
+    font-size: 1rem;
+  }
+
+  .install-text strong {
+    color: #1a3a5c;
+  }
+
+  .install-text svg {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: -0.2em;
+  }
+
+  .install-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .install-actions button {
+    flex: 1 1 auto;
+  }
+
+  @media (max-width: 42rem) {
+    .install-banner {
+      margin: 1rem 1rem 0;
+    }
+  }
 </style>
 </head>
 <body>
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V2.15</span>
+      <span class="app-version">V2.16</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
+
+  <div id="install-banner" class="install-banner hidden" role="region" aria-label="Installer l'appli">
+    <div id="install-text" class="install-text"></div>
+    <div class="install-actions">
+      <button type="button" id="install-btn" class="hidden">📲 Installer l'appli</button>
+      <button type="button" id="install-later" class="button-secondary">Plus tard</button>
+    </div>
+  </div>
 
   <main>
     <div id="screen-password">
@@ -1313,6 +1376,87 @@
         seConnecter(true);
       } else {
         passwordEl.focus();
+      }
+    }
+
+    // ---------------------------------------------------------------------
+    // V2.16 : installation sur l'écran d'accueil (appli en ligne uniquement,
+    // contexte sécurisé https — rien dans la version fichier). Bandeau d'aide pour les clients
+    // peu à l'aise avec le numérique :
+    //   - Android / Chrome : bouton « Installer l'appli » (fenêtre du système) ;
+    //     si le navigateur ne la propose pas (ex. lien ouvert dans WhatsApp),
+    //     explication du menu ⋮ après 4 s ;
+    //   - iPhone / iPad : Apple n'autorise pas de bouton → explication
+    //     « Partager » puis « Sur l'écran d'accueil ».
+    // Masqué si l'appli est déjà installée ; « Plus tard » le masque 7 jours.
+    // ---------------------------------------------------------------------
+    const CLE_INSTALL_PLUS_TARD = "technizen_client_install_plus_tard";
+    const installBannerEl = document.getElementById("install-banner");
+    const installTextEl = document.getElementById("install-text");
+    const installBtnEl = document.getElementById("install-btn");
+    const installLaterEl = document.getElementById("install-later");
+    let invitationInstallation = null;
+
+    const ICONE_PARTAGER_IOS = '<svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Partager"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8"/></svg>';
+
+    function estAppliInstallee() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function estAppareilApple() {
+      return /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    }
+
+    function installationRemiseAPlusTard() {
+      try {
+        const jusqua = Number(localStorage.getItem(CLE_INSTALL_PLUS_TARD) || 0);
+        return Date.now() < jusqua;
+      } catch { return false; }
+    }
+
+    function afficherBandeauInstallation(html, avecBouton) {
+      if (estAppliInstallee() || installationRemiseAPlusTard()) return;
+      installTextEl.innerHTML = html;
+      installBtnEl.classList.toggle("hidden", !avecBouton);
+      installBannerEl.classList.remove("hidden");
+    }
+
+    function masquerBandeauInstallation() {
+      installBannerEl.classList.add("hidden");
+    }
+
+    installLaterEl.addEventListener("click", () => {
+      try { localStorage.setItem(CLE_INSTALL_PLUS_TARD, String(Date.now() + 7 * 24 * 3600 * 1000)); } catch {}
+      masquerBandeauInstallation();
+    });
+
+    installBtnEl.addEventListener("click", async () => {
+      if (!invitationInstallation) return;
+      const invitation = invitationInstallation;
+      invitationInstallation = null;
+      invitation.prompt();
+      try { await invitation.userChoice; } catch {}
+      masquerBandeauInstallation();
+    });
+
+    if (window.isSecureContext && /^https?:$/.test(location.protocol) && !estAppliInstallee()) {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      }
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        invitationInstallation = event;
+        afficherBandeauInstallation("<strong>Installez l'appli TECHNIZEN sur ce téléphone</strong> : vous la retrouverez ensuite d'un simple appui sur son icône, comme vos autres applis.", true);
+      });
+      window.addEventListener("appinstalled", masquerBandeauInstallation);
+
+      if (estAppareilApple()) {
+        afficherBandeauInstallation("<strong>Installez l'appli TECHNIZEN sur votre écran d'accueil</strong> : touchez le bouton Partager " + ICONE_PARTAGER_IOS + " (en bas ou en haut de l'écran), puis choisissez <strong>«&nbsp;Sur l'écran d'accueil&nbsp;»</strong> et touchez <strong>«&nbsp;Ajouter&nbsp;»</strong>.", false);
+      } else if (/Android/i.test(navigator.userAgent)) {
+        setTimeout(() => {
+          if (invitationInstallation || !installBannerEl.classList.contains("hidden")) return;
+          afficherBandeauInstallation("<strong>Installez l'appli TECHNIZEN sur votre écran d'accueil</strong> : touchez le menu <strong>⋮</strong> (en haut à droite), puis <strong>«&nbsp;Ajouter à l'écran d'accueil&nbsp;»</strong> ou <strong>«&nbsp;Installer l'appli&nbsp;»</strong>. Si vous ne voyez pas ce choix, touchez d'abord <strong>«&nbsp;Ouvrir dans Chrome&nbsp;»</strong>.", false);
+        }, 4000);
       }
     }
   </script>
