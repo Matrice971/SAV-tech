@@ -16,6 +16,8 @@
     --color-error-bg: #fdecec;
     --color-error-border: #f3b4b4;
     --color-error-text: #8a1f1f;
+    --color-success-text: #1a7f37;
+    --color-pending-text: #8a5a00;
     --radius: 10px;
   }
 
@@ -125,6 +127,22 @@
   input[type="text"]:focus {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
+  }
+
+  .remember-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .remember-label input {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--color-primary);
   }
 
   button {
@@ -257,6 +275,54 @@
     word-break: break-word;
   }
 
+  /* V2.13 : contrôles de la dernière visite (fait + date / en attente) */
+  .controle-liste {
+    list-style: none;
+    margin: 0.2rem 0 0;
+    padding: 0;
+  }
+
+  .controle-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.95rem;
+  }
+
+  .controle-item:last-child {
+    border-bottom: none;
+  }
+
+  .controle-icone {
+    flex: 0 0 1.2rem;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .controle-nom {
+    flex: 1 1 auto;
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .controle-etat {
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .controle-fait .controle-icone {
+    color: var(--color-success-text);
+  }
+
+  .controle-attente .controle-icone,
+  .controle-attente .controle-etat {
+    color: var(--color-pending-text);
+    font-weight: 600;
+  }
+
   .detail-caveat {
     margin: 0.3rem 0 0;
     font-size: 0.78rem;
@@ -316,6 +382,41 @@
   .detail-highlight-row-value {
     font-weight: 600;
     font-size: 0.95rem;
+  }
+
+  /* V2.14 : date limite réglementaire mise en évidence (rassure le client) */
+  .detail-limite {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    margin: 0.6rem 0 0;
+    padding: 0.6rem 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid #c9dcf9;
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius);
+  }
+
+  .detail-limite-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .detail-limite-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .detail-limite-explication {
+    margin: 0.6rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.45;
   }
 
   .detail-highlight-note {
@@ -448,6 +549,35 @@
     background: var(--color-bg);
   }
 
+  /* .link-button (display: inline-flex), déclarée après .hidden, l'emportait :
+     les boutons "masqués" restaient affichés (corrigé en V2.10). */
+  .link-button.hidden {
+    display: none;
+  }
+
+  /* V2.12 : bouton Drive toujours affiché ; sans lien Drive publié pour ce
+     client, il est grisé (non cliquable) avec une mention en dessous. */
+  .drive-action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1 1 auto;
+  }
+
+  .link-button.disabled {
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border-color: var(--color-border);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .drive-note {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
   .detail-links {
     display: flex;
     flex-direction: column;
@@ -469,7 +599,7 @@
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V2.07</span>
+      <span class="app-version">V2.15</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
@@ -486,6 +616,10 @@
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" autocomplete="current-password" required>
           </div>
+          <label class="remember-label">
+            <input type="checkbox" id="remember-me" checked>
+            Se souvenir de mon mot de passe sur cet appareil
+          </label>
           <button type="submit" id="submit-btn">Valider</button>
         </form>
       </div>
@@ -508,7 +642,11 @@
         <p id="close-message" class="close-message hidden">Vous pouvez fermer cet onglet ou cette fenêtre manuellement.</p>
       </div>
       <div id="quick-actions" class="quick-actions">
-        <a id="drive-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button hidden">Accéder à mon Drive</a>
+        <div class="drive-action">
+          <a id="drive-link" target="_blank" rel="noopener noreferrer" class="link-button disabled" aria-disabled="true">Accéder à mon Drive</a>
+          <span id="drive-note" class="drive-note">Espace Drive bientôt disponible</span>
+        </div>
+        <a id="depot-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button hidden">Déposer un document</a>
         <a id="contact-link" href="#" class="link-button hidden">Nous contacter</a>
       </div>
       <h2 id="list-title" class="screen-title"></h2>
@@ -584,6 +722,21 @@
       return LIBELLES_MATERIEL_CLIENT[type] || type;
     }
 
+    // V2.13 : libellés des contrôles publiés par bureau-app (centres_visites
+    // [centre].controles, repris des catégories de contrôle de technizen-app).
+    const LIBELLES_CONTROLE_CLIENT = {
+      "Banc (freinage/suspension/ripage/pupitre/pédomètre)": "Bancs (freinage, suspension, ripage, liaison au sol)",
+      "Sonomètre/Calibreur": "Sonomètre et calibreur",
+    };
+
+    function libelleControleClient(label) {
+      return LIBELLES_CONTROLE_CLIENT[label] || LIBELLES_MATERIEL_CLIENT[label] || label;
+    }
+
+    function controlesVisite(visite) {
+      return Array.isArray(visite.controles) ? visite.controles.filter((c) => c && c.label) : [];
+    }
+
     const screenPasswordEl = document.getElementById("screen-password");
     const screenListEl = document.getElementById("screen-list");
     const screenDetailEl = document.getElementById("screen-detail");
@@ -591,6 +744,7 @@
     const formEl = document.getElementById("password-form");
     const clientIdEl = document.getElementById("client-id");
     const passwordEl = document.getElementById("password");
+    const rememberMeEl = document.getElementById("remember-me");
     const submitBtnEl = document.getElementById("submit-btn");
     const statusEl = document.getElementById("status");
     const errorEl = document.getElementById("error");
@@ -609,7 +763,9 @@
     const closeBtnEl = document.getElementById("close-btn");
     const closeMessageEl = document.getElementById("close-message");
     const driveLinkEl = document.getElementById("drive-link");
+    const driveNoteEl = document.getElementById("drive-note");
     const contactLinkEl = document.getElementById("contact-link");
+    const depotLinkEl = document.getElementById("depot-link");
 
     const detailTitleEl = document.getElementById("detail-title");
     const detailSublineEl = document.getElementById("detail-subline");
@@ -618,6 +774,7 @@
 
     let visibleAppareils = [];
     let emailContact = null;
+    let lienDriveClient = "";
 
     function switchListTab(tab) {
       tabMaterielBtnEl.classList.toggle("active", tab === "materiel");
@@ -736,16 +893,31 @@
       return div.innerHTML;
     }
 
+    function afficherBoutonDrive(lien) {
+      if (lien) {
+        driveLinkEl.href = lien;
+        driveLinkEl.classList.remove("disabled");
+        driveLinkEl.removeAttribute("aria-disabled");
+        driveNoteEl.classList.add("hidden");
+      } else {
+        driveLinkEl.removeAttribute("href");
+        driveLinkEl.classList.add("disabled");
+        driveLinkEl.setAttribute("aria-disabled", "true");
+        driveNoteEl.classList.remove("hidden");
+      }
+    }
+
     function renderList(data) {
       emailContact = data.email_contact || null;
 
-      const driveLink = (data.appareils || []).find((a) => a.lien_drive)?.lien_drive;
-      if (driveLink) {
-        driveLinkEl.href = driveLink;
-        driveLinkEl.classList.remove("hidden");
-      } else {
-        driveLinkEl.classList.add("hidden");
-      }
+      // V2.11 : lien Drive du client publié par bureau-app dans le fichier
+      // (lien_drive), même sans réparation en cours ; à défaut (fichier publié
+      // avant bureau-app V5.14), celui d'un appareil en réparation.
+      lienDriveClient = (typeof data.lien_drive === "string" && data.lien_drive.trim())
+        || (data.appareils || []).find((a) => a.lien_drive)?.lien_drive
+        || "";
+      // V2.12 : bouton toujours affiché, grisé avec mention s'il n'y a pas de lien.
+      afficherBoutonDrive(lienDriveClient);
 
       if (emailContact) {
         const subject = `Question - ${data.contact}`;
@@ -762,18 +934,27 @@
       const centresVisites = data.centres_visites && typeof data.centres_visites === "object" ? data.centres_visites : {};
       const centreVisiteNoms = Object.keys(centresVisites);
       if (centreVisiteNoms.length > 0) {
-        centresListEl.innerHTML = centreVisiteNoms
-          .map((nom) => {
-            const visite = centresVisites[nom];
-            return `
-              <div class="card">
-                <h3 class="screen-title" style="margin-top: 0">${escapeHtml(nom)}</h3>
-                <p class="detail-value">Dernière visite : ${escapeHtml(formatDateFr(visite.derniere_visite))}</p>
-                <p class="detail-value">Prochaine visite : à partir du ${escapeHtml(formatDateFr(visite.prochaine_visite_debut))}, dernier délai légal le ${escapeHtml(formatDateFr(visite.prochaine_visite_fin))}</p>
-              </div>
-            `;
-          })
-          .join("");
+        centresListEl.innerHTML = "";
+        centreVisiteNoms.forEach((nom, index) => {
+          const visite = centresVisites[nom];
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `device-item device-item-tone-${index % 2}`;
+          const nbEnAttente = controlesVisite(visite).filter((c) => c.statut !== "fait").length;
+          const resume = visite.derniere_visite
+            ? `Dernière visite : ${escapeHtml(formatDateFr(visite.derniere_visite))}${nbEnAttente > 0 ? ` — ${nbEnAttente} contrôle${nbEnAttente > 1 ? "s" : ""} en attente` : ""}`
+            : "Aucune visite enregistrée pour le moment";
+          button.innerHTML = `
+            <div class="device-item-title">${escapeHtml(nom)}</div>
+            <div class="device-item-center">${resume}</div>
+            <div class="device-item-hint">cliquer pour voir le matériel sous contrat</div>
+          `;
+          button.addEventListener("click", () => {
+            renderCentreDetail(nom, visite);
+            showScreen("detail");
+          });
+          centresListEl.appendChild(button);
+        });
         centresListEl.classList.remove("hidden");
         centresEmptyMessageEl.classList.add("hidden");
       } else {
@@ -872,9 +1053,10 @@
 
       const links = [];
 
-      if (appareil.lien_drive) {
+      const lienDriveAppareil = lienDriveClient || appareil.lien_drive;
+      if (lienDriveAppareil) {
         links.push(
-          `<a href="${escapeHtml(appareil.lien_drive)}" target="_blank" rel="noopener noreferrer" class="link-button">Accéder à mon Drive</a>`
+          `<a href="${escapeHtml(lienDriveAppareil)}" target="_blank" rel="noopener noreferrer" class="link-button">Accéder à mon Drive</a>`
         );
       }
 
@@ -895,20 +1077,121 @@
       detailBodyEl.innerHTML = html;
     }
 
+    function renderCentreDetail(nom, visite) {
+      detailTitleEl.textContent = nom;
+      detailSublineEl.textContent = "";
+
+      let html = "";
+
+      if (visite.derniere_visite) {
+        html += `
+          <div class="detail-highlight">
+            <p class="detail-highlight-title">Contrôle semestriel</p>
+            <div class="detail-highlight-row">
+              <span class="detail-highlight-row-label">Dernière visite</span>
+              <span class="detail-highlight-row-value">${escapeHtml(formatDateFr(visite.derniere_visite))}</span>
+            </div>
+            <div class="detail-highlight-row">
+              <span class="detail-highlight-row-label">Prochaine visite</span>
+              <span class="detail-highlight-row-value">${escapeHtml(formatDateFr(visite.prochaine_visite_debut))}</span>
+            </div>
+            <div class="detail-limite">
+              <span class="detail-limite-label">Date limite</span>
+              <span class="detail-limite-value">${escapeHtml(formatDateFr(visite.prochaine_visite_fin))}</span>
+            </div>
+            <p class="detail-limite-explication">Votre prochain contrôle est prévu le <strong>${escapeHtml(formatDateFr(visite.prochaine_visite_debut))}</strong>. Nous disposons d'un délai réglementaire de 2 mois pour le réaliser, soit au plus tard le <strong>${escapeHtml(formatDateFr(visite.prochaine_visite_fin))}</strong>.</p>
+          </div>
+        `;
+      } else {
+        html += `<p class="detail-caveat">Aucune visite enregistrée pour le moment.</p>`;
+      }
+
+      const controles = visite.derniere_visite ? controlesVisite(visite) : [];
+      if (controles.length > 0) {
+        html += `<p class="detail-label">Contrôles de la dernière visite</p><ul class="controle-liste">`;
+        html += controles.map((c) => {
+          const fait = c.statut === "fait" && c.date;
+          return `<li class="controle-item ${fait ? "controle-fait" : "controle-attente"}">
+              <span class="controle-icone" aria-hidden="true">${fait ? "✓" : "⏳"}</span>
+              <span class="controle-nom">${escapeHtml(libelleControleClient(c.label))}</span>
+              <span class="controle-etat">${fait ? escapeHtml(formatDateFr(c.date)) : "en attente"}</span>
+            </li>`;
+        }).join("");
+        html += `</ul>`;
+      }
+
+      const materiels = Array.isArray(visite.materiels) ? visite.materiels : [];
+      html += `<p class="detail-label">Matériel sous contrat</p>`;
+      if (materiels.length > 0) {
+        html += materiels
+          .map((type) => `<p class="detail-value">${escapeHtml(libelleMaterielClient(type))}</p>`)
+          .join("");
+      } else {
+        html += `<p class="detail-value">Aucun matériel renseigné.</p>`;
+      }
+
+      detailBodyEl.innerHTML = html;
+    }
+
     backBtnEl.addEventListener("click", () => {
       showScreen("list");
     });
 
+    // Identifiants mémorisés (V2.09, revu en V2.10) : l'appli est distribuée
+    // comme un fichier .html enregistré sur l'appareil du client, où le
+    // gestionnaire de mots de passe du navigateur ne propose rien (pas
+    // d'enregistrement en file://). On garde donc dans le localStorage :
+    // - l'identifiant, toujours, après chaque connexion réussie (un nouvel
+    //   identifiant remplace l'ancien) ;
+    // - le mot de passe, seulement si la case est cochée, pour se reconnecter
+    //   tout seul à l'ouverture. Déconnexion n'efface que le mot de passe.
+    // localStorage peut être indisponible (navigation privée, stockage
+    // bloqué) : on ignore alors silencieusement.
+    const CLE_IDENTIFIANTS = "savtech_client_identifiants";
+
+    function lireIdentifiantsMemorises() {
+      try {
+        const brut = localStorage.getItem(CLE_IDENTIFIANTS);
+        const ids = brut ? JSON.parse(brut) : null;
+        return ids && ids.identifiant ? ids : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function ecrireIdentifiantsMemorises(ids) {
+      try {
+        localStorage.setItem(CLE_IDENTIFIANTS, JSON.stringify(ids));
+      } catch {}
+    }
+
+    function memoriserIdentifiants(identifiant, motDePasse, retenirMotDePasse) {
+      const ids = { identifiant, retenirMotDePasse };
+      if (retenirMotDePasse) ids.motDePasse = motDePasse;
+      ecrireIdentifiantsMemorises(ids);
+    }
+
+    function oublierMotDePasse() {
+      const ids = lireIdentifiantsMemorises();
+      if (!ids) return;
+      delete ids.motDePasse;
+      ecrireIdentifiantsMemorises(ids);
+    }
+
     function resetToPasswordScreen() {
       visibleAppareils = [];
       emailContact = null;
+      lienDriveClient = "";
       listTitleEl.textContent = "";
       deviceListEl.innerHTML = "";
       detailSublineEl.textContent = "";
       detailBodyEl.innerHTML = "";
-      driveLinkEl.classList.add("hidden");
+      afficherBoutonDrive("");
       contactLinkEl.classList.add("hidden");
-      clientIdEl.value = "";
+      depotLinkEl.classList.add("hidden");
+      chargementDepot++;
+      const ids = lireIdentifiantsMemorises();
+      if (ids) clientIdEl.value = ids.identifiant;
       passwordEl.value = "";
       hideError();
       hideStatus();
@@ -917,7 +1200,10 @@
       showScreen("password");
     }
 
-    logoutBtnEl.addEventListener("click", resetToPasswordScreen);
+    logoutBtnEl.addEventListener("click", () => {
+      oublierMotDePasse();
+      resetToPasswordScreen();
+    });
 
     closeBtnEl.addEventListener("click", () => {
       window.close();
@@ -927,11 +1213,15 @@
       }, 300);
     });
 
-    formEl.addEventListener("submit", async (event) => {
+    formEl.addEventListener("submit", (event) => {
       event.preventDefault();
+      seConnecter(false);
+    });
+
+    async function seConnecter(automatique) {
       hideError();
       submitBtnEl.disabled = true;
-      showStatus("Récupération du fichier…");
+      showStatus(automatique ? "Connexion automatique…" : "Récupération du fichier…");
 
       try {
         const slug = slugify(clientIdEl.value.trim());
@@ -971,16 +1261,60 @@
           throw { userMessage: "Les données déchiffrées sont invalides." };
         }
 
+        memoriserIdentifiants(clientIdEl.value.trim(), passwordEl.value, rememberMeEl.checked);
+
         hideStatus();
         renderList(data);
         showScreen("list");
+        chargerLienDepot();
       } catch (err) {
         hideStatus();
-        showError(err && err.userMessage ? err.userMessage : "Une erreur inattendue est survenue.");
+        let message = err && err.userMessage ? err.userMessage : "Une erreur inattendue est survenue.";
+        if (automatique) {
+          message = "La connexion automatique a échoué : " + message + " Vérifiez vos identifiants puis cliquez sur Valider.";
+        }
+        showError(message);
       } finally {
         submitBtnEl.disabled = false;
       }
-    });
+    }
+
+    // Lien du dépôt de documents (V2.10) : commun à tous les clients, publié
+    // par bureau-app dans un fichier NON chiffré data/clients/_commun.txt
+    // ({ "lien_depot": "https://..." }). Lu après chaque connexion réussie ;
+    // absent ou illisible → bouton masqué, sans message. chargementDepot
+    // écarte une réponse arrivée après une déconnexion.
+    let chargementDepot = 0;
+
+    async function chargerLienDepot() {
+      const numero = ++chargementDepot;
+      depotLinkEl.classList.add("hidden");
+      try {
+        const response = await fetch(`${FILE_BASE_URL}/_commun.txt`, { cache: "no-store" });
+        if (!response.ok) return;
+        const commun = JSON.parse(await response.text());
+        const lien = commun && typeof commun.lien_depot === "string" ? commun.lien_depot.trim() : "";
+        if (numero !== chargementDepot || !/^https:\/\//i.test(lien)) return;
+        depotLinkEl.href = lien;
+        depotLinkEl.classList.remove("hidden");
+      } catch {}
+    }
+
+    // À l'ouverture : identifiant mémorisé → pré-rempli ; mot de passe aussi
+    // mémorisé → connexion automatique. En cas d'échec, l'écran de connexion
+    // reste affiché avec les champs pré-remplis (la mémoire n'est remplacée
+    // qu'à la prochaine connexion réussie).
+    const identifiantsMemorises = lireIdentifiantsMemorises();
+    if (identifiantsMemorises) {
+      clientIdEl.value = identifiantsMemorises.identifiant;
+      rememberMeEl.checked = identifiantsMemorises.retenirMotDePasse !== false;
+      if (identifiantsMemorises.motDePasse) {
+        passwordEl.value = identifiantsMemorises.motDePasse;
+        seConnecter(true);
+      } else {
+        passwordEl.focus();
+      }
+    }
   </script>
 </body>
 </html>
