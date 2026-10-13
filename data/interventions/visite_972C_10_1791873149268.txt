@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "9 Sécurité",
+  "date_validation": "2026-10-13"
+}
