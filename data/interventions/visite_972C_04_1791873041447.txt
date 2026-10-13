@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "3C Auto Controle",
+  "date_validation": "2026-10-13"
+}
