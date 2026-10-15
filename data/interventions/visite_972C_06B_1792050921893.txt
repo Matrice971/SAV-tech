@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "DEKRA Long Pré",
+  "date_validation": "2026-10-15"
+}
