@@ -1,0 +1,22 @@
+{
+  "centre": "SARL Auto Contrôle Lamentin",
+  "centre_numero": "971C.05",
+  "client_adresse": "BELLEVUE DARRAS, 97129 LE LAMENTIN",
+  "contact": "PERSANIE",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24214"
+  },
+  "etat": 1,
+  "date": "2026-10-19",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement sonde O2",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "Blombage a refaire",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-SARLAutoControleLamentin-191026.pdf",
+  "pieces_montees": [
+    "Sonde O2 rzlzdyne n'312221 k5"
+  ]
+}
