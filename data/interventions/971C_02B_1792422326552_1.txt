@@ -1,0 +1,20 @@
+{
+  "centre": "Bilan Auto Pointe Noire",
+  "centre_numero": "971C.02B",
+  "client_adresse": "MAHAULT, 97116 POINTE NOIRE",
+  "contact": "BUREAU Mickael",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24426"
+  },
+  "etat": 2,
+  "date": "2026-10-19",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Reparametrage bios\n\nPile cr2032 hs a remplacer",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "Prevoir pile avec support",
+  "commentaire_bureau": "Pile",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-BilanAutoPointeNoire-191026.pdf",
+  "pieces_montees": []
+}
