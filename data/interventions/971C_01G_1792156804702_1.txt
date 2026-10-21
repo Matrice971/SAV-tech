@@ -1,0 +1,22 @@
+{
+  "centre": "BUREAU CE SARL",
+  "centre_numero": "971C.01G",
+  "client_adresse": "Route des Abymes, 97139 ABYMES",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "26982"
+  },
+  "etat": 1,
+  "date": "2026-10-16",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEM%ENT SONDE DE PRELEVEMENT OPACIMETRE",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-BUREAUCESARL-26982-161026.pdf",
+  "pieces_montees": [
+    "SONDE OPACIMETRE"
+  ]
+}
