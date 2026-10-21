@@ -1,0 +1,22 @@
+{
+  "centre": "MONTAUBAN Auto Contrôle",
+  "centre_numero": "971C.08",
+  "client_adresse": "ROUTE DE MONTAUBAN, 97190 LE GOSIER",
+  "contact": "SAME",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "25290"
+  },
+  "etat": 1,
+  "date": "2026-10-16",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT TUYAU GAZ HS",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-MONTAUBANAutoControle-161026.pdf",
+  "pieces_montees": [
+    "TUYUAU"
+  ]
+}
