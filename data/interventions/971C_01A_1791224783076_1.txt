@@ -1,0 +1,22 @@
+{
+  "centre": "ACT Bas du Fort",
+  "centre_numero": "971C.01A",
+  "client_adresse": "BAS DU FORT, 97190 LE GOSIER",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "00619"
+  },
+  "etat": 1,
+  "date": "2026-10-05",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT CABLE RJ45",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-ACTBasduFort-051026.pdf",
+  "pieces_montees": [
+    "CABLE RJ45 10M"
+  ]
+}
