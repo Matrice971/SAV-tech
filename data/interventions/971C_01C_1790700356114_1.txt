@@ -1,0 +1,22 @@
+{
+  "centre": "ACT la JAILLE",
+  "centre_numero": "971C.01C",
+  "client_adresse": "LA JAILLE, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "34339"
+  },
+  "etat": 1,
+  "date": "2026-09-29",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT SONDE\nTEST OK",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-ACTlaJAILLE-290926.pdf",
+  "pieces_montees": [
+    "SONDE DE PRELEVEMENT OPACIMETRE"
+  ]
+}
