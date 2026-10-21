@@ -1,0 +1,23 @@
+{
+  "centre": "DEKRA Saint François",
+  "centre_numero": "971C.07B",
+  "client_adresse": "80 Rue du Général de Gaulle, 97118 SAINT FRANCOIS",
+  "contact": "QUILLIN Maël",
+  "materiel": {
+    "type": "Pont",
+    "num_serie": "0450"
+  },
+  "etat": 1,
+  "date": "2026-09-14",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT CARTE CPU ET ELECTROVANNE AIR\nREGLAGEINFRA ROUGE DE SECURITE",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-DEKRASaintFrancois-140926.pdf",
+  "pieces_montees": [
+    "CARTE CPU PONT",
+    "ELECTROVANNE AIR PONT"
+  ]
+}
