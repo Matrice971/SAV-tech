@@ -1,0 +1,22 @@
+{
+  "centre": "Bilan Auto Pointe Noire",
+  "centre_numero": "971C.02B",
+  "client_adresse": "MAHAULT, 97116 POINTE NOIRE",
+  "contact": "BUREAU Mickael",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24426"
+  },
+  "etat": 1,
+  "date": "2026-09-25",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT CELLULE GAZ LE 11 MAI 2026 SUITE MAUVAISE MESURE\nETALONNAGE\nREALISATION PRIMITIVE A LA DATE DE REPARATION\nTEST OK",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-BilanAutoPointeNoire-250926.pdf",
+  "pieces_montees": [
+    "CELLULE DE MESURE"
+  ]
+}
