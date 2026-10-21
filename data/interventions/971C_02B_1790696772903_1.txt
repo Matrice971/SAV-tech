@@ -1,0 +1,22 @@
+{
+  "centre": "Bilan Auto Pointe Noire",
+  "centre_numero": "971C.02B",
+  "client_adresse": "MAHAULT, 97116 POINTE NOIRE",
+  "contact": "BUREAU Mickael",
+  "materiel": {
+    "type": "OBD",
+    "num_serie": "51886"
+  },
+  "etat": 1,
+  "date": "2026-09-29",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT ALIMENTATION TEST\n\nTEST OK",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-BilanAutoPointeNoire-290926.pdf",
+  "pieces_montees": [
+    "ALIMENTATION TEST BOUCLE CAP"
+  ]
+}
