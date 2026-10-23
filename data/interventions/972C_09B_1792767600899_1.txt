@@ -1,0 +1,25 @@
+{
+  "centre": "JS Contrôle",
+  "centre_numero": "972C.09B",
+  "client_adresse": "Quartier Saint-Jacques Pont Béni, 97230 SAINTE-MARIE",
+  "contact": "SEBAREC Guy-Albert",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "28877"
+  },
+  "etat": 2,
+  "date": "2026-10-23",
+  "pieces_a_prevoir": [
+    {
+      "designation": "Suooprt sonde O2 pour cap3010",
+      "quantite": 1
+    }
+  ],
+  "commentaire_technicien": "Support sonde O2 fissuré\n\nTuyaux de prelevement gaz fissurer a plusieurs endroit",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "Tuyaux de prelevement gaz en mauvais etat",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JSControle-231026.pdf",
+  "pieces_montees": []
+}
