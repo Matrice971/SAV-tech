@@ -1,0 +1,22 @@
+{
+  "centre": "JS Contrôle",
+  "centre_numero": "972C.09B",
+  "client_adresse": "Quartier Saint-Jacques Pont Béni, 97230 SAINTE-MARIE",
+  "contact": "SEBAREC Guy-Albert",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "28877"
+  },
+  "etat": 3,
+  "date": "2026-10-24",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Support sonde O2\n\nPas de teste realisée",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "Plombage a  refaire",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JSControle-241026.pdf",
+  "pieces_montees": [
+    "Support sonde O2"
+  ]
+}
