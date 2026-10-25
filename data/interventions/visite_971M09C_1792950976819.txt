@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "Auto Contrôle Plus",
+  "date_validation": "2026-10-25"
+}
