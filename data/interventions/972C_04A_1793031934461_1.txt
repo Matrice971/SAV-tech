@@ -1,0 +1,22 @@
+{
+  "centre": "DEKRA Pont de Chaîne",
+  "centre_numero": "972C.04A",
+  "client_adresse": "Pont de Chaîne, 97200 FORT DE FRANCE",
+  "contact": "LAMEYNARDIE Marc",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "35254"
+  },
+  "etat": 3,
+  "date": "2026-10-26",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Livraison et mose en service sonde de prelevement opa",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-DEKRAPontdeChaine-261026.pdf",
+  "pieces_montees": [
+    "Sonde de prélèvement cap3030"
+  ]
+}
