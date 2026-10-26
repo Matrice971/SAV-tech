@@ -1,0 +1,20 @@
+{
+  "centre": "DEKRA Long Pré",
+  "centre_numero": "972C.06B",
+  "client_adresse": "Immeuble Landy Long Pré, 97232 LE LAMENTIN",
+  "contact": "LAMEYNARDIE Marc",
+  "materiel": {
+    "type": "Pont",
+    "num_serie": "221027"
+  },
+  "etat": 2,
+  "date": "2026-10-26",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Ne monte pas part moment\n\nIl faut appuyer sur la securité pour commencer la monter , mais au dela d’un metre le fonctionnement est normal",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-DEKRALongPre-261026.pdf",
+  "pieces_montees": []
+}
