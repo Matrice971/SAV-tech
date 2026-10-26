@@ -1,0 +1,20 @@
+{
+  "centre": "3C Auto Controle",
+  "centre_numero": "972C.04",
+  "client_adresse": "Ancienne Route de SCHOELCHER, 97233 SCHOELCHER",
+  "contact": "COUPIN Carl",
+  "materiel": {
+    "type": "OBD",
+    "num_serie": "35457"
+  },
+  "etat": 3,
+  "date": "2026-10-26",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Fixation carte de commu ication bleutooth",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-3CAutoControle-261026.pdf",
+  "pieces_montees": []
+}
