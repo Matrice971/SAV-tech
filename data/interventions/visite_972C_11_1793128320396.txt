@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "Contrôle Technique LARI",
+  "date_validation": "2026-10-27"
+}
