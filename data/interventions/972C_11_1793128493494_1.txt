@@ -1,0 +1,21 @@
+{
+  "centre": "Contrôle Technique LARI",
+  "centre_numero": "972C.11",
+  "client_adresse": "4 Route du Stade Petit-Bourg, 97215 RIVIERE SALE",
+  "contact": "LARI",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "21277"
+  },
+  "etat": 3,
+  "date": "2026-10-27",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Mise en service et semestrielleanalysuer",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ControleTechniqueLARI-271026.pdf",
+  "pieces_montees": [],
+  "materiel_recupere_num_serie": "47952"
+}
