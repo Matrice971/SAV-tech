@@ -1,0 +1,22 @@
+{
+  "centre": "EURL Caraïb Contrôle",
+  "centre_numero": "972C.07",
+  "client_adresse": "Rue Saint-Louis Quartier le Galère, 97250 SAINT-PIERRE",
+  "contact": "ARNAUD André Mickaël",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "10721"
+  },
+  "etat": 3,
+  "date": "2026-10-28",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement sonde O2",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-EURLCaraibControle-281026.pdf",
+  "pieces_montees": [
+    "Sonde O2 teledyne SN': 279036"
+  ]
+}
