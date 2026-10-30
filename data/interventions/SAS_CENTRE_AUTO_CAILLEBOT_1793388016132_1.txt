@@ -1,0 +1,21 @@
+{
+  "centre": "SAS CENTRE AUTO CAILLEBOT",
+  "centre_numero": null,
+  "client_adresse": "LA BAIE, 97160 MOULE",
+  "contact": null,
+  "materiel": {
+    "type": "CELEROMETRE CAP3010",
+    "num_serie": "01497"
+  },
+  "etat": 1,
+  "date": "2026-10-30",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "ETALONNAGE SEMESTRIEL\nRAPPORT IMPRIME",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv_HC-SASCentreAutoCaillebot-301026.pdf",
+  "pieces_montees": [],
+  "hors_contrat": true
+}
