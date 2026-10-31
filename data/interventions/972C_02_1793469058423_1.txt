@@ -1,0 +1,23 @@
+{
+  "centre": "Contrôle Auto DURIVAGE",
+  "centre_numero": "972C.02",
+  "client_adresse": "ROUTE DE GRANDE SAVANE, 97224 DUCOS",
+  "contact": "BERGER",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "13840"
+  },
+  "etat": 3,
+  "date": "2026-10-31",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Livraison cordon obd et tuyaux analyseur",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ControleAutoDURIVAGE-311026.pdf",
+  "pieces_montees": [
+    "Tuyau pour Analyseur de gaz cap3010",
+    "Cordon pour cap4250"
+  ]
+}
