@@ -1,0 +1,22 @@
+{
+  "centre": "CTA SEZE Contrôle",
+  "centre_numero": "971M.06",
+  "client_adresse": "RAIZINS CLAIRS, 97118 SAINT FRANCOIS",
+  "contact": "MASTAKAN Gille",
+  "materiel": {
+    "type": "Pupitre",
+    "num_serie": "2418"
+  },
+  "etat": 1,
+  "date": "2026-11-03",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT ORDINATEUR DU PUPITRE\nREMISE EN PLACE DES DONEES\nTEST OK",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-CTASEZEControle-031126.pdf",
+  "pieces_montees": [
+    "PC"
+  ]
+}
