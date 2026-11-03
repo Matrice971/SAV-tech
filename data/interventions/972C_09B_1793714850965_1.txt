@@ -1,0 +1,22 @@
+{
+  "centre": "JS Contrôle",
+  "centre_numero": "972C.09B",
+  "client_adresse": "Quartier Saint-Jacques Pont Béni, 97230 SAINTE-MARIE",
+  "contact": "SEBAREC Guy-Albert",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "28877"
+  },
+  "etat": 3,
+  "date": "2026-11-03",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Renplacement sonde de prelevement\n\nPrecedente sonde prise en stock en seprembre defectueuse. ,",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "Ancienne sonde pas encore facturé.",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JSControle-031126.pdf",
+  "pieces_montees": [
+    "Sonde de prélèvement  pour CAP3010"
+  ]
+}
