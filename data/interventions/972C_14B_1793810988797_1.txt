@@ -1,0 +1,26 @@
+{
+  "centre": "François Auto Controle (f.)",
+  "centre_numero": "972C.14B",
+  "client_adresse": "Z.A. de Trianon, 97240 LE FRANCOIS",
+  "contact": "José NICOLE",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "27664"
+  },
+  "etat": 2,
+  "date": "2026-11-04",
+  "pieces_a_prevoir": [
+    {
+      "designation": "Capteur de pression absolue",
+      "quantite": 1
+    }
+  ],
+  "commentaire_technicien": "Prise en charge pour reparation , pret de materiel",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-FrancoisAutoControle-f-041126.pdf",
+  "pieces_montees": [],
+  "materiel_prete_num_serie": "47952"
+}
