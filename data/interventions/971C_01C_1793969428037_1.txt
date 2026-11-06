@@ -1,0 +1,20 @@
+{
+  "centre": "ACT la JAILLE",
+  "centre_numero": "971C.01C",
+  "client_adresse": "LA JAILLE, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "OBD",
+    "num_serie": "51888"
+  },
+  "etat": 1,
+  "date": "2026-11-06",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "REMPLACEMENT PAR OBD N° 51397\nINSTALLATION ET TEST DE CONTINUITEE\n OK\n\nAPPAREIL FOURNIT PAR LE CLIENT",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-ACTlaJAILLE-51888-061126.pdf",
+  "pieces_montees": []
+}
