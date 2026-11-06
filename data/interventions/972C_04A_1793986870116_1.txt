@@ -1,0 +1,22 @@
+{
+  "centre": "DEKRA Pont de Chaîne",
+  "centre_numero": "972C.04A",
+  "client_adresse": "Pont de Chaîne, 97200 FORT DE FRANCE",
+  "contact": "LAMEYNARDIE Marc",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "40151"
+  },
+  "etat": 3,
+  "date": "2026-11-06",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement bol decanteue",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-DEKRAPontdeChaine-061126.pdf",
+  "pieces_montees": [
+    "Filtre décanteur CAPELEC pour. Ap3010"
+  ]
+}
