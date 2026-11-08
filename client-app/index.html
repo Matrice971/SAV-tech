@@ -654,7 +654,7 @@
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V2.16</span>
+      <span class="app-version">V2.17</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
@@ -985,7 +985,7 @@
       if (emailContact) {
         const subject = `Question - ${data.contact}`;
         const body = "Bonjour, j'ai une question concernant le suivi de mon matériel :";
-        contactLinkEl.href = `mailto:contact.technizen@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        contactLinkEl.href = `mailto:contact.technizen@ikmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         contactLinkEl.classList.remove("hidden");
       } else {
         contactLinkEl.classList.add("hidden");
@@ -1129,7 +1129,7 @@
         const body =
           `Bonjour, j'ai une question concernant la réparation de mon matériel ${libelleMateriel} ` +
           `(n° série ${appareil.num_serie}) situé à ${appareil.centre_origine} :`;
-        const mailtoUrl = `mailto:contact.technizen@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailtoUrl = `mailto:contact.technizen@ikmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         links.push(`<a href="${escapeHtml(mailtoUrl)}" class="link-button">Un commentaire ou une question sur cette réparation ?</a>`);
       }
 
