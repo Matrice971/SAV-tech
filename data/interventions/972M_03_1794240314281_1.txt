@@ -1,0 +1,23 @@
+{
+  "centre": "JP Contrôle",
+  "centre_numero": "972M.03",
+  "client_adresse": "Fond d'Or, 97224 DUCOS",
+  "contact": "PELOPONESE Corrine",
+  "materiel": {
+    "type": "Pupitre",
+    "num_serie": "1787"
+  },
+  "etat": 1,
+  "date": "2026-11-09",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Reparation et mise en service PC xg vl\n\nUC mise a disposition du client en attendant la réparation de sien",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JPControle-091126.pdf",
+  "pieces_montees": [
+    "Support pile cr2032",
+    "Pile cr2032"
+  ]
+}
