@@ -1,0 +1,5 @@
+{
+  "type": "visite_complete",
+  "centre_nom": "DEKRA Saint François",
+  "date_validation": "2026-11-12"
+}
