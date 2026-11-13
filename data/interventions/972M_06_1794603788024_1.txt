@@ -1,0 +1,22 @@
+{
+  "centre": "SUD Contrôle Auto",
+  "centre_numero": "972M.06",
+  "client_adresse": "285 Z.A. l'Espérance, 97215 RIVIERE SALE",
+  "contact": "TOZE Thomi",
+  "materiel": {
+    "type": "Suspension",
+    "num_serie": "104"
+  },
+  "etat": 3,
+  "date": "2026-11-13",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Rempl1cement 3 lame de suspension",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-SUDControleAuto-131126.pdf",
+  "pieces_montees": [
+    "Lame de suspension muller"
+  ]
+}
