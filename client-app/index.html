@@ -648,13 +648,166 @@
       margin: 1rem 1rem 0;
     }
   }
+
+  /* V3.00 : écran unique — matériel sous contrat rangé par centre */
+  .demo-banner {
+    background: #fff4d6;
+    border: 1px solid #f0c96b;
+    color: #6b4a00;
+    border-radius: var(--radius);
+    padding: 0.6rem 0.85rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  .centre-bloc { margin-top: 1.1rem; }
+  .centre-entete {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+    row-gap: 0.15rem;
+    width: 100%;
+    text-align: left;
+    background: #1a3a5c;
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+  }
+  .centre-entete:hover { background: #22496f; }
+  .centre-entete.is-fixe { cursor: default; }
+  .centre-entete.is-fixe:hover { background: #1a3a5c; }
+  .centre-fleche { display: inline-block; width: 1em; }
+  /* V3.01 : nom du centre et prochaine visite côte à côte, la date passe
+     dessous si l'écran est trop étroit ; le compte d'appareils en 2e ligne. */
+  .centre-nom { flex: 1 1 auto; font-weight: 700; }
+  .centre-prochaine { font-size: 0.85rem; font-weight: 600; color: #bfe3ff; white-space: nowrap; margin-left: auto; }
+  .centre-compte { flex: 1 0 100%; padding-left: 1.5rem; font-size: 0.8rem; font-weight: 400; opacity: 0.85; }
+  .centre-entete.is-fixe .centre-compte { padding-left: 1.6rem; }
+  .centre-bloc.is-replie .centre-contenu { display: none; }
+  .centre-visite {
+    display: inline-block;
+    width: auto;
+    background: transparent;
+    color: var(--color-primary);
+    border: none;
+    padding: 0.35rem 0.1rem 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .centre-visite:hover { background: transparent; text-decoration: underline; }
+  .appareil-visite { margin-top: 0.3rem; font-size: 0.88rem; color: var(--color-text); }
+  .appareil-visite.is-attente { color: var(--color-pending-text); font-weight: 600; }
+  .appareil-visite.is-inconnue { color: var(--color-text-muted); font-style: italic; }
+  .list-tab-badge { display: inline-block; min-width: 1.4em; padding: 0 0.35em; margin-left: 0.3rem; border-radius: 999px; background: #f0c96b; color: #4a3300; font-size: 0.8rem; }
+  .list-tab-btn.active .list-tab-badge { background: #fff; color: var(--color-primary); }
+  .reparation-carte { display: block; width: 100%; text-align: left; background: var(--color-surface); color: inherit; font: inherit; border: 1px solid var(--color-border); border-radius: var(--radius); padding: 0.85rem 1rem; margin-top: 0.6rem; cursor: pointer; }
+  .reparation-carte:hover { background: #f6f8fb; border-color: var(--color-primary); }
+  .reparation-carte.is-en-cours { border-color: #f0c96b; }
+  .reparation-centre { color: var(--color-text-muted); font-size: 0.85rem; }
+  .reparation-titre-groupe { margin: 1.1rem 0 0; font-size: 0.95rem; color: var(--color-text-muted); }
+  .appareil-carte {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin-top: 0.6rem;
+    overflow: hidden;
+  }
+  .appareil-carte.is-reparation { border-color: #f0c96b; }
+  .appareil-infos {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    border: none;
+    border-radius: 0;
+    padding: 0.85rem 1rem 0.5rem;
+    cursor: default;
+  }
+  .appareil-infos:hover { background: transparent; }
+  .appareil-infos.is-cliquable { cursor: pointer; }
+  .appareil-infos.is-cliquable:hover { background: #f6f8fb; }
+  .appareil-nom { font-weight: 600; }
+  .appareil-serie { color: var(--color-text-muted); font-size: 0.85rem; }
+  .appareil-etat { margin-top: 0.3rem; font-size: 0.88rem; font-weight: 600; }
+  .appareil-etat.etat-service { color: var(--color-success-text); }
+  .appareil-etat.etat-reparation { color: var(--color-pending-text); }
+  .appareil-etat-detail { display: block; font-weight: 400; color: var(--color-text-muted); font-size: 0.82rem; }
+  .appareil-actions { padding: 0 1rem 0.85rem; }
+  .appareil-actions button { width: 100%; font-size: 0.95rem; padding: 0.6rem 0.8rem; }
+
+  /* Fenêtre « Demander une intervention » */
+  .modal-fond {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+    z-index: 50;
+  }
+  .modal-fond.hidden { display: none; }
+  .modal-boite {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.1rem 1rem;
+    width: 100%;
+    max-width: 520px;
+    margin-top: 1.5rem;
+  }
+  .modal-boite h2 { margin: 0 0 0.25rem; font-size: 1.1rem; }
+  .demande-appareil { color: var(--color-text-muted); font-size: 0.9rem; margin: 0 0 0.75rem; }
+  .demande-question { font-size: 0.9rem; font-weight: 600; margin: 0.8rem 0 0.35rem; color: var(--color-text); }
+  .choix-groupe { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .choix-groupe label {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.55rem 0.7rem;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .choix-groupe label:has(input:checked) { border-color: var(--color-primary); background: #eaf1fe; }
+  .choix-groupe input { accent-color: var(--color-primary); margin: 0; }
+  .modal-boite textarea,
+  .modal-boite input[type="tel"],
+  .modal-boite input[type="text"] {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .modal-boite textarea { min-height: 5.5rem; resize: vertical; }
+  .demande-erreur { color: var(--color-error-text); font-size: 0.88rem; margin: 0.6rem 0 0; }
+  .modal-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+  .modal-actions button { flex: 1 1 auto; }
+  .demande-confirmation p { margin: 0.4rem 0; }
+  .demande-apercu {
+    white-space: pre-wrap;
+    background: #f5f6f8;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+  }
 </style>
 </head>
 <body>
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V2.17</span>
+      <span class="app-version">V3.01</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
@@ -712,20 +865,20 @@
         <a id="depot-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button hidden">Déposer un document</a>
         <a id="contact-link" href="#" class="link-button hidden">Nous contacter</a>
       </div>
+      <div id="demo-banner" class="demo-banner hidden">🧪 <strong>Mode démonstration</strong> : client et matériel fictifs. Aucune demande n'est réellement envoyée.</div>
       <h2 id="list-title" class="screen-title"></h2>
+      <!-- V3.01 : Mon matériel (rangé par centre) | Réparations -->
       <div class="list-tabs">
         <button type="button" id="tab-materiel-btn" class="list-tab-btn active">Mon matériel</button>
-        <button type="button" id="tab-centres-btn" class="list-tab-btn">Mes centres</button>
+        <button type="button" id="tab-reparations-btn" class="list-tab-btn">Réparations<span id="tab-reparations-badge" class="list-tab-badge hidden"></span></button>
       </div>
-
       <div id="tab-panel-materiel">
-        <ul id="device-list" class="device-list"></ul>
-        <p id="empty-message" class="empty-message hidden">Aucun matériel actuellement en réparation.</p>
+        <div id="parc-list"></div>
+        <p id="empty-message" class="empty-message hidden">Aucun matériel sous contrat renseigné pour le moment.</p>
       </div>
-
-      <div id="tab-panel-centres" class="hidden">
-        <div id="centres-list"></div>
-        <p id="centres-empty-message" class="empty-message hidden">Aucune visite programmée pour le moment</p>
+      <div id="tab-panel-reparations" class="hidden">
+        <div id="reparations-list"></div>
+        <p id="reparations-empty-message" class="empty-message hidden">Aucun matériel en réparation actuellement.</p>
       </div>
     </div>
 
@@ -738,6 +891,54 @@
       </div>
     </div>
   </main>
+
+  <!-- V3.00 : demande d'intervention sur un appareil -->
+  <div id="demande-fond" class="modal-fond hidden" role="dialog" aria-modal="true" aria-labelledby="demande-titre">
+    <div class="modal-boite">
+      <div id="demande-formulaire">
+        <h2 id="demande-titre">🛠 Demander une intervention</h2>
+        <p id="demande-appareil" class="demande-appareil"></p>
+
+        <p class="demande-question">Que se passe-t-il ?</p>
+        <div class="choix-groupe">
+          <label><input type="radio" name="demande-motif" value="En panne"> En panne</label>
+          <label><input type="radio" name="demande-motif" value="Fonctionne mal"> Fonctionne mal</label>
+          <label><input type="radio" name="demande-motif" value="Autre"> Autre</label>
+        </div>
+
+        <p class="demande-question">L'appareil bloque-t-il votre activité ?</p>
+        <div class="choix-groupe">
+          <label><input type="radio" name="demande-bloquant" value="Oui"> Oui, c'est bloquant</label>
+          <label><input type="radio" name="demande-bloquant" value="Non"> Non</label>
+        </div>
+
+        <p class="demande-question"><label for="demande-description">Décrivez le problème</label></p>
+        <textarea id="demande-description" placeholder="Ex. : message d'erreur à l'allumage, mesure instable…"></textarea>
+
+        <p class="demande-question"><label for="demande-nom">Votre nom</label></p>
+        <input type="text" id="demande-nom" autocomplete="name">
+
+        <p class="demande-question"><label for="demande-telephone">Téléphone pour vous rappeler</label></p>
+        <input type="tel" id="demande-telephone" autocomplete="tel" placeholder="0690 00 00 00">
+
+        <p id="demande-erreur" class="demande-erreur hidden"></p>
+        <div class="modal-actions">
+          <button type="button" id="demande-annuler" class="button-secondary">Annuler</button>
+          <button type="button" id="demande-envoyer">📧 Envoyer la demande</button>
+        </div>
+      </div>
+
+      <div id="demande-confirmation" class="demande-confirmation hidden">
+        <h2>✅ Demande prête</h2>
+        <p id="demande-confirmation-texte"></p>
+        <div id="demande-apercu" class="demande-apercu hidden"></div>
+        <div class="modal-actions">
+          <a id="demande-rouvrir" class="link-button" href="#">Rouvrir le mail</a>
+          <button type="button" id="demande-fermer">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer>SAV-tech — Suivi de réparation</footer>
 
@@ -814,14 +1015,26 @@
     const errorMessageEl = document.getElementById("error-message");
 
     const listTitleEl = document.getElementById("list-title");
-    const tabMaterielBtnEl = document.getElementById("tab-materiel-btn");
-    const tabCentresBtnEl = document.getElementById("tab-centres-btn");
-    const tabPanelMaterielEl = document.getElementById("tab-panel-materiel");
-    const tabPanelCentresEl = document.getElementById("tab-panel-centres");
-    const centresListEl = document.getElementById("centres-list");
-    const centresEmptyMessageEl = document.getElementById("centres-empty-message");
-    const deviceListEl = document.getElementById("device-list");
+    const parcListEl = document.getElementById("parc-list");
+    const demoBannerEl = document.getElementById("demo-banner");
     const emptyMessageEl = document.getElementById("empty-message");
+    const tabMaterielBtnEl = document.getElementById("tab-materiel-btn");
+    const tabReparationsBtnEl = document.getElementById("tab-reparations-btn");
+    const tabReparationsBadgeEl = document.getElementById("tab-reparations-badge");
+    const tabPanelMaterielEl = document.getElementById("tab-panel-materiel");
+    const tabPanelReparationsEl = document.getElementById("tab-panel-reparations");
+    const reparationsListEl = document.getElementById("reparations-list");
+    const reparationsEmptyMessageEl = document.getElementById("reparations-empty-message");
+
+    function switchListTab(tab) {
+      tabMaterielBtnEl.classList.toggle("active", tab === "materiel");
+      tabReparationsBtnEl.classList.toggle("active", tab === "reparations");
+      tabPanelMaterielEl.classList.toggle("hidden", tab !== "materiel");
+      tabPanelReparationsEl.classList.toggle("hidden", tab !== "reparations");
+    }
+
+    tabMaterielBtnEl.addEventListener("click", () => switchListTab("materiel"));
+    tabReparationsBtnEl.addEventListener("click", () => switchListTab("reparations"));
     const logoutBtnEl = document.getElementById("logout-btn");
     const closeBtnEl = document.getElementById("close-btn");
     const closeMessageEl = document.getElementById("close-message");
@@ -838,16 +1051,11 @@
     let visibleAppareils = [];
     let emailContact = null;
     let lienDriveClient = "";
-
-    function switchListTab(tab) {
-      tabMaterielBtnEl.classList.toggle("active", tab === "materiel");
-      tabCentresBtnEl.classList.toggle("active", tab === "centres");
-      tabPanelMaterielEl.classList.toggle("hidden", tab !== "materiel");
-      tabPanelCentresEl.classList.toggle("hidden", tab !== "centres");
-    }
-
-    tabMaterielBtnEl.addEventListener("click", () => switchListTab("materiel"));
-    tabCentresBtnEl.addEventListener("click", () => switchListTab("centres"));
+    let contactClient = "";
+    let modeDemo = false;
+    // V3.01 : avec plusieurs centres, tous sont repliés à l'ouverture ; ceux
+    // que le client déplie le restent pendant la session seulement.
+    const centresDeplies = new Set();
 
     function showScreen(screen) {
       screenPasswordEl.classList.toggle("hidden", screen !== "password");
@@ -992,64 +1200,435 @@
       }
 
       listTitleEl.textContent = `Bonjour ${data.contact}`;
-      switchListTab("materiel");
-
-      const centresVisites = data.centres_visites && typeof data.centres_visites === "object" ? data.centres_visites : {};
-      const centreVisiteNoms = Object.keys(centresVisites);
-      if (centreVisiteNoms.length > 0) {
-        centresListEl.innerHTML = "";
-        centreVisiteNoms.forEach((nom, index) => {
-          const visite = centresVisites[nom];
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = `device-item device-item-tone-${index % 2}`;
-          const nbEnAttente = controlesVisite(visite).filter((c) => c.statut !== "fait").length;
-          const resume = visite.derniere_visite
-            ? `Dernière visite : ${escapeHtml(formatDateFr(visite.derniere_visite))}${nbEnAttente > 0 ? ` — ${nbEnAttente} contrôle${nbEnAttente > 1 ? "s" : ""} en attente` : ""}`
-            : "Aucune visite enregistrée pour le moment";
-          button.innerHTML = `
-            <div class="device-item-title">${escapeHtml(nom)}</div>
-            <div class="device-item-center">${resume}</div>
-            <div class="device-item-hint">cliquer pour voir le matériel sous contrat</div>
-          `;
-          button.addEventListener("click", () => {
-            renderCentreDetail(nom, visite);
-            showScreen("detail");
-          });
-          centresListEl.appendChild(button);
-        });
-        centresListEl.classList.remove("hidden");
-        centresEmptyMessageEl.classList.add("hidden");
-      } else {
-        centresListEl.innerHTML = "";
-        centresListEl.classList.add("hidden");
-        centresEmptyMessageEl.classList.remove("hidden");
-      }
-
+      contactClient = data.contact || "";
       visibleAppareils = (data.appareils || []).filter(isAppareilVisible);
+      renderParc(data);
+      renderReparations();
+      switchListTab("materiel");
+    }
 
-      deviceListEl.innerHTML = "";
-      const isEmpty = visibleAppareils.length === 0;
-      emptyMessageEl.classList.toggle("hidden", !isEmpty);
-      deviceListEl.classList.toggle("hidden", isEmpty);
+    // V3.00 : construit, pour chaque centre, la liste du matériel sous contrat
+    // et y rattache les réparations en cours (ou remises en service depuis
+    // moins de 90 jours). Le n° de série vient de centres_visites[centre].equipements
+    // ([{ type, serie }]) quand l'appli bureau le publie ; sinon, une ligne par
+    // type (centres_visites[centre].materiels), sans n° de série.
+    function construireParc(data) {
+      const centresVisites = data.centres_visites && typeof data.centres_visites === "object" ? data.centres_visites : {};
+      const centres = new Map();
+      const centre = (nom) => {
+        if (!centres.has(nom)) {
+          centres.set(nom, { nom, visite: centresVisites[nom] || null, appareils: [] });
+        }
+        return centres.get(nom);
+      };
+      Object.keys(centresVisites).forEach((nom) => {
+        const visite = centresVisites[nom] || {};
+        const c = centre(nom);
+        const equipements = Array.isArray(visite.equipements) ? visite.equipements.filter((e) => e && e.type) : [];
+        if (equipements.length > 0) {
+          equipements.forEach((e) => c.appareils.push({ type: e.type, serie: e.serie || "", reparation: null }));
+        } else {
+          (Array.isArray(visite.materiels) ? visite.materiels : []).forEach((type) => {
+            if (type) c.appareils.push({ type, serie: "", reparation: null });
+          });
+        }
+      });
+      visibleAppareils.forEach((rep) => {
+        const nomCentre = rep.centre_origine || "Autre";
+        const c = centre(nomCentre);
+        const exact = c.appareils.find((a) => !a.reparation && a.serie && a.serie === rep.num_serie && a.type === rep.type);
+        const parType = exact ? null : c.appareils.find((a) => !a.reparation && !a.serie && a.type === rep.type);
+        const cible = exact || parType;
+        if (cible) {
+          cible.reparation = rep;
+          if (!cible.serie) cible.serie = rep.num_serie || "";
+        } else {
+          c.appareils.push({ type: rep.type, serie: rep.num_serie || "", reparation: rep });
+        }
+      });
+      return [...centres.values()];
+    }
 
-      visibleAppareils.forEach((appareil, index) => {
-        const li = document.createElement("li");
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `device-item device-item-tone-${index % 2}`;
-        button.innerHTML = `
-          <div class="device-item-title">${escapeHtml(libelleMaterielClient(appareil.type))} — ${escapeHtml(appareil.num_serie)}</div>
-          <div class="device-item-center">${escapeHtml(appareil.centre_origine)} — ${escapeHtml(formatDateFr(appareil.date_prise_charge))}</div>
-          <div class="device-item-hint">cliquer pour afficher les détails</div>
-        `;
-        button.addEventListener("click", () => {
-          renderDetail(appareil);
+    function enReparation(rep) {
+      return !!(rep && !rep.date_remise_service);
+    }
+
+    // Même calcul que l'appli bureau (addMonthsIsoDate) : prochaine visite =
+    // date du contrôle + 6 mois.
+    function ajouterMoisIso(isoDate, mois) {
+      const d = parseIsoDate(isoDate);
+      d.setMonth(d.getMonth() + mois);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    // Contrôle semestriel (catégories TECHNIZEN) dont dépend chaque type d'appareil :
+    // les éléments d'un banc partagent un seul contrôle, de même que le sonomètre
+    // et son calibreur. Les autres types ont un contrôle à leur nom.
+    const CONTROLE_DU_TYPE = {
+      "Freinage": "Banc (freinage/suspension/ripage/pupitre/pédomètre)",
+      "Suspension": "Banc (freinage/suspension/ripage/pupitre/pédomètre)",
+      "Ripage": "Banc (freinage/suspension/ripage/pupitre/pédomètre)",
+      "Pupitre": "Banc (freinage/suspension/ripage/pupitre/pédomètre)",
+      "Pédomètre": "Banc (freinage/suspension/ripage/pupitre/pédomètre)",
+      "Sonomètre": "Sonomètre/Calibreur",
+      "Calibreur": "Sonomètre/Calibreur",
+    };
+
+    // V3.01 : prochaine visite d'un appareil. Son contrôle fait → date + 6 mois ;
+    // contrôle resté en attente → « en attente » ; pas de contrôle connu → date
+    // de prochaine visite du centre.
+    function prochaineVisiteAppareil(type, visite) {
+      if (!visite) return { genre: "inconnue" };
+      const label = CONTROLE_DU_TYPE[type] || type;
+      const controle = controlesVisite(visite).find((c) => c.label === label);
+      if (controle) {
+        if (controle.statut === "fait" && controle.date) {
+          return { genre: "date", date: ajouterMoisIso(controle.date, 6) };
+        }
+        return { genre: "attente" };
+      }
+      if (visite.prochaine_visite_debut) {
+        return { genre: "date", date: visite.prochaine_visite_debut };
+      }
+      return { genre: "inconnue" };
+    }
+
+    function carteAppareil(appareil, centreParc) {
+      const carte = document.createElement("div");
+      const rep = enReparation(appareil.reparation) ? appareil.reparation : null;
+      carte.className = `appareil-carte${rep ? " is-reparation" : ""}`;
+      const pv = prochaineVisiteAppareil(appareil.type, centreParc.visite);
+      let visiteHtml;
+      if (pv.genre === "date") {
+        visiteHtml = `<div class="appareil-visite">📅 Prochaine visite : <strong>${escapeHtml(formatDateFr(pv.date))}</strong></div>`;
+      } else if (pv.genre === "attente") {
+        visiteHtml = `<div class="appareil-visite is-attente">⏳ Contrôle en attente</div>`;
+      } else {
+        visiteHtml = `<div class="appareil-visite is-inconnue">Aucune visite enregistrée pour le moment</div>`;
+      }
+      let etatHtml = "";
+      if (rep) {
+        const statut = ETAT_LABELS[rep.etat] || "Statut inconnu";
+        const livraison = rep.date_livraison_prevue ? ` · livraison prévue le ${escapeHtml(formatDateFr(rep.date_livraison_prevue))}` : "";
+        etatHtml = `<div class="appareil-etat etat-reparation">🔧 En réparation<span class="appareil-etat-detail">${escapeHtml(statut)}${livraison} — voir le détail ▸</span></div>`;
+      }
+      carte.innerHTML = `
+        <button type="button" class="appareil-infos${rep ? " is-cliquable" : ""}" ${rep ? "" : 'tabindex="-1"'}>
+          <div class="appareil-nom">${escapeHtml(libelleMaterielClient(appareil.type))}</div>
+          ${appareil.serie ? `<div class="appareil-serie">n° de série ${escapeHtml(appareil.serie)}</div>` : ""}
+          ${etatHtml}
+          ${visiteHtml}
+        </button>
+        <div class="appareil-actions">
+          <button type="button" class="button-secondary bouton-demande">🛠 Demander une intervention</button>
+        </div>
+      `;
+      if (rep) {
+        carte.querySelector(".appareil-infos").addEventListener("click", () => {
+          renderDetail(rep);
           showScreen("detail");
         });
-        li.appendChild(button);
-        deviceListEl.appendChild(li);
+      }
+      carte.querySelector(".bouton-demande").addEventListener("click", () => ouvrirDemande(appareil, centreParc.nom));
+      return carte;
+    }
+
+    function renderParc(data) {
+      const centres = construireParc(data);
+      parcListEl.innerHTML = "";
+      const vide = centres.every((c) => c.appareils.length === 0 && !c.visite);
+      emptyMessageEl.classList.toggle("hidden", !vide);
+      if (vide) return;
+      const plusieurs = centres.length > 1;
+      centres.forEach((c) => {
+        const bloc = document.createElement("section");
+        const replie = plusieurs && !centresDeplies.has(c.nom);
+        bloc.className = `centre-bloc${replie ? " is-replie" : ""}`;
+        const n = c.appareils.length;
+        const nbRep = c.appareils.filter((a) => enReparation(a.reparation)).length;
+        const compte = `${n} appareil${n > 1 ? "s" : ""}${nbRep > 0 ? ` · ${nbRep} en réparation` : ""}`;
+        const prochaine = c.visite && c.visite.prochaine_visite_debut
+          ? `Prochaine visite : ${formatDateFr(c.visite.prochaine_visite_debut)}`
+          : "";
+        bloc.innerHTML = `
+          <button type="button" class="centre-entete${plusieurs ? "" : " is-fixe"}" ${plusieurs ? `aria-expanded="${replie ? "false" : "true"}"` : 'tabindex="-1"'}>
+            ${plusieurs ? `<span class="centre-fleche">${replie ? "▸" : "▾"}</span>` : "📍"}
+            <span class="centre-nom">${escapeHtml(c.nom)}</span>
+            ${prochaine ? `<span class="centre-prochaine">${escapeHtml(prochaine)}</span>` : ""}
+            <span class="centre-compte">${escapeHtml(compte)}</span>
+          </button>
+          <div class="centre-contenu"></div>
+        `;
+        const contenu = bloc.querySelector(".centre-contenu");
+        if (c.visite) {
+          const visiteBtn = document.createElement("button");
+          visiteBtn.type = "button";
+          visiteBtn.className = "centre-visite";
+          visiteBtn.textContent = "Voir le contrôle semestriel du centre ▸";
+          visiteBtn.addEventListener("click", () => {
+            renderCentreDetail(c.nom, c.visite);
+            showScreen("detail");
+          });
+          contenu.appendChild(visiteBtn);
+        }
+        if (n === 0) {
+          const p = document.createElement("p");
+          p.className = "detail-caveat";
+          p.textContent = "Aucun matériel renseigné pour ce centre.";
+          contenu.appendChild(p);
+        }
+        // En réparation d'abord, puis le reste dans l'ordre du contrat.
+        const tries = c.appareils.slice().sort((a, b) =>
+          Number(!enReparation(a.reparation)) - Number(!enReparation(b.reparation)));
+        tries.forEach((a) => contenu.appendChild(carteAppareil(a, c)));
+        if (plusieurs) {
+          const entete = bloc.querySelector(".centre-entete");
+          entete.addEventListener("click", () => {
+            const r = !bloc.classList.contains("is-replie");
+            bloc.classList.toggle("is-replie", r);
+            entete.querySelector(".centre-fleche").textContent = r ? "▸" : "▾";
+            entete.setAttribute("aria-expanded", r ? "false" : "true");
+            if (r) centresDeplies.delete(c.nom); else centresDeplies.add(c.nom);
+          });
+        }
+        parcListEl.appendChild(bloc);
       });
+    }
+
+    // V3.01 : onglet Réparations — tous les appareils pris en charge par une
+    // intervention : en cours d'abord, puis remis en service depuis moins de
+    // 90 jours (isAppareilVisible). Un appui ouvre le détail habituel.
+    function renderReparations() {
+      reparationsListEl.innerHTML = "";
+      const enCours = visibleAppareils.filter(enReparation)
+        .sort((a, b) => String(b.date_prise_charge || "").localeCompare(String(a.date_prise_charge || "")));
+      const terminees = visibleAppareils.filter((a) => !enReparation(a))
+        .sort((a, b) => String(b.date_remise_service || "").localeCompare(String(a.date_remise_service || "")));
+      tabReparationsBadgeEl.textContent = String(enCours.length);
+      tabReparationsBadgeEl.classList.toggle("hidden", enCours.length === 0);
+      reparationsEmptyMessageEl.classList.toggle("hidden", visibleAppareils.length > 0);
+      const groupe = (titre, liste) => {
+        if (liste.length === 0) return;
+        const h = document.createElement("h3");
+        h.className = "reparation-titre-groupe";
+        h.textContent = titre;
+        reparationsListEl.appendChild(h);
+        liste.forEach((rep) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const cours = enReparation(rep);
+          btn.className = `reparation-carte${cours ? " is-en-cours" : ""}`;
+          const statut = cours
+            ? `🔧 ${escapeHtml(ETAT_LABELS[rep.etat] || "Statut inconnu")}${rep.date_livraison_prevue ? ` · livraison prévue le ${escapeHtml(formatDateFr(rep.date_livraison_prevue))}` : ""}`
+            : `✅ Remis en service le ${escapeHtml(formatDateFr(rep.date_remise_service))}`;
+          btn.innerHTML = `
+            <div class="appareil-nom">${escapeHtml(libelleMaterielClient(rep.type))}</div>
+            <div class="appareil-serie">n° de série ${escapeHtml(rep.num_serie || "")}</div>
+            <div class="reparation-centre">${escapeHtml(rep.centre_origine || "")}${rep.date_prise_charge ? ` — pris en charge le ${escapeHtml(formatDateFr(rep.date_prise_charge))}` : ""}</div>
+            <div class="appareil-etat ${cours ? "etat-reparation" : "etat-service"}">${statut}</div>
+            <div class="device-item-hint">appuyer pour afficher les détails</div>
+          `;
+          btn.addEventListener("click", () => {
+            renderDetail(rep);
+            showScreen("detail");
+          });
+          reparationsListEl.appendChild(btn);
+        });
+      };
+      groupe(`En cours (${enCours.length})`, enCours);
+      groupe(`Remis en service ces 90 derniers jours (${terminees.length})`, terminees);
+    }
+
+    // ---------------------------------------------------------------------
+    // V3.00 : demande d'intervention sur un appareil. Mail prérempli, objet
+    // « Question - Demande d'intervention - … » : il remonte dans le bandeau
+    // « Demandes client » de l'appli bureau sans rien changer au relais.
+    // En mode démo, rien n'est envoyé : le mail est seulement affiché.
+    // ---------------------------------------------------------------------
+    const ADRESSE_CONTACT = "contact.technizen@ikmail.com";
+    const CLE_DEMANDEUR = "technizen_client_demandeur";
+    const demandeFondEl = document.getElementById("demande-fond");
+    const demandeFormulaireEl = document.getElementById("demande-formulaire");
+    const demandeConfirmationEl = document.getElementById("demande-confirmation");
+    const demandeAppareilEl = document.getElementById("demande-appareil");
+    const demandeDescriptionEl = document.getElementById("demande-description");
+    const demandeNomEl = document.getElementById("demande-nom");
+    const demandeTelephoneEl = document.getElementById("demande-telephone");
+    const demandeErreurEl = document.getElementById("demande-erreur");
+    const demandeConfirmationTexteEl = document.getElementById("demande-confirmation-texte");
+    const demandeApercuEl = document.getElementById("demande-apercu");
+    const demandeRouvrirEl = document.getElementById("demande-rouvrir");
+    let demandeEnCours = null;
+
+    function lireDemandeur() {
+      try {
+        return JSON.parse(localStorage.getItem(CLE_DEMANDEUR)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function ouvrirDemande(appareil, nomCentre) {
+      demandeEnCours = { appareil, nomCentre };
+      const libelle = libelleMaterielClient(appareil.type);
+      demandeAppareilEl.textContent = `${libelle}${appareil.serie ? ` — n° ${appareil.serie}` : ""} · ${nomCentre}`;
+      document.querySelectorAll('input[name="demande-motif"], input[name="demande-bloquant"]').forEach((i) => { i.checked = false; });
+      demandeDescriptionEl.value = "";
+      const demandeur = lireDemandeur();
+      demandeNomEl.value = demandeur.nom || "";
+      demandeTelephoneEl.value = demandeur.telephone || "";
+      demandeErreurEl.classList.add("hidden");
+      demandeFormulaireEl.classList.remove("hidden");
+      demandeConfirmationEl.classList.add("hidden");
+      demandeFondEl.classList.remove("hidden");
+    }
+
+    function fermerDemande() {
+      demandeFondEl.classList.add("hidden");
+      demandeEnCours = null;
+    }
+
+    function composerDemande() {
+      const { appareil, nomCentre } = demandeEnCours;
+      const libelle = libelleMaterielClient(appareil.type);
+      const motif = (document.querySelector('input[name="demande-motif"]:checked') || {}).value || "";
+      const bloquant = (document.querySelector('input[name="demande-bloquant"]:checked') || {}).value || "";
+      const description = demandeDescriptionEl.value.trim();
+      const nom = demandeNomEl.value.trim();
+      const telephone = demandeTelephoneEl.value.trim();
+      const manque = [];
+      if (!motif) manque.push("ce qui se passe");
+      if (!bloquant) manque.push("si l'appareil est bloquant");
+      if (!telephone) manque.push("un téléphone");
+      if (manque.length > 0) {
+        return { erreur: `Merci d'indiquer : ${manque.join(", ")}.` };
+      }
+      const objet = `Question - Demande d'intervention${bloquant === "Oui" ? " URGENTE" : ""} - ${nomCentre} - ${libelle}${appareil.serie ? ` - ${appareil.serie}` : ""}`;
+      const texte = [
+        "Bonjour,",
+        "",
+        "Je souhaite une intervention sur le matériel suivant :",
+        `- Client : ${contactClient}`,
+        `- Centre : ${nomCentre}`,
+        `- Appareil : ${libelle}`,
+        `- N° de série : ${appareil.serie || "(non renseigné)"}`,
+        "",
+        `Problème : ${motif}`,
+        `Bloquant pour l'activité : ${bloquant}`,
+        `Description : ${description || "(aucune)"}`,
+        "",
+        `Demandeur : ${nom || "(non renseigné)"}`,
+        `Téléphone : ${telephone}`,
+        "",
+        "Merci.",
+      ].join("\n");
+      return { objet, texte, nom, telephone };
+    }
+
+    document.getElementById("demande-envoyer").addEventListener("click", () => {
+      const d = composerDemande();
+      if (d.erreur) {
+        demandeErreurEl.textContent = d.erreur;
+        demandeErreurEl.classList.remove("hidden");
+        return;
+      }
+      try {
+        localStorage.setItem(CLE_DEMANDEUR, JSON.stringify({ nom: d.nom, telephone: d.telephone }));
+      } catch {}
+      const mailto = `mailto:${ADRESSE_CONTACT}?subject=${encodeURIComponent(d.objet)}&body=${encodeURIComponent(d.texte)}`;
+      demandeRouvrirEl.href = mailto;
+      demandeFormulaireEl.classList.add("hidden");
+      demandeConfirmationEl.classList.remove("hidden");
+      if (modeDemo) {
+        demandeConfirmationTexteEl.textContent = "Mode démonstration : rien n'a été envoyé. Voici le mail qui serait préparé :";
+        demandeApercuEl.textContent = `À : ${ADRESSE_CONTACT}\nObjet : ${d.objet}\n\n${d.texte}`;
+        demandeApercuEl.classList.remove("hidden");
+        demandeRouvrirEl.classList.add("hidden");
+      } else {
+        demandeConfirmationTexteEl.textContent = "Votre messagerie s'est ouverte avec la demande déjà remplie : il ne reste qu'à appuyer sur « Envoyer ». Si elle ne s'est pas ouverte, appuyez sur « Rouvrir le mail ».";
+        demandeApercuEl.classList.add("hidden");
+        demandeRouvrirEl.classList.remove("hidden");
+        window.location.href = mailto;
+      }
+    });
+
+    document.getElementById("demande-annuler").addEventListener("click", fermerDemande);
+    document.getElementById("demande-fermer").addEventListener("click", fermerDemande);
+    demandeFondEl.addEventListener("click", (e) => {
+      if (e.target === demandeFondEl) fermerDemande();
+    });
+
+    // ---------------------------------------------------------------------
+    // V3.00 : mode démonstration — identifiant « demo » (mot de passe libre),
+    // seulement quand l'appli est ouverte en fichier local ou avec ?demo dans
+    // l'adresse. Client et matériel fictifs, rien n'est lu ni envoyé.
+    // ---------------------------------------------------------------------
+    function demoAutorisee() {
+      return location.protocol === "file:" || /[?&]demo\b/.test(location.search);
+    }
+
+    function decalerJours(jours) {
+      const d = new Date();
+      d.setDate(d.getDate() + jours);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    function donneesDemo() {
+      return {
+        contact: "CT Démonstration",
+        email_contact: "demo@exemple.fr",
+        lien_drive: "",
+        centres_visites: {
+          "Centre du Gosier": {
+            derniere_visite: decalerJours(-60),
+            prochaine_visite_debut: ajouterMoisIso(decalerJours(-60), 6),
+            prochaine_visite_fin: ajouterMoisIso(decalerJours(-60), 8),
+            controles: [
+              { label: "Opacimètre", statut: "fait", date: decalerJours(-60) },
+              { label: "Gaz", statut: "fait", date: decalerJours(-60) },
+              { label: "Banc (freinage/suspension/ripage/pupitre/pédomètre)", statut: "fait", date: decalerJours(-59) },
+              { label: "Régloscope", statut: "attente" },
+            ],
+            materiels: ["Opacimètre", "Gaz", "Freinage", "Suspension", "Régloscope"],
+            equipements: [
+              { type: "Opacimètre", serie: "OP-21458" },
+              { type: "Gaz", serie: "GZ-77310" },
+              { type: "Freinage", serie: "BF-1022" },
+              { type: "Suspension", serie: "BS-1023" },
+              { type: "Régloscope", serie: "RG-5541" },
+            ],
+          },
+          "Centre des Abymes": {
+            derniere_visite: decalerJours(-150),
+            prochaine_visite_debut: ajouterMoisIso(decalerJours(-150), 6),
+            prochaine_visite_fin: ajouterMoisIso(decalerJours(-150), 8),
+            controles: [
+              { label: "Opacimètre", statut: "fait", date: decalerJours(-150) },
+              { label: "Gaz", statut: "fait", date: decalerJours(-150) },
+            ],
+            materiels: ["Opacimètre", "Gaz", "OBD"],
+            equipements: [
+              { type: "Opacimètre", serie: "OP-30987" },
+              { type: "Gaz", serie: "GZ-80412" },
+              { type: "OBD", serie: "OBD-4410" },
+            ],
+          },
+        },
+        appareils: [
+          {
+            type: "Gaz", num_serie: "GZ-77310", centre_origine: "Centre du Gosier", centre_commune: "Le Gosier",
+            date_prise_charge: decalerJours(-8), lieu_prise_charge: "atelier", etat: 4,
+            commentaire_technicien: "Pompe de prélèvement à remplacer. Pièce commandée chez le fabricant.",
+            date_livraison_prevue: decalerJours(10), materiel_prete_num_serie: "GZ-PRET-02",
+          },
+          {
+            type: "OBD", num_serie: "OBD-4410", centre_origine: "Centre des Abymes", centre_commune: "Les Abymes",
+            date_prise_charge: decalerJours(-40), lieu_prise_charge: "site", etat: 3,
+            commentaire_technicien: "Câble de liaison remplacé, essais concluants.",
+            date_remise_service: decalerJours(-30),
+          },
+        ],
+      };
     }
 
     function renderDetail(appareil) {
@@ -1246,7 +1825,16 @@
       emailContact = null;
       lienDriveClient = "";
       listTitleEl.textContent = "";
-      deviceListEl.innerHTML = "";
+      parcListEl.innerHTML = "";
+      emptyMessageEl.classList.add("hidden");
+      contactClient = "";
+      modeDemo = false;
+      demoBannerEl.classList.add("hidden");
+      centresDeplies.clear();
+      reparationsListEl.innerHTML = "";
+      tabReparationsBadgeEl.classList.add("hidden");
+      switchListTab("materiel");
+      fermerDemande();
       detailSublineEl.textContent = "";
       detailBodyEl.innerHTML = "";
       afficherBoutonDrive("");
@@ -1291,6 +1879,15 @@
         if (!slug) {
           throw { userMessage: "L'identifiant client doit contenir au moins une lettre ou un chiffre." };
         }
+        // V3.00 : mode démonstration (fichier local ou ?demo), rien n'est mémorisé.
+        if (slug === "demo" && demoAutorisee()) {
+          hideStatus();
+          modeDemo = true;
+          demoBannerEl.classList.remove("hidden");
+          renderList(donneesDemo());
+          showScreen("list");
+          return;
+        }
         const fileUrl = `${FILE_BASE_URL}/${slug}.txt`;
 
         let response;
@@ -1327,6 +1924,8 @@
         memoriserIdentifiants(clientIdEl.value.trim(), passwordEl.value, rememberMeEl.checked);
 
         hideStatus();
+        modeDemo = false;
+        demoBannerEl.classList.add("hidden");
         renderList(data);
         showScreen("list");
         chargerLienDepot();
