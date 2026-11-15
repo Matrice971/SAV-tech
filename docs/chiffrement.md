@@ -28,6 +28,7 @@ C'est ce JSON qui est chiffré pour produire le fichier `.txt` (section 2).
       "type": "Banc de frein",
       "num_serie": "BF-2024-0088",
       "centre_origine": "Centre Nord",
+      "centre_commune": "Basse-Terre",
       "adresse": "12 rue Example, 97100 Basse-Terre",
       "etat": 2,
       "date_prise_charge": "2026-07-20",
@@ -35,6 +36,7 @@ C'est ce JSON qui est chiffré pour produire le fichier `.txt` (section 2).
       "piece_en_commande": true,
       "materiel_prete_num_serie": "PRET-0012",
       "commentaire_technicien": "Diagnostic en cours, pièce commandée",
+      "commentaire_bureau": "",
       "date_remise_service": null,
       "lien_drive": "URL du dossier Drive racine du centre (optionnel, repris tel quel depuis TECHNIZEN)"
     }
@@ -46,6 +48,17 @@ C'est ce JSON qui est chiffré pour produire le fichier `.txt` (section 2).
 l'appli client pour construire le lien `mailto:` de l'écran de détail (voir
 section 4). Si absent, l'appli client n'affiche simplement pas ce lien —
 elle ne code jamais d'adresse en dur.
+
+**Champ `centre_commune`** (par appareil, optionnel) : commune du centre
+d'origine, affichée avec `centre_origine` sur l'écran détail de l'appli
+client (ex. « Centre Nord — Basse-Terre »). Si absent, seul le nom du
+centre est affiché.
+
+**Champ `commentaire_bureau`** (par appareil, optionnel) : note interne
+saisie par le bureau lors de la publication. Sur l'écran détail de l'appli
+client, un seul bloc « Observation » est affiché : `commentaire_bureau`
+s'il est renseigné, sinon `commentaire_technicien` en repli — jamais les
+deux à la fois, et sans indiquer au client l'origine du texte.
 
 **Champ `lien_drive`** (par appareil, optionnel) : URL du dossier Drive du
 centre d'origine de l'appareil. Pour un même contact réparti sur plusieurs

@@ -2,5 +2,19 @@ name = "sav-tech-relay"
 main = "index.js"
 compatibility_date = "2024-11-01"
 
-# Les secrets (WRITE_PASSWORD, GITHUB_TOKEN) ne sont PAS définis ici.
-# Voir README.md de ce dossier : ils se configurent via `wrangler secret put`.
+# Les secrets (WRITE_PASSWORD, GITHUB_TOKEN, KDRIVE_API_TOKEN) ne sont PAS
+# définis ici. Voir README.md de ce dossier : ils se configurent via
+# `wrangler secret put` (ou le dashboard Cloudflare, type "Secret").
+
+# KDRIVE_ID et KDRIVE_ROOT_ID ne sont pas des secrets (identifiants numériques
+# de drive/dossier) — déclarés ici pour rester synchronisés avec les valeurs
+# ajoutées côté dashboard Cloudflare et ne pas être effacés par un futur
+# `wrangler deploy`.
+#
+# KDRIVE_ROOT_ID = "5" : le dossier "1" (racine absolue du drive) refuse toute
+# création avec "permission_denied" — diagnostiqué le 2026-09-26 via un script
+# de test isolé sur ce drive et un autre. La racine réellement inscriptible
+# est le dossier "Private" (id 5), seul enfant direct de "1".
+[vars]
+KDRIVE_ID = "4085333"
+KDRIVE_ROOT_ID = "5"
