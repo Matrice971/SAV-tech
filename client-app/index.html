@@ -779,7 +779,8 @@
   .choix-groupe input { accent-color: var(--color-primary); margin: 0; }
   .modal-boite textarea,
   .modal-boite input[type="tel"],
-  .modal-boite input[type="text"] {
+  .modal-boite input[type="text"],
+  .modal-boite input[type="password"] {
     width: 100%;
     font: inherit;
     font-size: 1rem;
@@ -789,6 +790,9 @@
   }
   .modal-boite textarea { min-height: 5.5rem; resize: vertical; }
   .demande-erreur { color: var(--color-error-text); font-size: 0.88rem; margin: 0.6rem 0 0; }
+  /* V3.02 : choix / changement du mot de passe */
+  .mdp-regle { color: var(--color-text-muted); font-size: 0.82rem; margin: 0.3rem 0 0; }
+  .mdp-explication { font-size: 0.92rem; margin: 0.4rem 0 0.2rem; }
   .modal-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
   .modal-actions button { flex: 1 1 auto; }
   .demande-confirmation p { margin: 0.4rem 0; }
@@ -807,7 +811,7 @@
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V3.01</span>
+      <span class="app-version">V3.02</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
@@ -853,6 +857,7 @@
 
     <div id="screen-list" class="hidden">
       <div class="list-actions">
+        <button type="button" id="mdp-btn" class="button-secondary button-small hidden">🔑 Mot de passe</button>
         <button type="button" id="logout-btn" class="button-secondary button-small">Déconnexion</button>
         <button type="button" id="close-btn" class="button-secondary button-small">Fermer</button>
         <p id="close-message" class="close-message hidden">Vous pouvez fermer cet onglet ou cette fenêtre manuellement.</p>
@@ -891,6 +896,38 @@
       </div>
     </div>
   </main>
+
+  <!-- V3.02 : choix (mot de passe provisoire) ou changement du mot de passe -->
+  <div id="mdp-fond" class="modal-fond hidden" role="dialog" aria-modal="true" aria-labelledby="mdp-titre">
+    <div class="modal-boite">
+      <div id="mdp-formulaire">
+        <h2 id="mdp-titre">🔑 Choisissez votre mot de passe</h2>
+        <p id="mdp-explication" class="mdp-explication"></p>
+        <div id="mdp-actuel-bloc">
+          <p class="demande-question"><label for="mdp-actuel">Mot de passe actuel</label></p>
+          <input type="password" id="mdp-actuel" autocomplete="current-password">
+        </div>
+        <p class="demande-question"><label for="mdp-nouveau">Nouveau mot de passe</label></p>
+        <input type="password" id="mdp-nouveau" autocomplete="new-password">
+        <p class="mdp-regle">Au moins 8 caractères, avec une majuscule, une minuscule et un chiffre.</p>
+        <p class="demande-question"><label for="mdp-confirmation">Retapez le nouveau mot de passe</label></p>
+        <input type="password" id="mdp-confirmation" autocomplete="new-password">
+        <label class="remember-label"><input type="checkbox" id="mdp-afficher"> Afficher les mots de passe</label>
+        <p id="mdp-erreur" class="demande-erreur hidden"></p>
+        <div class="modal-actions">
+          <button type="button" id="mdp-annuler" class="button-secondary">Annuler</button>
+          <button type="button" id="mdp-valider">Enregistrer</button>
+        </div>
+      </div>
+      <div id="mdp-confirmation-bloc" class="hidden">
+        <h2>✅ Mot de passe enregistré</h2>
+        <p class="mdp-explication">Utilisez-le désormais pour vous connecter. Notez-le : en cas d'oubli, TECHNIZEN vous donnera un mot de passe provisoire.</p>
+        <div class="modal-actions">
+          <button type="button" id="mdp-fermer">Continuer</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- V3.00 : demande d'intervention sur un appareil -->
   <div id="demande-fond" class="modal-fond hidden" role="dialog" aria-modal="true" aria-labelledby="demande-titre">
@@ -944,6 +981,9 @@
 
   <script>
     const FILE_BASE_URL = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/clients";
+    // V3.02 : clé du fichier client (mot de passe choisi par le client).
+    const CLES_BASE_URL = "https://raw.githubusercontent.com/Matrice971/SAV-tech/main/data/cles";
+    const RELAIS_URL = "https://sav-tech-relay.matrice971.workers.dev";
     const PBKDF2_ITERATIONS = 100000;
     const REMISE_SERVICE_VISIBILITY_DAYS = 90;
 
@@ -1036,6 +1076,7 @@
     tabMaterielBtnEl.addEventListener("click", () => switchListTab("materiel"));
     tabReparationsBtnEl.addEventListener("click", () => switchListTab("reparations"));
     const logoutBtnEl = document.getElementById("logout-btn");
+    const mdpBtnEl = document.getElementById("mdp-btn");
     const closeBtnEl = document.getElementById("close-btn");
     const closeMessageEl = document.getElementById("close-message");
     const driveLinkEl = document.getElementById("drive-link");
@@ -1090,7 +1131,13 @@
       return bytes;
     }
 
-    async function deriveKey(password, saltBytes) {
+    function bytesToBase64(bytes) {
+      let binary = "";
+      bytes.forEach((b) => (binary += String.fromCharCode(b)));
+      return btoa(binary);
+    }
+
+    async function deriveKey(password, saltBytes, usages = ["decrypt"]) {
       const passwordBytes = new TextEncoder().encode(password);
       const baseKey = await crypto.subtle.importKey(
         "raw",
@@ -1109,7 +1156,7 @@
         baseKey,
         { name: "AES-GCM", length: 256 },
         false,
-        ["decrypt"]
+        usages
       );
     }
 
@@ -1125,6 +1172,28 @@
 
       const key = await deriveKey(password, salt);
       const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
+      return new TextDecoder().decode(decrypted);
+    }
+
+    // V3.02 : même format « sel.iv.chiffré » que decryptFile.
+    async function chiffrerTexte(plaintext, password) {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(password, salt, ["encrypt"]);
+      const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(plaintext));
+      return `${bytesToBase64(salt)}.${bytesToBase64(iv)}.${bytesToBase64(new Uint8Array(ciphertext))}`;
+    }
+
+    // V3.02 : fichier client « v2.<génération>.<iv>.<chiffré> », chiffré avec
+    // la clé du client (k), elle-même verrouillée par son mot de passe dans
+    // data/cles/<identifiant>.txt (voir bureau-app V5.37).
+    async function dechiffrerFichierV2(fileContent, kB64) {
+      const parts = fileContent.trim().split(".");
+      if (parts.length !== 4) {
+        throw new Error("format de fichier invalide");
+      }
+      const key = await crypto.subtle.importKey("raw", base64ToBytes(kB64), { name: "AES-GCM" }, false, ["decrypt"]);
+      const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: base64ToBytes(parts[2]) }, key, base64ToBytes(parts[3]));
       return new TextDecoder().decode(decrypted);
     }
 
@@ -1841,6 +1910,9 @@
       contactLinkEl.classList.add("hidden");
       depotLinkEl.classList.add("hidden");
       chargementDepot++;
+      sessionCle = null;
+      mdpBtnEl.classList.add("hidden");
+      mdpFondEl.classList.add("hidden");
       const ids = lireIdentifiantsMemorises();
       if (ids) clientIdEl.value = ids.identifiant;
       passwordEl.value = "";
@@ -1888,30 +1960,32 @@
           showScreen("list");
           return;
         }
-        const fileUrl = `${FILE_BASE_URL}/${slug}.txt`;
-
-        let response;
-        try {
-          response = await fetch(fileUrl, { cache: "no-store" });
-        } catch {
-          throw { userMessage: "Connexion impossible. Vérifiez votre accès à internet et réessayez." };
-        }
-
-        if (response.status === 404) {
-          throw { userMessage: "Identifiant client ou fichier introuvable." };
-        }
-        if (!response.ok) {
-          throw { userMessage: `Le serveur a répondu avec une erreur (code ${response.status}).` };
-        }
-
-        const fileContent = await response.text();
+        const { fileContent, fichierCle } = await lireFichiersClient(slug);
 
         showStatus("Déchiffrement…");
         let decryptedText;
-        try {
-          decryptedText = await decryptFile(fileContent, passwordEl.value);
-        } catch {
-          throw { userMessage: "Mot de passe incorrect ou fichier corrompu." };
+        let cleOuverte = null;
+        if (fileContent.trim().startsWith("v2.")) {
+          // V3.02 : la clé du fichier s'ouvre avec le mot de passe du client.
+          if (!fichierCle) {
+            throw { userMessage: "Votre compte est en cours de mise à jour : réessayez dans quelques minutes." };
+          }
+          try {
+            cleOuverte = JSON.parse(await decryptFile(fichierCle.cle, passwordEl.value));
+          } catch {
+            throw { userMessage: "Mot de passe incorrect." };
+          }
+          try {
+            decryptedText = await dechiffrerFichierV2(fileContent, cleOuverte.k);
+          } catch {
+            throw { userMessage: "Votre compte est en cours de mise à jour : réessayez dans quelques minutes." };
+          }
+        } else {
+          try {
+            decryptedText = await decryptFile(fileContent, passwordEl.value);
+          } catch {
+            throw { userMessage: "Mot de passe incorrect ou fichier corrompu." };
+          }
         }
 
         let data;
@@ -1926,9 +2000,16 @@
         hideStatus();
         modeDemo = false;
         demoBannerEl.classList.add("hidden");
+        sessionCle = cleOuverte
+          ? { identifiant: slug, fichierCle, k: cleOuverte.k, j: cleOuverte.j, motDePasse: passwordEl.value }
+          : null;
+        mdpBtnEl.classList.toggle("hidden", !sessionCle);
         renderList(data);
         showScreen("list");
         chargerLienDepot();
+        if (sessionCle && sessionCle.fichierCle.provisoire) {
+          ouvrirMdp(true);
+        }
       } catch (err) {
         hideStatus();
         let message = err && err.userMessage ? err.userMessage : "Une erreur inattendue est survenue.";
@@ -1940,6 +2021,173 @@
         submitBtnEl.disabled = false;
       }
     }
+
+    // V3.02 : fichier client et clé, relus sans cache par le relais
+    // (/client-cle) ; relais injoignable → lecture directe sur GitHub (cache
+    // de 5 min possible, comme avant). Lève { userMessage } en cas d'échec.
+    async function lireFichiersClient(slug) {
+      try {
+        const res = await fetch(`${RELAIS_URL}/client-cle`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifiant: slug }),
+        });
+        const data = await res.json();
+        if (res.ok && data && data.success === true) {
+          if (!data.fichierClient) {
+            throw { userMessage: "Identifiant client ou fichier introuvable." };
+          }
+          return { fileContent: data.fichierClient, fichierCle: data.existe ? JSON.parse(data.contenu) : null };
+        }
+      } catch (err) {
+        if (err && err.userMessage) throw err;
+      }
+
+      let response;
+      try {
+        response = await fetch(`${FILE_BASE_URL}/${slug}.txt`, { cache: "no-store" });
+      } catch {
+        throw { userMessage: "Connexion impossible. Vérifiez votre accès à internet et réessayez." };
+      }
+      if (response.status === 404) {
+        throw { userMessage: "Identifiant client ou fichier introuvable." };
+      }
+      if (!response.ok) {
+        throw { userMessage: `Le serveur a répondu avec une erreur (code ${response.status}).` };
+      }
+      const fileContent = await response.text();
+      let fichierCle = null;
+      if (fileContent.trim().startsWith("v2.")) {
+        try {
+          const resCle = await fetch(`${CLES_BASE_URL}/${slug}.txt`, { cache: "no-store" });
+          if (resCle.ok) fichierCle = JSON.parse(await resCle.text());
+        } catch {}
+      }
+      return { fileContent, fichierCle };
+    }
+
+    // ---------------------------------------------------------------------
+    // V3.02 : mot de passe choisi par le client. Mot de passe provisoire
+    // (donné par TECHNIZEN) → choix obligatoire juste après la connexion ;
+    // sinon « 🔑 Mot de passe » permet de le changer (mot de passe actuel
+    // demandé). La clé du fichier est reverrouillée avec le nouveau mot de
+    // passe ici même, puis envoyée au relais (/client-mdp) avec le jeton
+    // trouvé dans la clé : le mot de passe ne quitte jamais l'appareil.
+    // ---------------------------------------------------------------------
+    let sessionCle = null;
+    let mdpForce = false;
+    const mdpFondEl = document.getElementById("mdp-fond");
+    const mdpFormulaireEl = document.getElementById("mdp-formulaire");
+    const mdpConfirmationBlocEl = document.getElementById("mdp-confirmation-bloc");
+    const mdpTitreEl = document.getElementById("mdp-titre");
+    const mdpExplicationEl = document.getElementById("mdp-explication");
+    const mdpActuelBlocEl = document.getElementById("mdp-actuel-bloc");
+    const mdpActuelEl = document.getElementById("mdp-actuel");
+    const mdpNouveauEl = document.getElementById("mdp-nouveau");
+    const mdpConfirmationEl = document.getElementById("mdp-confirmation");
+    const mdpAfficherEl = document.getElementById("mdp-afficher");
+    const mdpErreurEl = document.getElementById("mdp-erreur");
+    const mdpAnnulerEl = document.getElementById("mdp-annuler");
+    const mdpValiderEl = document.getElementById("mdp-valider");
+
+    function ouvrirMdp(force) {
+      mdpForce = force;
+      mdpTitreEl.textContent = force ? "🔑 Choisissez votre mot de passe" : "🔑 Changer mon mot de passe";
+      mdpExplicationEl.textContent = force
+        ? "Le mot de passe que vous venez d'utiliser est provisoire. Choisissez le vôtre : c'est lui qui vous servira désormais, et vous seul le connaîtrez."
+        : "Vous seul connaissez votre mot de passe. Pour le changer, saisissez d'abord l'actuel.";
+      mdpActuelBlocEl.classList.toggle("hidden", force);
+      mdpAnnulerEl.textContent = force ? "Se déconnecter" : "Annuler";
+      [mdpActuelEl, mdpNouveauEl, mdpConfirmationEl].forEach((el) => { el.value = ""; el.type = "password"; });
+      mdpAfficherEl.checked = false;
+      mdpErreurEl.classList.add("hidden");
+      mdpValiderEl.disabled = false;
+      mdpValiderEl.textContent = "Enregistrer";
+      mdpFormulaireEl.classList.remove("hidden");
+      mdpConfirmationBlocEl.classList.add("hidden");
+      mdpFondEl.classList.remove("hidden");
+      (force ? mdpNouveauEl : mdpActuelEl).focus();
+    }
+
+    function erreurMdp(message) {
+      mdpErreurEl.textContent = message;
+      mdpErreurEl.classList.remove("hidden");
+    }
+
+    async function validerMdp() {
+      if (!sessionCle) return;
+      mdpErreurEl.classList.add("hidden");
+      const nouveau = mdpNouveauEl.value;
+      if (!mdpForce) {
+        try {
+          await decryptFile(sessionCle.fichierCle.cle, mdpActuelEl.value);
+        } catch {
+          erreurMdp("Le mot de passe actuel est incorrect.");
+          return;
+        }
+      }
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(nouveau)) {
+        erreurMdp("Le nouveau mot de passe doit contenir au moins 8 caractères, avec une majuscule, une minuscule et un chiffre.");
+        return;
+      }
+      if (nouveau !== mdpConfirmationEl.value) {
+        erreurMdp("Les deux saisies du nouveau mot de passe ne sont pas identiques.");
+        return;
+      }
+      if (nouveau === sessionCle.motDePasse) {
+        erreurMdp("Choisissez un mot de passe différent de l'actuel.");
+        return;
+      }
+      mdpValiderEl.disabled = true;
+      mdpValiderEl.textContent = "Enregistrement…";
+      try {
+        const cle = await chiffrerTexte(JSON.stringify({ k: sessionCle.k, j: sessionCle.j }), nouveau);
+        let res;
+        try {
+          res = await fetch(`${RELAIS_URL}/client-mdp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identifiant: sessionCle.identifiant, jeton: sessionCle.j, cle }),
+          });
+        } catch {
+          erreurMdp("Connexion impossible. Vérifiez votre accès à internet et réessayez.");
+          return;
+        }
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data || data.success !== true) {
+          erreurMdp((data && data.error) || `Le serveur a répondu avec une erreur (code ${res.status}).`);
+          return;
+        }
+        sessionCle.fichierCle = { ...sessionCle.fichierCle, cle, provisoire: false, par: "client", modifie_le: data.modifie_le };
+        sessionCle.motDePasse = nouveau;
+        // Mot de passe mémorisé sur cet appareil → remplacé par le nouveau.
+        const ids = lireIdentifiantsMemorises();
+        if (ids && ids.motDePasse) {
+          ids.motDePasse = nouveau;
+          ecrireIdentifiantsMemorises(ids);
+        }
+        mdpFormulaireEl.classList.add("hidden");
+        mdpConfirmationBlocEl.classList.remove("hidden");
+      } finally {
+        mdpValiderEl.disabled = false;
+        mdpValiderEl.textContent = "Enregistrer";
+      }
+    }
+
+    mdpBtnEl.addEventListener("click", () => ouvrirMdp(false));
+    mdpValiderEl.addEventListener("click", validerMdp);
+    mdpAfficherEl.addEventListener("change", () => {
+      [mdpActuelEl, mdpNouveauEl, mdpConfirmationEl].forEach((el) => { el.type = mdpAfficherEl.checked ? "text" : "password"; });
+    });
+    mdpAnnulerEl.addEventListener("click", () => {
+      if (mdpForce) {
+        oublierMotDePasse();
+        resetToPasswordScreen();
+      } else {
+        mdpFondEl.classList.add("hidden");
+      }
+    });
+    document.getElementById("mdp-fermer").addEventListener("click", () => mdpFondEl.classList.add("hidden"));
 
     // Lien du dépôt de documents (V2.10) : commun à tous les clients, publié
     // par bureau-app dans un fichier NON chiffré data/clients/_commun.txt

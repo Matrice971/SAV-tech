@@ -178,6 +178,58 @@ exactement le même format :
 
 ---
 
+## 5 bis. Format v2 : mot de passe choisi par le client (bureau-app V5.37, client-app V3.02, 15/11/2026)
+
+Depuis V5.37, le fichier client n'est plus chiffré avec le mot de passe du
+client : bureau-app publie sans le connaître, et le client peut le changer
+lui-même dans son appli. Les fichiers de l'ancien format (section 2) restent
+lisibles ; un client passe au format v2 à la première écriture de son fichier
+par bureau-app V5.37, ou par le bouton « 🔐 Mots de passe clients ».
+
+**Fichier client** `data/clients/<identifiant>.txt` :
+`v2.<génération>.<iv_base64>.<chiffré_base64>` — AES-GCM 256 avec la **clé du
+client** (32 octets) pour cette génération.
+
+**Clé du client** = HMAC-SHA256(clé des clients, `savtech-client|<identifiant>|<génération>`).
+La **clé des clients** (32 octets aléatoires, `configState.cleMaitreClients`)
+n'existe que dans la configuration de bureau-app et ses sauvegardes : elle
+n'est jamais publiée. Sans elle, bureau-app ne peut plus publier pour les
+clients passés au format v2 (seule issue : réinitialiser leur mot de passe).
+
+**Fichier de clé** `data/cles/<identifiant>.txt` (JSON public) :
+
+```json
+{
+  "version": 2,
+  "generation": 1,
+  "empreinte": "16 hex : SHA-256('savtech-empreinte|' + clé des clients en base64)",
+  "verif": "SHA-256 (hex) du jeton en base64",
+  "provisoire": true,
+  "modifie_le": "AAAA-MM-JJ",
+  "par": "bureau | client",
+  "cle": "<sel>.<iv>.<chiffré> = {\"k\": clé du client en base64, \"j\": jeton en base64}, chiffré avec le mot de passe (sections 2 et 3)"
+}
+```
+
+- **Connexion (client-app)** : relais `/client-cle` (lecture sans cache des deux
+  fichiers ; à défaut lecture directe GitHub), ouverture de `cle` avec le mot
+  de passe → `k` déchiffre le fichier client. `provisoire: true` → le client
+  doit choisir son mot de passe avant de continuer.
+- **Changement par le client** : `{k, j}` rechiffré avec le nouveau mot de
+  passe dans l'appli, envoyé au relais `/client-mdp` avec le jeton `j`. Le
+  relais vérifie SHA-256(`j`) = `verif`, puis réécrit le fichier de clé
+  (`provisoire: false`, `par: "client"`). Le mot de passe ne quitte jamais
+  l'appareil ; le relais ne connaît ni `k` ni le mot de passe.
+- **Réinitialisation (bureau-app, mot de passe changé dans la fiche client)** :
+  génération + 1, nouveau jeton, fichier de clé verrouillé avec le mot de passe
+  de la fiche, fichier client rechiffré. Une ancienne session du client ne peut
+  plus rien changer (jeton périmé).
+- **Empreinte** : bureau-app refuse de publier si l'empreinte du fichier de clé
+  ne correspond pas à sa clé des clients (configuration d'un autre poste ou
+  ancienne sauvegarde) : il faut restaurer la bonne configuration.
+
+---
+
 ## 6. Paramètres figés
 
 Ces valeurs sont identiques dans le JS (`client-app/index.html`) et le
