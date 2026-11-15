@@ -10,7 +10,13 @@
  * dossiers depuis technizen-app ou contrat-app, crée l'arborescence manquante
  * sur le kDrive puis y dépose le fichier.
  *
- * /read (lecture sans cache d'un fichier data/clients/, cf. handleRead).
+ * /read (lecture sans cache d'un fichier data/clients/ ou data/cles/, cf. handleRead).
+ *
+ * /client-cle et /client-mdp (bureau-app V5.37 / client-app V3.02) : mot de
+ * passe choisi par le client. Le fichier data/cles/<identifiant>.txt garde la
+ * clé de son fichier client, verrouillée par son mot de passe ; seul le client
+ * qui l'a ouverte (jeton secret qu'elle contient) peut la reverrouiller avec
+ * un nouveau mot de passe. Sans WRITE_PASSWORD, rien d'autre n'est modifiable.
  *
  * /kdrive-list et /kdrive-download (lecture) servent aux imports automatiques
  * de technizen-app et bureau-app ; ils sont limités aux sous-arbres
@@ -50,6 +56,7 @@ const GITHUB_BRANCH = "main";
 const DOSSIERS_AUTORISES = {
   clients: "data/clients",
   interventions: "data/interventions",
+  cles: "data/cles",
 };
 const DOSSIER_PAR_DEFAUT = "clients";
 
@@ -252,7 +259,8 @@ async function handleDelete(request, env) {
 // (max-age=300 : une relecture moins de 5 min après une écriture renvoyait
 // l'ancienne version, et la publication suivante écrasait la précédente —
 // visites perdues). Passe par l'API GitHub avec le token du relais. Limité à
-// data/clients/ (fichiers chiffrés, illisibles sans le mot de passe client).
+// data/clients/ (fichiers chiffrés, illisibles sans le mot de passe client)
+// et, depuis bureau-app V5.37, data/cles/ (champ "dossier": "cles").
 async function handleRead(request, env) {
   let body;
   try {
@@ -261,7 +269,7 @@ async function handleRead(request, env) {
     return jsonResponse({ success: false, error: "Corps JSON invalide." }, 400);
   }
 
-  const { password, filename } = body;
+  const { password, filename, dossier } = body;
 
   if (!env.WRITE_PASSWORD || !env.GITHUB_TOKEN) {
     return jsonResponse(
@@ -281,7 +289,8 @@ async function handleRead(request, env) {
     );
   }
 
-  const path = `${DOSSIERS_AUTORISES.clients}/${filename}`;
+  const dataDir = dossier === "cles" ? DOSSIERS_AUTORISES.cles : DOSSIERS_AUTORISES.clients;
+  const path = `${dataDir}/${filename}`;
   const res = await githubRequest(env, `${path}?ref=${GITHUB_BRANCH}`, {
     method: "GET",
     headers: { "Accept": "application/vnd.github.raw" },
@@ -294,6 +303,141 @@ async function handleRead(request, env) {
     return jsonResponse({ success: false, error: `Erreur GitHub lors de la lecture : ${errorText}` }, 502);
   }
   return jsonResponse({ success: true, existe: true, filename, contenu: await res.text() });
+}
+
+// ============================================================
+// MOT DE PASSE CHOISI PAR LE CLIENT (bureau-app V5.37 / client-app V3.02)
+// ============================================================
+// data/cles/<identifiant>.txt (JSON, écrit par bureau-app via /write) :
+//   { version, generation, empreinte, verif, provisoire, modifie_le, par, cle }
+// - cle   : "<sel>.<iv>.<chiffré>" = { k: clé du fichier client, j: jeton }
+//           chiffré avec le mot de passe du client (PBKDF2 + AES-GCM) ;
+// - verif : SHA-256 (hex) du jeton j. Le relais ne connaît ni la clé ni le
+//           mot de passe : il vérifie seulement que l'appli client a bien
+//           ouvert la clé (elle seule peut fournir le jeton).
+
+function isValidIdentifiantClient(identifiant) {
+  return typeof identifiant === "string" && identifiant.length <= 120 && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(identifiant);
+}
+
+async function sha256Hex(texte) {
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texte));
+  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// AAAA-MM-JJ du jour en Guadeloupe (UTC-4, sans heure d'été).
+function dateDuJourGuadeloupe() {
+  return new Date(Date.now() - 4 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
+// Lecture sans cache (API GitHub) d'un fichier du dépôt : { sha, contenu } ou null.
+async function lireFichierDepot(env, path) {
+  const res = await githubRequest(env, `${path}?ref=${GITHUB_BRANCH}`, { method: "GET" });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Erreur GitHub lors de la lecture : ${await res.text()}`);
+  const data = await res.json();
+  const binaire = atob(String(data.content || "").replace(/\s/g, ""));
+  const contenu = new TextDecoder().decode(Uint8Array.from(binaire, (c) => c.charCodeAt(0)));
+  return { sha: data.sha, contenu };
+}
+
+function lireCleClient(env, identifiant) {
+  return lireFichierDepot(env, `${DOSSIERS_AUTORISES.cles}/${identifiant}.txt`);
+}
+
+// /client-cle — { identifiant } → { success, existe, contenu, fichierClient }
+// (clé du client et son fichier data/clients/<identifiant>.txt, null si
+// absents). Sans mot de passe : ces fichiers chiffrés sont publics sur GitHub
+// de toute façon ; le relais évite seulement le cache de 5 min de
+// raw.githubusercontent.com (un mot de passe tout juste changé serait refusé,
+// ou la clé et le fichier ne correspondraient plus, pendant 5 min).
+async function handleClientCle(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ success: false, error: "Corps JSON invalide." }, 400);
+  }
+  if (!env.GITHUB_TOKEN) {
+    return jsonResponse({ success: false, error: "Configuration serveur incomplète (variables d'environnement manquantes)." }, 500);
+  }
+  if (!isValidIdentifiantClient(body.identifiant)) {
+    return jsonResponse({ success: false, error: "Identifiant invalide." }, 400);
+  }
+  try {
+    const [fichier, fichierClient] = await Promise.all([
+      lireCleClient(env, body.identifiant),
+      lireFichierDepot(env, `${DOSSIERS_AUTORISES.clients}/${body.identifiant}.txt`),
+    ]);
+    return jsonResponse({
+      success: true,
+      existe: !!fichier,
+      contenu: fichier ? fichier.contenu : null,
+      fichierClient: fichierClient ? fichierClient.contenu : null,
+    });
+  } catch (err) {
+    return jsonResponse({ success: false, error: err.message }, 502);
+  }
+}
+
+// /client-mdp — { identifiant, jeton, cle } : nouveau verrou choisi par le
+// client. Accepté seulement si SHA-256(jeton) = verif du fichier en ligne ;
+// le relais réécrit lui-même le fichier (verif, generation, empreinte
+// inchangés ; provisoire: false ; par: "client").
+async function handleClientMdp(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ success: false, error: "Corps JSON invalide." }, 400);
+  }
+  if (!env.GITHUB_TOKEN) {
+    return jsonResponse({ success: false, error: "Configuration serveur incomplète (variables d'environnement manquantes)." }, 500);
+  }
+  const { identifiant, jeton, cle } = body;
+  if (!isValidIdentifiantClient(identifiant)) {
+    return jsonResponse({ success: false, error: "Identifiant invalide." }, 400);
+  }
+  if (typeof jeton !== "string" || jeton.length < 20 || jeton.length > 200) {
+    return jsonResponse({ success: false, error: "Jeton invalide." }, 400);
+  }
+  if (typeof cle !== "string" || cle.length > 4000 || !/^[A-Za-z0-9+/=]+\.[A-Za-z0-9+/=]+\.[A-Za-z0-9+/=]+$/.test(cle)) {
+    return jsonResponse({ success: false, error: "Clé invalide." }, 400);
+  }
+
+  let fichier;
+  try {
+    fichier = await lireCleClient(env, identifiant);
+  } catch (err) {
+    return jsonResponse({ success: false, error: err.message }, 502);
+  }
+  if (!fichier) {
+    return jsonResponse({ success: false, error: "Ce compte ne permet pas encore de changer le mot de passe." }, 404);
+  }
+  let actuel;
+  try {
+    actuel = JSON.parse(fichier.contenu);
+  } catch {
+    return jsonResponse({ success: false, error: "Fichier de clé illisible." }, 500);
+  }
+  if (!actuel || typeof actuel.verif !== "string" || !safeEqual(await sha256Hex(jeton), actuel.verif)) {
+    return jsonResponse({ success: false, error: "Mot de passe déjà changé entre-temps : reconnectez-vous." }, 403);
+  }
+
+  const nouveau = { ...actuel, provisoire: false, modifie_le: dateDuJourGuadeloupe(), par: "client", cle };
+  const putResponse = await githubRequest(env, `${DOSSIERS_AUTORISES.cles}/${identifiant}.txt`, {
+    method: "PUT",
+    body: JSON.stringify({
+      message: `Mot de passe choisi par le client (${identifiant}) via relais SAV-tech`,
+      content: toBase64(JSON.stringify(nouveau, null, 2)),
+      branch: GITHUB_BRANCH,
+      sha: fichier.sha,
+    }),
+  });
+  if (!putResponse.ok) {
+    return jsonResponse({ success: false, error: `Erreur GitHub lors de l'écriture : ${await putResponse.text()}` }, 502);
+  }
+  return jsonResponse({ success: true, modifie_le: nouveau.modifie_le });
 }
 
 // ============================================================
@@ -1247,6 +1391,14 @@ export default {
 
     if (url.pathname === "/depot-telecharger" && request.method === "POST") {
       return handleDepotTelecharger(request, env);
+    }
+
+    if (url.pathname === "/client-cle" && request.method === "POST") {
+      return handleClientCle(request, env);
+    }
+
+    if (url.pathname === "/client-mdp" && request.method === "POST") {
+      return handleClientMdp(request, env);
     }
 
     if (url.pathname === "/mails-non-lus" && request.method === "POST") {

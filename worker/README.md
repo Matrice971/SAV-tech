@@ -99,6 +99,14 @@ Le jeton ne donne accès à rien d'autre (ni visites passées, ni exports, ni `/
 
 **Clé USB perdue ou jeton à changer** : voir `apps/depot-app/README.md`, section « Changer le jeton ».
 
+### `POST /client-cle` et `POST /client-mdp` (mot de passe choisi par le client, bureau-app V5.37 / client-app V3.02, 15/11/2026)
+
+Format décrit dans `docs/chiffrement.md` (section 5 bis) du dépôt SAV-tech. **Sans mot de passe du relais** (appelées par l'appli client) :
+- `/client-cle` : `{ "identifiant": "lamie-joseph" }` → `{ "success": true, "existe", "contenu", "fichierClient" }` — fichier de clé `data/cles/<identifiant>.txt` et fichier client `data/clients/<identifiant>.txt`, lus sans le cache de 5 min de raw.githubusercontent.com (`null` si absents). Fichiers chiffrés, déjà publics sur GitHub.
+- `/client-mdp` : `{ "identifiant", "jeton", "cle" }` → `{ "success": true, "modifie_le" }`. Accepté seulement si SHA-256(`jeton`) = `verif` du fichier de clé en ligne (403 sinon) ; le relais réécrit lui-même le fichier (seul `cle` change, plus `provisoire: false`, `par: "client"`, `modifie_le`). Rien d'autre n'est modifiable par cette route.
+
+`/write`, `/read` acceptent aussi `"dossier": "cles"` (`data/cles/`), avec le mot de passe du relais (bureau-app).
+
 ### `POST /mails-non-lus` (bureau-app V5.32, 08/11/2026)
 
 Corps : `{ "password": WRITE_PASSWORD }`. Le relais lit la boîte de réception Infomaniak en
