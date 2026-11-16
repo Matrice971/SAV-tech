@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "generation": 1,
+  "empreinte": "a8eb2b6a3f8c0ff2",
+  "verif": "4d728821cefb261adf97a2a3688593789f81c2cb5f7fd2050db7e6d57e8b1c07",
+  "provisoire": true,
+  "modifie_le": "2026-11-16",
+  "par": "bureau",
+  "cle": "h6L7SfwK8v0hgJ+408LBtg==.UT+6KD3Be2gmXbkn.pf/33qVUyb9ZEaoo0w0zEoLMrZjh+rtGKJk6OJ/8TzK05CBEyUzlwax8ngyGk0/CwFF75Av8WciSjlhkKDh3JskXMuSyOSv7i2A0zyiACtKIKARyo8ccRKGjK5Ju8iMI5r7CoLpCfNU101WOELqyc7FOrU5RTGY="
+}
