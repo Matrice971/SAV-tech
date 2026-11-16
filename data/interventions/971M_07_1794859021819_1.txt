@@ -1,0 +1,20 @@
+{
+  "centre": "CTP Poumaroux",
+  "centre_numero": "971M.07",
+  "client_adresse": "ZAC DE COLIN, 97170 PETIT BOURG",
+  "contact": "POUMAROUX Marius",
+  "materiel": {
+    "type": "Pont",
+    "num_serie": "00119"
+  },
+  "etat": 3,
+  "date": "2026-11-16",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remontage plongant de la pompe hydraulique",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CTPPoumaroux-161126.pdf",
+  "pieces_montees": []
+}
