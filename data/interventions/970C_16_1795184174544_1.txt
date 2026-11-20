@@ -1,0 +1,22 @@
+{
+  "centre": "BS Contrôle",
+  "centre_numero": "970C.16",
+  "client_adresse": "6 Rue Charles Tondu Sandy Ground, 97150 SAINT-MARTIN",
+  "contact": "GALVANI Brigitte",
+  "materiel": {
+    "type": "Ripage",
+    "num_serie": "4181"
+  },
+  "etat": 3,
+  "date": "2026-11-18",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Reduction et recablage capteur de passage",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-BSControle-181126.pdf",
+  "pieces_montees": [
+    "Capteur de passage"
+  ]
+}
