@@ -1,0 +1,25 @@
+{
+  "centre": "JO Contrôle",
+  "centre_numero": "971C.04A",
+  "client_adresse": "VOIE N°0 JARRY, 97122 BAIE-MAHAULT",
+  "contact": "VOLET Evariste",
+  "materiel": {
+    "type": "Régloscope",
+    "num_serie": "3574"
+  },
+  "etat": 2,
+  "date": "2026-11-21",
+  "pieces_a_prevoir": [
+    {
+      "designation": "C1rgeur pour 764-8",
+      "quantite": 1
+    }
+  ],
+  "commentaire_technicien": "Mise en service d une alimentation de 12v 2a en attendant un chargeur",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-JOControle-211126.pdf",
+  "pieces_montees": []
+}
