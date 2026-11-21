@@ -1,0 +1,22 @@
+{
+  "centre": "PRESTIGE AUTO NET (sr)",
+  "centre_numero": "971M.04A",
+  "client_adresse": "Lotissement Liberté Anceneaux, 97115 SAINTE ROSE",
+  "contact": "SAINT-MARC Jonny",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "536248"
+  },
+  "etat": 3,
+  "date": "2026-11-21",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Livraison et mise en service captuer vibratoire pour rpm miller",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-PRESTIGEAUTONET-sr-211126.pdf",
+  "pieces_montees": [
+    "Capteur vibratoire muller AMAT1163003"
+  ]
+}
