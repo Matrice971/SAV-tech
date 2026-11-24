@@ -1,0 +1,22 @@
+{
+  "centre": "CTPL (l1)",
+  "centre_numero": "971M.01B",
+  "client_adresse": "Dugazon, 97139 ABYMES",
+  "contact": "FIFI Livio",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "0577"
+  },
+  "etat": 3,
+  "date": "2026-11-24",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement des ventilateurs",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-CTPL-l1-241126.pdf",
+  "pieces_montees": [
+    "Ventilo pout lcs2400 AM9250-018"
+  ]
+}
