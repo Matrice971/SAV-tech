@@ -1,0 +1,21 @@
+{
+  "centre": "SOCATRANS capesterre",
+  "centre_numero": "971C.01D",
+  "client_adresse": "PEROU Flamboyant, 97130 CAPESTERRE B.E.",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Gaz",
+    "num_serie": "24329"
+  },
+  "etat": 2,
+  "date": "2026-11-25",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Pas d aspiration apres filtre essence d entré de mesure",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-SOCATRANScapesterre-251126.pdf",
+  "pieces_montees": [],
+  "materiel_prete_num_serie": "22725"
+}
