@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "generation": 1,
+  "generation": 2,
   "empreinte": "a8eb2b6a3f8c0ff2",
-  "verif": "7dc607ff4cc0f17ac7fbba1dfe795302acea3aa7550f15f7097902128d075960",
+  "verif": "46a43b48b103d0a23fa787ace7bc02193efd200c2d8657ea6dfed44db6bf8db0",
   "provisoire": false,
   "modifie_le": "2026-11-25",
-  "par": "client",
-  "cle": "WTSMeGMyWNuFRoHfmssUcA==.P883qsX6YyUWLMNW.sXqFeQuv9igvhD0Jvv281RFMOcWa4U2ZvHxN0TSMaTqTi9rxk0s+MRexOYuVW2yO/AESTmDWjZg2CywXn6DajqtiVPkZ4WocMg93ZcJJn4jrRu8pw90i1Yamff05BewuRDWfaa69H4+7PiK/vMDdLgEXNDvFOpA="
+  "par": "bureau",
+  "cle": "QjmbbtfJ6oQiEx9dWqLngA==.Ou3eEU7EYmODbXYu.NMP8ujOXXr+Nn/fuSXq/snEYl6EM0yi81/IjVVZNbnMGRqtLV6JKMTHA/FYQSipLzb+Wv9iSWRWkC9jobMzFm/DSgw5Wim3FINeoeCIKpV/d5zxWag4l6AXbEzkCAQB3QFUZ9RQF0etF9WeX7FX9Co6mcpl6JeI="
 }
