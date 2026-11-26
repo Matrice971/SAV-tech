@@ -779,6 +779,7 @@
   .choix-groupe input { accent-color: var(--color-primary); margin: 0; }
   .modal-boite textarea,
   .modal-boite input[type="tel"],
+  .modal-boite input[type="email"],
   .modal-boite input[type="text"],
   .modal-boite input[type="password"] {
     width: 100%;
@@ -811,7 +812,7 @@
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V3.02</span>
+      <span class="app-version">V4.00</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
@@ -958,6 +959,9 @@
         <p class="demande-question"><label for="demande-telephone">Téléphone pour vous rappeler</label></p>
         <input type="tel" id="demande-telephone" autocomplete="tel" placeholder="0690 00 00 00">
 
+        <p class="demande-question"><label for="demande-email">Votre e-mail pour la réponse</label></p>
+        <input type="email" id="demande-email" autocomplete="email" placeholder="nom@exemple.fr">
+
         <p id="demande-erreur" class="demande-erreur hidden"></p>
         <div class="modal-actions">
           <button type="button" id="demande-annuler" class="button-secondary">Annuler</button>
@@ -966,12 +970,42 @@
       </div>
 
       <div id="demande-confirmation" class="demande-confirmation hidden">
-        <h2>✅ Demande prête</h2>
+        <h2 id="demande-confirmation-titre">✅ Demande envoyée</h2>
         <p id="demande-confirmation-texte"></p>
         <div id="demande-apercu" class="demande-apercu hidden"></div>
         <div class="modal-actions">
-          <a id="demande-rouvrir" class="link-button" href="#">Rouvrir le mail</a>
           <button type="button" id="demande-fermer">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- V4.00 : message à TECHNIZEN envoyé par l'appli elle-même (plus de messagerie) -->
+  <div id="message-fond" class="modal-fond hidden" role="dialog" aria-modal="true" aria-labelledby="message-titre">
+    <div class="modal-boite">
+      <div id="message-formulaire">
+        <h2 id="message-titre">✉️ Écrire à TECHNIZEN</h2>
+        <p id="message-objet" class="demande-appareil"></p>
+
+        <p class="demande-question"><label for="message-texte">Votre message</label></p>
+        <textarea id="message-texte" style="min-height:9rem;"></textarea>
+
+        <p class="demande-question"><label for="message-email">Votre e-mail pour la réponse</label></p>
+        <input type="email" id="message-email" autocomplete="email" placeholder="nom@exemple.fr">
+
+        <p id="message-erreur" class="demande-erreur hidden"></p>
+        <div class="modal-actions">
+          <button type="button" id="message-annuler" class="button-secondary">Annuler</button>
+          <button type="button" id="message-envoyer">✉️ Envoyer</button>
+        </div>
+      </div>
+
+      <div id="message-confirmation" class="demande-confirmation hidden">
+        <h2 id="message-confirmation-titre">✅ Message envoyé</h2>
+        <p id="message-confirmation-texte"></p>
+        <div id="message-apercu" class="demande-apercu hidden"></div>
+        <div class="modal-actions">
+          <button type="button" id="message-fermer">Fermer</button>
         </div>
       </div>
     </div>
@@ -1259,14 +1293,9 @@
       // V2.12 : bouton toujours affiché, grisé avec mention s'il n'y a pas de lien.
       afficherBoutonDrive(lienDriveClient);
 
-      if (emailContact) {
-        const subject = `Question - ${data.contact}`;
-        const body = "Bonjour, j'ai une question concernant le suivi de mon matériel :";
-        contactLinkEl.href = `mailto:contact.technizen@ikmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        contactLinkEl.classList.remove("hidden");
-      } else {
-        contactLinkEl.classList.add("hidden");
-      }
+      // V4.00 : « Nous contacter » ouvre la fenêtre d'envoi de l'appli
+      // (plus de messagerie de l'appareil), toujours affiché.
+      contactLinkEl.classList.remove("hidden");
 
       listTitleEl.textContent = `Bonjour ${data.contact}`;
       contactClient = data.contact || "";
@@ -1509,10 +1538,11 @@
     }
 
     // ---------------------------------------------------------------------
-    // V3.00 : demande d'intervention sur un appareil. Mail prérempli, objet
-    // « Question - Demande d'intervention - … » : il remonte dans le bandeau
-    // « Demandes client » de l'appli bureau sans rien changer au relais.
-    // En mode démo, rien n'est envoyé : le mail est seulement affiché.
+    // V3.00 : demande d'intervention sur un appareil, objet « Question -
+    // Demande d'intervention - … » : elle remonte dans le bandeau « Demandes
+    // client » de l'appli bureau. V4.00 : envoyée par le relais (plus de
+    // messagerie de l'appareil), copie au client. En mode démo, rien n'est
+    // envoyé : le message est seulement affiché.
     // ---------------------------------------------------------------------
     const ADRESSE_CONTACT = "contact.technizen@ikmail.com";
     const CLE_DEMANDEUR = "technizen_client_demandeur";
@@ -1526,8 +1556,60 @@
     const demandeErreurEl = document.getElementById("demande-erreur");
     const demandeConfirmationTexteEl = document.getElementById("demande-confirmation-texte");
     const demandeApercuEl = document.getElementById("demande-apercu");
-    const demandeRouvrirEl = document.getElementById("demande-rouvrir");
+    const demandeEmailEl = document.getElementById("demande-email");
+    const demandeConfirmationTitreEl = document.getElementById("demande-confirmation-titre");
     let demandeEnCours = null;
+
+    // ---- V4.00 : envoi des messages par le relais (/client-message) ----
+    // Depuis client.technizen@ikmail.com vers contact.technizen@ikmail.com,
+    // « Répondre à » = e-mail saisi ; copie au client à l'adresse enregistrée
+    // par TECHNIZEN (vérifiée par le relais). Fonctionne sur tout appareil.
+    const CLE_EMAIL_REPONSE = "technizen_client_email_reponse";
+
+    function emailReponseParDefaut() {
+      try {
+        return localStorage.getItem(CLE_EMAIL_REPONSE) || emailContact || "";
+      } catch {
+        return emailContact || "";
+      }
+    }
+
+    function memoriserEmailReponse(adresse) {
+      try {
+        localStorage.setItem(CLE_EMAIL_REPONSE, adresse);
+      } catch {}
+    }
+
+    function emailValide(adresse) {
+      return /^[^\s@<>",;:()]+@[^\s@<>",;:()]+\.[^\s@<>",;:()]+$/.test(adresse);
+    }
+
+    async function envoyerMessageClient(objet, texte, repondreA) {
+      if (!sessionCle) {
+        throw new Error("Envoi impossible avec ce compte pour le moment : merci de nous appeler.");
+      }
+      let res;
+      try {
+        res = await fetch(`${RELAIS_URL}/client-message`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifiant: sessionCle.identifiant, jeton: sessionCle.j, objet, texte, repondreA, copie: emailContact || "" }),
+        });
+      } catch {
+        throw new Error("Pas de connexion Internet : le message n'a pas été envoyé. Réessayez dans un instant.");
+      }
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || data.success !== true) {
+        throw new Error(`Le message n'a pas été envoyé${data && data.error ? ` (${data.error})` : ""}. Réessayez, ou appelez-nous.`);
+      }
+      return data;
+    }
+
+    function texteCopie(copie) {
+      if (copie === "envoyee") return `Une copie vous a été envoyée à ${emailContact}.`;
+      if (copie === "non_verifiee") return "La copie n'a pas pu vous être envoyée (adresse e-mail pas encore à jour chez TECHNIZEN).";
+      return "Aucune adresse e-mail n'est enregistrée pour vous envoyer une copie.";
+    }
 
     function lireDemandeur() {
       try {
@@ -1546,6 +1628,7 @@
       const demandeur = lireDemandeur();
       demandeNomEl.value = demandeur.nom || "";
       demandeTelephoneEl.value = demandeur.telephone || "";
+      demandeEmailEl.value = emailReponseParDefaut();
       demandeErreurEl.classList.add("hidden");
       demandeFormulaireEl.classList.remove("hidden");
       demandeConfirmationEl.classList.add("hidden");
@@ -1565,12 +1648,16 @@
       const description = demandeDescriptionEl.value.trim();
       const nom = demandeNomEl.value.trim();
       const telephone = demandeTelephoneEl.value.trim();
+      const email = demandeEmailEl.value.trim();
       const manque = [];
       if (!motif) manque.push("ce qui se passe");
       if (!bloquant) manque.push("si l'appareil est bloquant");
       if (!telephone) manque.push("un téléphone");
       if (manque.length > 0) {
         return { erreur: `Merci d'indiquer : ${manque.join(", ")}.` };
+      }
+      if (email && !emailValide(email)) {
+        return { erreur: "L'adresse e-mail pour la réponse n'est pas valide." };
       }
       const objet = `Question - Demande d'intervention${bloquant === "Oui" ? " URGENTE" : ""} - ${nomCentre} - ${libelle}${appareil.serie ? ` - ${appareil.serie}` : ""}`;
       const texte = [
@@ -1588,13 +1675,15 @@
         "",
         `Demandeur : ${nom || "(non renseigné)"}`,
         `Téléphone : ${telephone}`,
+        `E-mail : ${email || "(non renseigné)"}`,
         "",
         "Merci.",
       ].join("\n");
-      return { objet, texte, nom, telephone };
+      return { objet, texte, nom, telephone, email };
     }
 
-    document.getElementById("demande-envoyer").addEventListener("click", () => {
+    const demandeEnvoyerEl = document.getElementById("demande-envoyer");
+    demandeEnvoyerEl.addEventListener("click", async () => {
       const d = composerDemande();
       if (d.erreur) {
         demandeErreurEl.textContent = d.erreur;
@@ -1604,21 +1693,119 @@
       try {
         localStorage.setItem(CLE_DEMANDEUR, JSON.stringify({ nom: d.nom, telephone: d.telephone }));
       } catch {}
-      const mailto = `mailto:${ADRESSE_CONTACT}?subject=${encodeURIComponent(d.objet)}&body=${encodeURIComponent(d.texte)}`;
-      demandeRouvrirEl.href = mailto;
-      demandeFormulaireEl.classList.add("hidden");
-      demandeConfirmationEl.classList.remove("hidden");
+      if (d.email) memoriserEmailReponse(d.email);
       if (modeDemo) {
-        demandeConfirmationTexteEl.textContent = "Mode démonstration : rien n'a été envoyé. Voici le mail qui serait préparé :";
-        demandeApercuEl.textContent = `À : ${ADRESSE_CONTACT}\nObjet : ${d.objet}\n\n${d.texte}`;
+        demandeFormulaireEl.classList.add("hidden");
+        demandeConfirmationEl.classList.remove("hidden");
+        demandeConfirmationTitreEl.textContent = "Mode démonstration";
+        demandeConfirmationTexteEl.textContent = "Rien n'a été envoyé. Voici le message qui serait envoyé à TECHNIZEN :";
+        demandeApercuEl.textContent = `Objet : ${d.objet}\n\n${d.texte}`;
         demandeApercuEl.classList.remove("hidden");
-        demandeRouvrirEl.classList.add("hidden");
-      } else {
-        demandeConfirmationTexteEl.textContent = "Votre messagerie s'est ouverte avec la demande déjà remplie : il ne reste qu'à appuyer sur « Envoyer ». Si elle ne s'est pas ouverte, appuyez sur « Rouvrir le mail ».";
-        demandeApercuEl.classList.add("hidden");
-        demandeRouvrirEl.classList.remove("hidden");
-        window.location.href = mailto;
+        return;
       }
+      demandeErreurEl.classList.add("hidden");
+      demandeEnvoyerEl.disabled = true;
+      demandeEnvoyerEl.textContent = "Envoi…";
+      try {
+        const resultat = await envoyerMessageClient(d.objet, d.texte, d.email);
+        demandeFormulaireEl.classList.add("hidden");
+        demandeConfirmationEl.classList.remove("hidden");
+        demandeConfirmationTitreEl.textContent = "✅ Demande envoyée";
+        demandeConfirmationTexteEl.textContent = `Votre demande a bien été envoyée à TECHNIZEN. ${texteCopie(resultat.copie)}`;
+        demandeApercuEl.classList.add("hidden");
+      } catch (err) {
+        demandeErreurEl.textContent = err.message;
+        demandeErreurEl.classList.remove("hidden");
+      } finally {
+        demandeEnvoyerEl.disabled = false;
+        demandeEnvoyerEl.textContent = "📧 Envoyer la demande";
+      }
+    });
+
+    // ---- V4.00 : fenêtre « Écrire à TECHNIZEN » (Nous contacter, question
+    // sur une réparation) — objet identique aux anciens mails, reconnu par
+    // le bandeau « Demandes client » de l'appli bureau. ----
+    const messageFondEl = document.getElementById("message-fond");
+    const messageFormulaireEl = document.getElementById("message-formulaire");
+    const messageConfirmationEl = document.getElementById("message-confirmation");
+    const messageObjetEl = document.getElementById("message-objet");
+    const messageTexteEl = document.getElementById("message-texte");
+    const messageEmailEl = document.getElementById("message-email");
+    const messageErreurEl = document.getElementById("message-erreur");
+    const messageEnvoyerEl = document.getElementById("message-envoyer");
+    const messageConfirmationTitreEl = document.getElementById("message-confirmation-titre");
+    const messageConfirmationTexteEl = document.getElementById("message-confirmation-texte");
+    const messageApercuEl = document.getElementById("message-apercu");
+    let messageObjet = "";
+
+    function ouvrirMessage(objet, texte) {
+      messageObjet = objet;
+      messageObjetEl.textContent = `Objet : ${objet}`;
+      messageTexteEl.value = texte;
+      messageEmailEl.value = emailReponseParDefaut();
+      messageErreurEl.classList.add("hidden");
+      messageFormulaireEl.classList.remove("hidden");
+      messageConfirmationEl.classList.add("hidden");
+      messageFondEl.classList.remove("hidden");
+      messageTexteEl.focus();
+      messageTexteEl.setSelectionRange(messageTexteEl.value.length, messageTexteEl.value.length);
+    }
+
+    function fermerMessage() {
+      messageFondEl.classList.add("hidden");
+    }
+
+    contactLinkEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      ouvrirMessage(`Question - ${contactClient}`, "Bonjour, j'ai une question concernant le suivi de mon matériel :\n\n");
+    });
+
+    messageEnvoyerEl.addEventListener("click", async () => {
+      const texte = messageTexteEl.value.trim();
+      const email = messageEmailEl.value.trim();
+      if (!texte) {
+        messageErreurEl.textContent = "Merci d'écrire votre message.";
+        messageErreurEl.classList.remove("hidden");
+        return;
+      }
+      if (email && !emailValide(email)) {
+        messageErreurEl.textContent = "L'adresse e-mail pour la réponse n'est pas valide.";
+        messageErreurEl.classList.remove("hidden");
+        return;
+      }
+      if (email) memoriserEmailReponse(email);
+      if (modeDemo) {
+        messageFormulaireEl.classList.add("hidden");
+        messageConfirmationEl.classList.remove("hidden");
+        messageConfirmationTitreEl.textContent = "Mode démonstration";
+        messageConfirmationTexteEl.textContent = "Rien n'a été envoyé. Voici le message qui serait envoyé à TECHNIZEN :";
+        messageApercuEl.textContent = `Objet : ${messageObjet}\n\n${texte}`;
+        messageApercuEl.classList.remove("hidden");
+        return;
+      }
+      messageErreurEl.classList.add("hidden");
+      messageEnvoyerEl.disabled = true;
+      messageEnvoyerEl.textContent = "Envoi…";
+      try {
+        const resultat = await envoyerMessageClient(messageObjet, texte, email);
+        messageFormulaireEl.classList.add("hidden");
+        messageConfirmationEl.classList.remove("hidden");
+        messageConfirmationTitreEl.textContent = "✅ Message envoyé";
+        messageConfirmationTexteEl.textContent = `Votre message a bien été envoyé à TECHNIZEN. ${texteCopie(resultat.copie)}`;
+        messageApercuEl.classList.add("hidden");
+      } catch (err) {
+        messageErreurEl.textContent = err.message;
+        messageErreurEl.classList.remove("hidden");
+      } finally {
+        messageEnvoyerEl.disabled = false;
+        messageEnvoyerEl.textContent = "✉️ Envoyer";
+      }
+    });
+
+    document.getElementById("message-annuler").addEventListener("click", fermerMessage);
+    document.getElementById("message-fermer").addEventListener("click", fermerMessage);
+    messageFondEl.addEventListener("click", (e) => {
+      if (e.target === messageFondEl) fermerMessage();
     });
 
     document.getElementById("demande-annuler").addEventListener("click", fermerDemande);
@@ -1771,21 +1958,25 @@
         );
       }
 
-      if (emailContact) {
-        const libelleMateriel = libelleMaterielClient(appareil.type);
-        const subject = `Question - ${appareil.centre_origine} - ${libelleMateriel} - ${appareil.num_serie}`;
-        const body =
-          `Bonjour, j'ai une question concernant la réparation de mon matériel ${libelleMateriel} ` +
-          `(n° série ${appareil.num_serie}) situé à ${appareil.centre_origine} :`;
-        const mailtoUrl = `mailto:contact.technizen@ikmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        links.push(`<a href="${escapeHtml(mailtoUrl)}" class="link-button">Un commentaire ou une question sur cette réparation ?</a>`);
-      }
+      const libelleMateriel = libelleMaterielClient(appareil.type);
+      links.push(`<a href="#" class="link-button" data-question-reparation="1">Un commentaire ou une question sur cette réparation ?</a>`);
 
       if (links.length > 0) {
         html += `<div class="detail-links">${links.join("")}</div>`;
       }
 
       detailBodyEl.innerHTML = html;
+      const questionEl = detailBodyEl.querySelector("[data-question-reparation]");
+      if (questionEl) {
+        questionEl.addEventListener("click", (e) => {
+          e.preventDefault();
+          ouvrirMessage(
+            `Question - ${appareil.centre_origine} - ${libelleMateriel} - ${appareil.num_serie}`,
+            `Bonjour, j'ai une question concernant la réparation de mon matériel ${libelleMateriel} ` +
+            `(n° série ${appareil.num_serie}) situé à ${appareil.centre_origine} :\n\n`
+          );
+        });
+      }
     }
 
     function renderCentreDetail(nom, visite) {
@@ -1904,6 +2095,7 @@
       tabReparationsBadgeEl.classList.add("hidden");
       switchListTab("materiel");
       fermerDemande();
+      fermerMessage();
       detailSublineEl.textContent = "";
       detailBodyEl.innerHTML = "";
       afficherBoutonDrive("");
