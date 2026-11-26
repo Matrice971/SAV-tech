@@ -6,5 +6,6 @@
   "provisoire": true,
   "modifie_le": "2026-11-16",
   "par": "bureau",
-  "cle": "JYxJo3y4uiHt7STSCjcbtQ==./KcBn8frDMFP97pM.clA8YuYA7VTNjr2z+v/ZkjzHvaY3/shhyx4TnojSIF+Z9ZWUoILWqnmV+mrEhrHZBeGKy+JOKm4fNxoPvQQtOWpBy1fsBhuFWIYPjfO1GlQHTwgs9W6m/tw+9BRe6oI5s7erDmu1vq08IWAccaiPo1A6VBUy/Rw="
+  "cle": "JYxJo3y4uiHt7STSCjcbtQ==./KcBn8frDMFP97pM.clA8YuYA7VTNjr2z+v/ZkjzHvaY3/shhyx4TnojSIF+Z9ZWUoILWqnmV+mrEhrHZBeGKy+JOKm4fNxoPvQQtOWpBy1fsBhuFWIYPjfO1GlQHTwgs9W6m/tw+9BRe6oI5s7erDmu1vq08IWAccaiPo1A6VBUy/Rw=",
+  "mail": "de3e9ca82bafefe26c47af5616b7ff3eef94a5ea10c45bdfc574ada6a287dd02"
 }
