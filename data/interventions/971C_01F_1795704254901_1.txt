@@ -1,0 +1,22 @@
+{
+  "centre": "SOCATRANS jarry",
+  "centre_numero": "971C.01F",
+  "client_adresse": "ZI JARRY, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "26977"
+  },
+  "etat": 1,
+  "date": "2026-11-26",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Remplacement carte alimentation\nRéalisation vérification primitive\ntest ok",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-SOCATRANSjarry-261126.pdf",
+  "pieces_montees": [
+    "carte alimentation"
+  ]
+}
