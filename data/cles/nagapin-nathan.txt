@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "generation": 1,
+  "generation": 2,
   "empreinte": "a8eb2b6a3f8c0ff2",
-  "verif": "b2371bc6aee0fc0dada8ba06fa8f024a0bb6cc61c3273e23c8a0887a7e093319",
-  "provisoire": true,
-  "modifie_le": "2026-11-16",
+  "verif": "e9c06a755227e86f9ff66b059848a55e86e04425791c66510eff685e404ca746",
+  "provisoire": false,
+  "modifie_le": "2026-11-27",
   "par": "bureau",
-  "cle": "ndO18PZ1HRRdminKMZtelw==.nglZRor+IPtjKU3y.hCPFNXemhVrE8C29hgw+rJPBj4MX8p8B2X1+FyfRSyTktYaZptviplaSxcs3aTda679hgk2pqsfbXYZKJktSdATmsCBMDmks4SH1ag7R3gfxSgTsuW0WbOsRl8YDpRkCJhvc78/qp/OoMkYdcTIZumZbF3jXAWI=",
+  "cle": "KjHEtx0WBqbOMd67XbyOyA==.yv26PB8AtN3eTyiO.7gLCz7CtO4vu8XCVqSomXryRlmvjXpNB6ebVMjHIrkhrFXqzaQ3TQx033BOkH9stS0mZu75P4vR0xozVyx71kzq2mXc5CHFcxDClPEt4dXCO+QvO2HkhxNvy+BRy/4me3kwDK5oRepO8kITXtS+yULACCr3zJck=",
   "mail": "3e568fe8daf009d0b3c428a7d2c9b67ede5a2577d31ac51b6e8977ed076ebeee"
 }
