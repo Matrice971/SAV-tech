@@ -1,0 +1,22 @@
+{
+  "centre": "ACT la JAILLE",
+  "centre_numero": "971C.01C",
+  "client_adresse": "LA JAILLE, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "OBD",
+    "num_serie": "51888"
+  },
+  "etat": 3,
+  "date": "2026-11-27",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Mise en service OBD",
+  "lieu_prise_charge": "site",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Chathuant Philippe",
+  "nom_rapport": "Fiche_interv-ACTlaJAILLE-271126.pdf",
+  "pieces_montees": [
+    "Kit complet Cap4350"
+  ]
+}
