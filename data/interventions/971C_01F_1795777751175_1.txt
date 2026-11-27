@@ -1,0 +1,21 @@
+{
+  "centre": "SOCATRANS jarry",
+  "centre_numero": "971C.01F",
+  "client_adresse": "ZI JARRY, 97122 BAIE-MAHAULT",
+  "contact": "BUREAU Erick",
+  "materiel": {
+    "type": "Opacimètre",
+    "num_serie": "26977"
+  },
+  "etat": 2,
+  "date": "2026-11-25",
+  "pieces_a_prevoir": [],
+  "commentaire_technicien": "Mise en service appareil de pret",
+  "lieu_prise_charge": "atelier",
+  "pieces_complementaires": "",
+  "commentaire_bureau": "",
+  "technicien": "Zenon Raymond",
+  "nom_rapport": "Fiche_interv-SOCATRANSjarry-251126.pdf",
+  "pieces_montees": [],
+  "materiel_prete_num_serie": "26799"
+}
