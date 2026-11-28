@@ -580,6 +580,61 @@
     pointer-events: none;
   }
 
+  /* V4.01 : page « Vos documents » (explication des dossiers du Drive). */
+  .link-button.link-button-plein {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    font-size: 1.05rem;
+  }
+
+  .link-button.link-button-plein:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  /* Bouton « Accès aux DOCUMENTS » (écran principal et fiche de réparation)
+     entièrement en gras pour qu'il ressorte. */
+  #drive-link,
+  [data-documents] {
+    font-weight: 800;
+  }
+
+  #screen-documents .screen-title {
+    margin-top: 0;
+  }
+
+  .documents-intro {
+    margin: 0 0 0.6rem;
+  }
+
+  .dossier {
+    padding: 0.6rem 0.1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .dossier:last-child {
+    border-bottom: none;
+  }
+
+  .dossier-nom {
+    font-weight: 700;
+  }
+
+  .dossier-desc {
+    color: var(--color-text-muted);
+    font-size: 0.93rem;
+    margin-top: 0.1rem;
+  }
+
+  .documents-astuce {
+    color: var(--color-text-muted);
+    font-size: 0.93rem;
+    margin: 0.9rem 0 1rem;
+  }
+
   .drive-note {
     font-size: 0.8rem;
     color: var(--color-text-muted);
@@ -812,7 +867,7 @@
   <header>
     <div class="header-top-row">
       <span class="header-brand"><span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">T</span>ECHNI<span style="font-size:1.4em;color:#4fc3f7;font-weight:900;">Z</span>EN</span>
-      <span class="app-version">V4.00</span>
+      <span class="app-version">V4.01</span>
     </div>
     <h1>SAV-tech</h1>
   </header>
@@ -865,8 +920,8 @@
       </div>
       <div id="quick-actions" class="quick-actions">
         <div class="drive-action">
-          <a id="drive-link" target="_blank" rel="noopener noreferrer" class="link-button disabled" aria-disabled="true">Accéder à mon Drive</a>
-          <span id="drive-note" class="drive-note">Espace Drive bientôt disponible</span>
+          <a id="drive-link" href="#" class="link-button disabled" aria-disabled="true">📂 Accès aux DOCUMENTS</a>
+          <span id="drive-note" class="drive-note">Documents bientôt disponibles</span>
         </div>
         <a id="depot-link" href="#" target="_blank" rel="noopener noreferrer" class="link-button hidden">Déposer un document</a>
         <a id="contact-link" href="#" class="link-button hidden">Nous contacter</a>
@@ -885,6 +940,26 @@
       <div id="tab-panel-reparations" class="hidden">
         <div id="reparations-list"></div>
         <p id="reparations-empty-message" class="empty-message hidden">Aucun matériel en réparation actuellement.</p>
+      </div>
+    </div>
+
+    <!-- V4.01 : explication des dossiers du Drive avant de l'ouvrir -->
+    <div id="screen-documents" class="hidden">
+      <button type="button" id="documents-back-btn" class="button-secondary back-link">← Retour</button>
+      <div class="card">
+        <h2 class="screen-title">📂 Vos documents</h2>
+        <p class="documents-intro">Vous y trouvez tous les documents de vos centres, rangés ainsi :</p>
+        <div class="dossiers">
+          <div class="dossier"><div class="dossier-nom">📁 00 RAPPORT D'INTERVENTION</div><div class="dossier-desc">Les rapports de nos interventions et réparations.</div></div>
+          <div class="dossier"><div class="dossier-nom">📁 01 CONTRAT</div><div class="dossier-desc">Pour chaque centre, un document unique qui regroupe tous ses contrats de maintenance.</div></div>
+          <div class="dossier"><div class="dossier-nom">📁 03 FACTURE - DEVIS</div><div class="dossier-desc">Nos factures et nos devis.</div></div>
+          <div class="dossier"><div class="dossier-nom">📁 04 ATTESTATION</div><div class="dossier-desc">Les attestations de conformité et de non-dérive de votre matériel.</div></div>
+          <div class="dossier"><div class="dossier-nom">📁 05 Notice Matériel</div><div class="dossier-desc">Les notices d'utilisation de votre matériel.</div></div>
+          <div class="dossier"><div class="dossier-nom">📁 06 Titre de qualification</div><div class="dossier-desc">Les titres d'habilitation et de qualification de nos techniciens.</div></div>
+          <div class="dossier"><div class="dossier-nom">📁 Un dossier par centre</div><div class="dossier-desc">Les documents des visites de contrôle de ce centre.</div></div>
+        </div>
+        <p class="documents-astuce">Touchez un document pour l'afficher ; vous pouvez aussi le télécharger.</p>
+        <a id="documents-open-link" target="_blank" rel="noopener noreferrer" class="link-button link-button-plein">📂 Ouvrir mes documents</a>
       </div>
     </div>
 
@@ -1078,6 +1153,11 @@
     const screenPasswordEl = document.getElementById("screen-password");
     const screenListEl = document.getElementById("screen-list");
     const screenDetailEl = document.getElementById("screen-detail");
+    const screenDocumentsEl = document.getElementById("screen-documents");
+    const documentsOpenLinkEl = document.getElementById("documents-open-link");
+    const documentsBackBtnEl = document.getElementById("documents-back-btn");
+    // V4.01 : écran à réafficher par « ← Retour » de la page Documents.
+    let ecranAvantDocuments = "list";
 
     const formEl = document.getElementById("password-form");
     const clientIdEl = document.getElementById("client-id");
@@ -1136,6 +1216,18 @@
       screenPasswordEl.classList.toggle("hidden", screen !== "password");
       screenListEl.classList.toggle("hidden", screen !== "list");
       screenDetailEl.classList.toggle("hidden", screen !== "detail");
+      screenDocumentsEl.classList.toggle("hidden", screen !== "documents");
+    }
+
+    // V4.01 : « Accès aux DOCUMENTS » (écran principal ou fiche de
+    // réparation) ouvre d'abord la page qui explique les dossiers du Drive ;
+    // « Ouvrir mes documents » ouvre ensuite le Drive (lien de partage).
+    function ouvrirPageDocuments(lien, depuis) {
+      if (!lien) return;
+      documentsOpenLinkEl.href = lien;
+      ecranAvantDocuments = depuis;
+      showScreen("documents");
+      window.scrollTo(0, 0);
     }
 
     function showStatus(message) {
@@ -1269,7 +1361,7 @@
 
     function afficherBoutonDrive(lien) {
       if (lien) {
-        driveLinkEl.href = lien;
+        driveLinkEl.href = "#";
         driveLinkEl.classList.remove("disabled");
         driveLinkEl.removeAttribute("aria-disabled");
         driveNoteEl.classList.add("hidden");
@@ -1954,7 +2046,7 @@
       const lienDriveAppareil = lienDriveClient || appareil.lien_drive;
       if (lienDriveAppareil) {
         links.push(
-          `<a href="${escapeHtml(lienDriveAppareil)}" target="_blank" rel="noopener noreferrer" class="link-button">Accéder à mon Drive</a>`
+          `<a href="#" class="link-button" data-documents="1">📂 Accès aux DOCUMENTS</a>`
         );
       }
 
@@ -1966,6 +2058,13 @@
       }
 
       detailBodyEl.innerHTML = html;
+      const documentsEl = detailBodyEl.querySelector("[data-documents]");
+      if (documentsEl) {
+        documentsEl.addEventListener("click", (e) => {
+          e.preventDefault();
+          ouvrirPageDocuments(lienDriveAppareil, "detail");
+        });
+      }
       const questionEl = detailBodyEl.querySelector("[data-question-reparation]");
       if (questionEl) {
         questionEl.addEventListener("click", (e) => {
@@ -2037,6 +2136,16 @@
 
     backBtnEl.addEventListener("click", () => {
       showScreen("list");
+    });
+
+    driveLinkEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      ouvrirPageDocuments(lienDriveClient, "list");
+    });
+
+    documentsBackBtnEl.addEventListener("click", () => {
+      showScreen(ecranAvantDocuments);
+      window.scrollTo(0, 0);
     });
 
     // Identifiants mémorisés (V2.09, revu en V2.10) : l'appli est distribuée
